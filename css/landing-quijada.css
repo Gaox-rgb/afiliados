@@ -1,0 +1,301 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap');
+
+/* ===== ESTILOS PARA LA PASARELA DE PAGO ===== */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(18, 18, 18, 0.95);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000; opacity: 0; transition: opacity 0.3s ease;
+    visibility: hidden;
+}
+.modal-overlay.visible { opacity: 1; visibility: visible; }
+
+.modal-content {
+    background: var(--color-light-dark); padding: 40px; border-radius: 10px;
+    text-align: center; position: relative; max-width: 500px;
+    border-top: 5px solid var(--color-primary);
+    transform: scale(0.7); transition: transform 0.3s ease;
+}
+.modal-overlay.visible .modal-content { transform: scale(1); }
+
+.modal-close-btn {
+    position: absolute; top: 10px; right: 15px; background: none; border: none;
+    color: var(--color-text); font-size: 2rem; cursor: pointer;
+    opacity: 0.6; transition: opacity 0.2s;
+}
+.modal-close-btn:hover { opacity: 1; }
+
+.modal-content h3 { font-size: 1.8rem; color: var(--color-primary); margin-bottom: 10px; }
+.modal-content p { margin-bottom: 25px; font-size: 1.1rem; }
+
+#paypal-button-container {
+    min-height: 50px;
+}
+
+
+:root {
+    --color-primary: #FFD700; /* Amarillo Makumoto */
+    --color-secondary: #ff4d4d; /* Rojo Peligro */
+    --color-dark: #101010; /* Negro casi absoluto */
+    --color-light-dark: #1E1E1E;
+    --color-text: #E0E0E0;
+    --color-text-dark: #333;
+    --font-family: 'Poppins', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-dark);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+/* --- ESTILOS GENERALES DE SECCIÓN --- */
+section { padding: 80px 0; text-align: center; border-bottom: 1px solid #2a2a2a; }
+.titulo-seccion {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-bottom: 40px;
+    color: var(--color-primary);
+    text-transform: uppercase;
+}
+
+/* ===== PUNTO 1: HERO ===== */
+.seccion-hero {
+    /* PROTOCOLO TIERRA FÉRTIL: Fondo de contingencia a prueba de fallos. */
+    background: radial-gradient(ellipse at center, rgba(30, 30, 30, 0.8) 0%, rgba(16, 16, 16, 1) 70%), linear-gradient(rgba(16, 16, 16, 0.8), rgba(16, 16, 16, 0.9));
+    background-size: cover;
+    background-position: center center;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.titulo-letal {
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1.1;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+}
+.subtitulo-hero {
+    font-size: 1.4rem;
+    max-width: 700px;
+    margin: 20px auto 0;
+    opacity: 0.9;
+}
+
+/* ===== PUNTO 2 & 8: TRIAJE ===== */
+.seccion-triaje, .seccion-cierre { background-color: var(--color-light-dark); }
+.triage-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.triage-btn {
+    background: var(--color-dark); color: var(--color-text);
+    border: 2px solid var(--color-primary);
+    padding: 20px 40px; font-size: 1.2rem; font-weight: 700;
+    cursor: pointer; border-radius: 8px; transition: all 0.3s ease;
+}
+.triage-btn:hover {
+    background: var(--color-primary); color: var(--color-dark);
+    transform: translateY(-5px);
+}
+.triage-btn i { margin-right: 10px; }
+
+/* ===== PUNTO 3: MANIFIESTO ===== */
+.texto-manifiesto { font-size: 1.2rem; max-width: 800px; margin: 0 auto 40px; }
+.imagen-preview {
+    width: 100%;
+    max-width: 800px;
+    border-radius: 10px;
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+    margin-bottom: 40px;
+}
+.cta-button-grande {
+    display: inline-block; background: var(--color-secondary); color: white;
+    padding: 20px 50px; border-radius: 10px; font-size: 1.5rem;
+    font-weight: 900; text-decoration: none; transition: transform 0.2s;
+}
+.cta-button-grande:hover { transform: scale(1.05); }
+
+/* ===== PUNTO 4 REFORZADO: DIÁLOGO FIJO CON SCROLL REVEAL ===== */
+.seccion-dialogo {
+    background-color: var(--color-light-dark);
+}
+.chat-container {
+    max-width: 600px; /* Reducido para mejor estética */
+    margin: 0 auto;
+    padding: 20px;
+    background: var(--color-dark);
+    border-radius: 15px;
+    display: flex; /* Añadido para controlar hijos */
+    flex-direction: column; /* Añadido para apilar mensajes */
+    gap: 20px; /* Añadido para espaciado consistente */
+}
+.mensaje-burbuja {
+    display: flex; align-items: flex-end; margin-bottom: 20px; max-width: 80%;
+    /* La burbuja está lista para la batalla, inicialmente invisible y fuera de posición. */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Esta es el arma de animación */
+}
+.mensaje-burbuja.visible {
+    /* La orden de aparecer. Irrevocable. */
+    opacity: 1;
+    transform: translateY(0);
+}
+.avatar-chat { width: 50px; height: 50px; border-radius: 50%; margin: 0 10px; }
+.mensaje-burbuja p { padding: 15px; border-radius: 20px; line-height: 1.4; }
+.mensaje-burbuja.ellos { align-self: flex-start; /* Reemplaza float */ }
+.mensaje-burbuja.ellos p { background-color: #333; border-bottom-left-radius: 5px; }
+.mensaje-burbuja.yo { align-self: flex-end; /* Reemplaza float */ flex-direction: row-reverse; }
+.mensaje-burbuja.yo p { background-color: var(--color-primary); color: var(--color-text-dark); border-bottom-right-radius: 5px; }
+
+
+/* ===== PUNTO 5 REFORZADO: TABLA DE PRECIOS EN LÍNEA ÚNICA Y RESPONSIVA ===== */
+.precios-grid {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: 1fr; /* Móvil primero */
+}
+.precio-tarjeta {
+    background: var(--color-light-dark); padding: 30px; border-radius: 10px;
+    border: 2px solid transparent; transition: all 0.3s ease;
+    display: flex; flex-direction: column;
+}
+.precio-tarjeta:hover { transform: translateY(-10px); border-color: var(--color-primary); }
+.precio-tarjeta h3 { font-size: 1.2rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase; }
+.lema-paquete { font-style: italic; opacity: 0.7; font-size: 0.9rem; min-height: 40px; }
+.precio-valor { font-size: 3rem; font-weight: 900; margin: 10px 0; }
+.precio-valor span { font-size: 1rem; font-weight: 400; color: var(--color-text); }
+.precio-tarjeta ul { list-style: none; text-align: left; margin-top: 20px; flex-grow: 1; }
+.precio-tarjeta ul li { margin-bottom: 10px; }
+.precio-tarjeta ul i { color: var(--color-primary); margin-right: 10px; }
+.cta-precio {
+    width: 100%; padding: 15px; margin-top: 20px; border: none;
+    border-radius: 5px; background: var(--color-primary); color: var(--color-dark);
+    font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s;
+}
+.cta-precio:hover { background-color: #fff08d; }
+.precio-tarjeta.recomendada {
+    border-color: var(--color-primary); position: relative;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+.etiqueta-recomendada {
+    position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+    background: var(--color-primary); color: var(--color-dark);
+    padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+}
+.cta-recomendada { background: var(--color-secondary); color: white; }
+.apologia-precios { margin-top: 40px; font-size: 1.2rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+
+/* Media Queries para responsividad de precios */
+@media (min-width: 768px) {
+    .precios-grid { grid-template-columns: repeat(2, 1fr); }
+    .precio-tarjeta.recomendada { transform: scale(1.05); }
+}
+@media (min-width: 1200px) {
+    .precios-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+
+/* ===== PUNTO 6: OFERTA ===== */
+.seccion-oferta { background: var(--color-secondary); padding: 60px 0; }
+.banner-oferta h2 { color: white; font-size: 2.5rem; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+.texto-oferta { font-size: 1.3rem; margin: 15px 0; color: white; }
+.contador-oferta {
+    display: inline-block; background: var(--color-dark); color: var(--color-primary);
+    padding: 10px 20px; border-radius: 5px; font-size: 1.5rem; font-weight: 900;
+    margin-top: 20px;
+}
+
+/* ===== PUNTO 7 REFORZADO: GALERÍA DE TESTIMONIOS Y FOMO CON BANDERAS ===== */
+.testimonios-slider {
+    position: relative; min-height: 350px; max-width: 700px; margin: 0 auto;
+}
+.testimonio {
+    position: absolute; top: 0; left: 0; width: 100%;
+    opacity: 0; transition: opacity 0.8s ease-in-out;
+    display: flex; flex-direction: column; align-items: center;
+}
+.testimonio.active { opacity: 1; }
+.testimonio img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; border: 3px solid var(--color-primary); }
+.testimonio blockquote { font-style: italic; margin-bottom: 15px; font-size: 1.1rem; }
+.testimonio cite { font-weight: 700; color: var(--color-primary); }
+
+#fomo-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; }
+.fomo-burbuja {
+    display: flex; align-items: center;
+    background: rgba(30, 30, 30, 0.95);
+    border-left: 3px solid var(--color-primary); /* Borde lateral para más estilo */
+    color: var(--color-text);
+    padding: 12px 18px; /* Más compacto */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: all 0.5s ease-in-out;
+    font-size: 0.85rem; /* Letra más pequeña */
+}
+.fomo-burbuja.visible { opacity: 1; transform: translateX(0); }
+.fomo-bandera { font-size: 1.5rem; margin-right: 10px; }
+
+
+/* ===== PUNTO 8: CIERRE ===== */
+.seccion-cierre { border-bottom: none; }
+.cta-final { margin: 40px 0; }
+.nota-final { opacity: 0.8; margin-top: 20px; }
+
+
+/* ===== ESTILOS DE LA LÍNEA DE RETAGUARDIA (FOOTER) ===== */
+#main-footer {
+    background-color: #0A0A0A; /* Aún más oscuro que el fondo principal */
+    padding: 30px 0;
+    text-align: center;
+    border-top: 1px solid #2a2a2a;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* ===== ESTILOS DEL BOTÓN DE RETORNO TÁCTICO ===== */
+#back-to-hub-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background-color: rgba(30, 30, 30, 0.8);
+    color: var(--color-primary);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    text-decoration: none;
+    border: 1px solid var(--color-primary);
+    transition: all 0.3s ease;
+}
+
+#back-to-hub-btn:hover {
+    background-color: var(--color-primary);
+    color: var(--color-dark);
+    transform: scale(1.1);
+}
+
+/* --- RESPONSIVIDAD GENERAL --- */
+@media (max-width: 768px) {
+    .titulo-letal { font-size: 2.5rem; }
+    .titulo-seccion { font-size: 2rem; }
+    .triage-btn { padding: 15px 20px; font-size: 1rem; }
+    .cta-button-grande { padding: 15px 30px; font-size: 1.2rem; }
+    #fomo-container { left: 10px; bottom: 10px; width: calc(100% - 20px); }
+}
