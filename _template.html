@@ -85,20 +85,5 @@
         </div>
     </footer>
     
-    <!-- Scripts simplificados, ya que estas páginas son estáticas -->
-    <script>
-        // Lógica simple para el slider de testimonios
-        document.addEventListener('DOMContentLoaded', () => {
-            const testimonios = document.querySelectorAll('.testimonio');
-            if (testimonios.length > 0) {
-                let testimonioActual = 0;
-                setInterval(() => {
-                    testimonios[testimonioActual].classList.remove('active');
-                    testimonioActual = (testimonioActual + 1) % testimonios.length;
-                    testimonios[testimonioActual].classList.add('active');
-                }, 6000);
-            }
-        });
-    </script>
 </body>
 </html>

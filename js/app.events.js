@@ -9,25 +9,12 @@ window.app.events = {
         });
 
         // --- LÓGICA DE LANDING FUSIONADA ---
-        this.initSmoothScroll();
         window.app.ui.initLandingDynamics(); // Llama a los inicializadores de UI (testimonios, fomo, etc)
     },
 
     // EL ANTIGUO MÉTODO DE SCROLL HA SIDO ELIMINADO. ERA INEFICIENTE Y FRÁGIL.
     // LA NUEVA LÓGICA VIVE DIRECTAMENTE EN app.ui.js CON UN OBSERVER.
 
-    initSmoothScroll: function() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    },
-
-    // ===== NUEVO CONTROLADOR DE TRIAJE =====
     // ===== NUEVO CONTROLADOR DE TRIAJE =====
     handleTriageClick: function(e) {
         const segment = e.currentTarget.dataset.segment;

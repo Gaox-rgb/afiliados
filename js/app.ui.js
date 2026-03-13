@@ -25,6 +25,7 @@ window.app.ui = {
         this.initTestimonialSlider();
         this.initFomoBubbles();
         this.initOfferCounter();
+        this.initSmoothScroll(); // Lógica de scroll movida a su ubicación correcta
     },
 
     // PROTOCOLO DE DOMINACIÓN ABSOLUTA
@@ -203,5 +204,17 @@ window.app.ui = {
                 contadorElemento.textContent = paquetesRestantes;
             }, 15000);
         }
+    }
+},
+
+    initSmoothScroll: function() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
     }
 };
