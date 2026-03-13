@@ -204,17 +204,14 @@ window.app.ui = {
                 contadorElemento.textContent = paquetesRestantes;
             }, 15000);
         }
-    }
-},
-
-    initSmoothScroll: function() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+}, // <-- Esta coma es ahora correcta, separa 'initOfferCounter' de 'initSmoothScroll'
+initSmoothScroll: function() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
             });
         });
-    }
-};
+    });
+}
