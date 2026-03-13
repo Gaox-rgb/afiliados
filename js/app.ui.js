@@ -215,3 +215,4 @@ initSmoothScroll: function() {
         });
     });
 }
+};
