@@ -1,6 +1,6 @@
 // js/app.state.js
-console.log("MAKUMOTO® DEBUG: app.state.js comenzando.");
-// window.app ya se inicializa en app.base.js
+console.log("MAKUMOTO® DEBUG: app.state.js comenzando. (Asume window.app ya inicializado).");
+// NO inicializar window.app aquí. Se inicializa en app.js
 window.app.state = {
     // El estado isModalShown ha sido expurgado.
 };

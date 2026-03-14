@@ -1,13 +1,33 @@
 // js/app.js
-console.log("MAKUMOTO® DEBUG: app.js comenzando.");
-// window.app ya se inicializa en app.base.js
+console.log("MAKUMOTO® DEBUG: app.js comenzando. Este es el punto de entrada principal.");
+
+// PROTOCOLO DE INICIALIZACIÓN DE MAKUMOTO®: Asegurar que window.app exista primero.
+window.app = window.app || {};
+console.log("MAKUMOTO® DEBUG: window.app inicializado en app.js como:", window.app);
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("MAKUMOTO® DEBUG: DOMContentLoaded disparado. Iniciando app.");
+    console.log("MAKUMOTO® DEBUG: DOMContentLoaded disparado. Iniciando el arsenal Makumoto®.");
+    
+    // Verificación final de la integridad de los módulos cargados
+    console.log("MAKUMOTO® DEBUG: Estado final de window.app.state:", window.app.state);
+    console.log("MAKUMOTO® DEBUG: Estado final de window.app.payments:", window.app.payments);
+    console.log("MAKUMOTO® DEBUG: Estado final de window.app.ui:", window.app.ui);
+    console.log("MAKUMOTO® DEBUG: Estado final de window.app.events:", window.app.events);
+
     // Armar todos los gatillos
-    window.app.events.init();
+    if (window.app.events && typeof window.app.events.init === 'function') {
+        window.app.events.init();
+    } else {
+        console.error("MAKUMOTO® ERROR CRÍTICO: window.app.events.init no está disponible. Fallo en la carga de módulos.");
+    }
+    
     // Inyectar la sección de precios en todas las páginas de aterrizaje que la requieran
-    window.app.ui.renderPricingSection('pricing-section-container');
-    console.log("MAKUMOTO® DEBUG: app.js - DOMContentLoaded finalizado.");
+    if (window.app.ui && typeof window.app.ui.renderPricingSection === 'function') {
+        window.app.ui.renderPricingSection('pricing-section-container');
+    } else {
+        console.error("MAKUMOTO® ERROR CRÍTICO: window.app.ui.renderPricingSection no está disponible. Fallo en la carga de módulos.");
+    }
+    
+    console.log("MAKUMOTO® DEBUG: app.js - DOMContentLoaded finalizado. Preparado para la batalla.");
 });
 console.log("MAKUMOTO® DEBUG: app.js finalizado.");
