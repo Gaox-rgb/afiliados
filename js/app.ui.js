@@ -126,10 +126,18 @@ window.app.ui = {
         // Sustituya 'TU_CLIENT_ID_DE_PAYPAL_LIVE' con la llave que obtuvo en la FASE 1
         const PAYPAL_LIVE_CLIENT_ID = 'AXZ8W2MQaEjQK5lIORlA8l4OoOCWm3UATWeWGqtt1NSEnrYIlKsyjxWOUca6j5qzNhx2o9smjCnU2A6q';
         
-        // Importar y usar el nuevo especialista en pagos
-        import('./payments.js').then(module => {
-            module.default.renderButton('paypal-button-container', planData, PAYPAL_LIVE_CLIENT_ID);
-        }).catch(err => console.error("Fallo al cargar el módulo de pagos:", err));
+        // Ejecutar el especialista de pagos directamente, ya que payments.js se carga antes en el HTML
+        if (window.app.payments && typeof window.app.payments.renderButton === 'function') {
+            console.log("MAKUMOTO® DEBUG: Iniciando renderizado de botón PayPal.");
+            window.app.payments.renderButton('paypal-button-container', planData, PAYPAL_LIVE_CLIENT_ID);
+        } else {
+            console.error("MAKUMOTO® ERROR CRÍTICO: El módulo de pagos (window.app.payments) no está disponible o no tiene la función renderButton.");
+            // Opcional: Mostrar un mensaje de error al usuario en el modal
+            const container = document.getElementById('paypal-button-container');
+            if (container) {
+                container.innerHTML = `<p style="color:var(--color-secondary);">Error crítico: No se pudo cargar la pasarela de pago. Por favor, recargue la página o contacte a soporte.</p>`;
+            }
+        }
     },
 
     // La función renderPayPalButton (simulación) ha sido eliminada.

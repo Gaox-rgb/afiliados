@@ -1,13 +1,34 @@
 // js/payments.js
 // VERSIÓN DE COMBATE FINAL - PROTOCOLO DE RE-ENSAMBLAJE de Makumoto®
+// js/payments.js
+// VERSIÓN DE COMBATE FINAL - PROTOCOLO DE RE-ENSAMBLAJE de Makumoto®
 window.app = window.app || {};
+console.log("MAKUMOTO® DEBUG: payments.js cargado.");
 
 window.app.payments = {
     loadPayPalSDK: function(clientId, callback) {
         if (window.paypal) {
+            console.log("MAKUMOTO® DEBUG: SDK de PayPal ya cargado.");
             if (callback) callback();
             return;
         }
+        console.log("MAKUMOTO® DEBUG: Cargando SDK de PayPal desde:", `https://www.paypal.com/sdk/js?client-id=${clientId.substring(0, 10)}...&currency=USD&components=buttons`);
+        const script = document.createElement('script');
+        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD&components=buttons`;
+        script.onload = () => {
+            console.log("MAKUMOTO® DEBUG: SDK de PayPal cargado con éxito.");
+            if (callback) callback();
+        };
+        script.onerror = (e) => {
+            console.error("MAKUMOTO® ERROR CRÍTICO: El SDK de PayPal no pudo cargarse.", e);
+            console.error("Verifique el Client ID de PayPal y su conexión a internet.");
+            const container = document.getElementById('paypal-button-container');
+            if (container) {
+                container.innerHTML = `<p style="color:var(--color-secondary);">Error al cargar PayPal. Asegúrate de tener conexión a internet.</p>`;
+            }
+        };
+        document.body.appendChild(script);
+    },
         const script = document.createElement('script');
         script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD&components=buttons`;
         script.onload = () => {
