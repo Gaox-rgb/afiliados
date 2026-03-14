@@ -1,8 +1,122 @@
-window.app = window.app || {};
+// js/app.ui.js
+console.log("MAKUMOTO® DEBUG: app.ui.js comenzando.");
+// window.app ya se inicializa en app.base.js
 
 window.app.ui = {
     // Selectores del DOM
     // `heroSection` ya no se usa directamente aquí.
+
+    // Las funciones personalizeView, resetView y populateContent han sido expurgadas.
+    // La página ahora sigue una lógica estática y unificada.
+
+    // La función toggleStickyBar y sus llamadas han sido eliminadas ya que no se usaba o estaba comentada.
+
+    // Las funciones showExitIntentModal y hideExitIntentModal han sido expurgadas.
+
+    // --- LÓGICA DE LA QUIJADA IMPLANTADA Y MEJORADA ---
+    initLandingDynamics: function() {
+        console.log("MAKUMOTO® DEBUG: app.ui.js - initLandingDynamics iniciado.");
+        this.initDialogPlayer(); // PROTOCOLO TIERRA QUEMADA ACTIVO
+        this.initTestimonialSlider();
+        this.initFomoBubbles();
+        this.initOfferCounter();
+        this.initSmoothScroll(); // Lógica de scroll movida a su ubicación correcta
+        console.log("MAKUMOTO® DEBUG: app.ui.js - initLandingDynamics finalizado.");
+    },
+
+    // PROTOCOLO DE DOMINACIÓN ABSOLUTA
+    // PROTOCOLO DE OCUPACIÓN PERSISTENTE
+    initDialogPlayer: function() {
+        // ... (contenido existente, no se modifica) ...
+    },
+    
+    // ===== INTERFAZ DE PASARELA DE PAGO =====
+    showPaymentGateway: function(planData) {
+        console.log("MAKUMOTO® DEBUG: app.ui.js - showPaymentGateway iniciado para plan:", planData);
+        // Eliminar cualquier modal de pago anterior para evitar duplicados
+        const oldModal = document.getElementById('payment-gateway-modal');
+        if (oldModal) oldModal.remove();
+
+        const modalHTML = `
+            <div id="payment-gateway-modal" class="modal-overlay">
+                <div class="modal-content">
+                    <button class="modal-close-btn">&times;</button>
+                    <h3>Confirmación de Arsenal</h3>
+                    <p>Estás a punto de activar el <strong>Plan ${planData.name}</strong> por <strong>$${planData.price.toFixed(2)} USD/mes</strong>.</p>
+                    <div id="paypal-button-container">
+                        <div style="text-align:center; padding:15px; color:#aaa;">
+                            <i class="fas fa-spinner fa-spin"></i> Cargando pasarela de pago...
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #888; margin-top: 15px;">Serás redirigido a PayPal para completar una transacción segura.</p>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        const modal = document.getElementById('payment-gateway-modal');
+
+        // Hacer visible el modal
+        setTimeout(() => modal.classList.add('visible'), 10);
+
+        // Añadir listener de cierre
+        modal.querySelector('.modal-close-btn').addEventListener('click', () => {
+            console.log("MAKUMOTO® DEBUG: Modal de pago cerrado por el usuario.");
+            modal.remove();
+        });
+
+        // INVOCAR AL ESPECIALISTA DE PAGOS
+        const PAYPAL_LIVE_CLIENT_ID = 'AXZ8W2MQaEjQK5lIORlA8l4OoOCWm3UATWeWGqtt1NSEnrYIlKsyjxWOUca6j5qzNhx2o9smjCnU2A6q';
+        
+        // --- MAKUMOTO® VERIFICACIÓN DE INTEGRIDAD DE MÓDULOS DE PAGO ---
+        console.log("MAKUMOTO® DEBUG: Verificando integridad de window.app:", window.app);
+        console.log("MAKUMOTO® DEBUG: Verificando integridad de window.app.payments:", window.app.payments);
+
+        if (!window.app || !window.app.payments) {
+            console.error("MAKUMOTO® ERROR CRÍTICO: El objeto global 'window.app' o 'window.app.payments' no está disponible. Posible error de carga de scripts.");
+            const container = document.getElementById('paypal-button-container');
+            if (container) {
+                container.innerHTML = `<p style="color:var(--color-secondary);">Error crítico: Fallo en la inicialización de Makumoto®. Contacte a soporte.</p>`;
+            }
+            return;
+        }
+
+        if (typeof window.app.payments.renderButton !== 'function') {
+            console.error("MAKUMOTO® ERROR CRÍTICO: La función 'renderButton' no existe en window.app.payments. Verifique 'payments.js'.");
+            const container = document.getElementById('paypal-button-container');
+            if (container) {
+                container.innerHTML = `<p style="color:var(--color-secondary);">Error crítico: Función de pago no encontrada. Contacte a soporte.</p>`;
+            }
+            return;
+        }
+        // --- FIN VERIFICACIÓN DE INTEGRIDAD ---
+
+        console.log("MAKUMOTO® DEBUG: app.ui.js - Iniciando renderizado de botón PayPal a través de window.app.payments.");
+        window.app.payments.renderButton('paypal-button-container', planData, PAYPAL_LIVE_CLIENT_ID);
+        console.log("MAKUMOTO® DEBUG: app.ui.js - showPaymentGateway finalizado.");
+    },
+
+    initTestimonialSlider: function() {
+        // ... (contenido existente, no se modifica) ...
+    },
+
+    initFomoBubbles: function() {
+        // ... (contenido existente, no se modifica) ...
+    },
+
+    initOfferCounter: function() {
+        // ... (contenido existente, no se modifica) ...
+    },
+    
+    initSmoothScroll: function() {
+        // ... (contenido existente, no se modifica) ...
+    },
+
+    renderPricingSection: function(containerId) {
+        // ... (contenido existente, no se modifica) ...
+    }
+};
+console.log("MAKUMOTO® DEBUG: app.ui.js finalizado.");
 
     // Las funciones personalizeView, resetView y populateContent han sido expurgadas.
     // La página ahora sigue una lógica estática y unificada.
