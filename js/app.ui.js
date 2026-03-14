@@ -198,6 +198,76 @@ window.app.ui = {
         }
     },
     
+    // ===== PROTOCOLO DE CONSOLIDACIÓN DE LA SECCIÓN DE PRECIOS =====
+    renderPricingSection: function(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        container.innerHTML = `
+            <section id="seccion-precios" class="seccion-precios">
+                <div class="container">
+                    <h2 class="titulo-seccion">Elige tu Arsenal. (Spoiler: Cuesta menos que tu paciencia)</h2>
+                    <div class="precios-grid">
+                        <!-- Paquete starter_10 -->
+                        <div class="precio-tarjeta">
+                            <h3>Equipo Semilla</h3>
+                            <p class="lema-paquete">"El primer paso para una cultura invencible."</p>
+                            <p class="precio-valor">$2 <span class="precio-mes">/mes</span></p>
+                            <ul>
+                                <li><i class="fas fa-users"></i> <strong>Hasta 10</strong> Licencias</li>
+                                <li><i class="fas fa-check"></i> Acceso Total a la Plataforma</li>
+                                <li><i class="fas fa-tachometer-alt"></i> Dashboard Esencial</li>
+                            </ul>
+                            <button class="cta-precio" data-plan="starter_10" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
+                        </div>
+                        <!-- Paquete growth_50 -->
+                        <div class="precio-tarjeta">
+                            <h3>Acelerador de Tribu</h3>
+                            <p class="lema-paquete">"De un equipo a una tribu imparable."</p>
+                            <p class="precio-valor">$5 <span class="precio-mes">/mes</span></p>
+                            <ul>
+                                <li><i class="fas fa-users"></i> <strong>Hasta 50</strong> Licencias</li>
+                                <li><i class="fas fa-check"></i> Todo lo de Semilla +</li>
+                                <li><i class="fas fa-fist-raised"></i> <strong>Power-Up:</strong> Kit de Comunidad</li>
+                            </ul>
+                            <button class="cta-precio" data-plan="growth_50" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
+                        </div>
+                        <!-- Paquete business_200 - Recomendado -->
+                        <div class="precio-tarjeta recomendada">
+                            <span class="etiqueta-recomendada">NÚCLEO ESTRATEGA</span>
+                            <h3>Business</h3>
+                            <p class="lema-paquete">"La herramienta definitiva para la retención de talento."</p>
+                            <p class="precio-valor">$10 <span class="precio-mes">/mes</span></p>
+                            <ul>
+                                <li><i class="fas fa-users"></i> <strong>Hasta 200</strong> Licencias</li>
+                                <li><i class="fas fa-check"></i> Todo lo de Acelerador +</li>
+                                <li><i class="fas fa-chart-line"></i> <strong>Power-Up:</strong> Kit de Analítica</li>
+                                <li><i class="fas fa-headset"></i> Soporte Prioritario</li>
+                            </ul>
+                            <button class="cta-precio cta-recomendada" data-plan="business_200" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
+                        </div>
+                        <!-- Paquete enterprise_500 -->
+                        <div class="precio-tarjeta">
+                            <h3>Flota Conquistador</h3>
+                            <p class="lema-paquete">"Domine su industria desde adentro."</p>
+                            <p class="precio-valor">$20 <span class="precio-mes">/mes</span></p>
+                            <ul>
+                                <li><i class="fas fa-users"></i> <strong>Hasta 500</strong> Licencias</li>
+                                <li><i class="fas fa-check"></i> Todo lo de Business +</li>
+                                <li><i class="fas fa-bullhorn"></i> <strong>Power-Up:</strong> Mando y Control</li>
+                                <li><i class="fas fa-robot"></i> <strong>Power-Up:</strong> Automatización</li>
+                            </ul>
+                            <button class="cta-precio" data-plan="enterprise_500" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
+                        </div>
+                    </div>
+                    <div class="apologia-precios">
+                        <p><strong>Seamos honestos.</strong> El plan de $2. ¿Qué compras con eso? Aquí, compras la lealtad de 10 personas por un mes. El plan de $10 es lo que gastas en un almuerzo. Nosotros te damos inteligencia de negocios para 200 personas. <strong>Esto no es un gasto, es el robo del siglo... a tu favor.</strong></p>
+                    </div>
+                </div>
+            </section>
+        `;
+    },
+
     initSmoothScroll: function() {
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {

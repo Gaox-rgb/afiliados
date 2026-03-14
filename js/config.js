@@ -6,9 +6,9 @@ import { getFunctions } from "https://www.gstatic.com/firebasejs/10.7.1/firebase
 
 const firebaseConfig = {
   apiKey: "AIzaSyB_7mUw2TD5YvPMBOFeGAgRgSKcikfSXog",
-  authDomain: "makumoto-app-2026.firebaseapp.com",
-  projectId: "makumoto-app-2026",
-  storageBucket: "makumoto-app-2026.appspot.com",
+  authDomain: "makumoto-app-2026.firebaseapp.com", // Dominio de autenticación Makumoto®
+  projectId: "makumoto-app-2026", // ID del proyecto Makumoto®
+  storageBucket: "makumoto-app-2026.appspot.com", // Bucket de almacenamiento Makumoto®
   messagingSenderId: "398366272130",
   appId: "1:398366272130:web:073b05e75ed299534ce29b"
 };
