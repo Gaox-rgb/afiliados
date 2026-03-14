@@ -34,7 +34,7 @@
 
 
 :root {
-    --color-primary: #FFD700; /* Amarillo Makumoto */
+    --color-primary: #FFD700; /* Amarillo Makumoto® */
     --color-secondary: #ff4d4d; /* Rojo Peligro */
     --color-dark: #101010; /* Negro casi absoluto */
     --color-light-dark: #1E1E1E;
@@ -248,6 +248,20 @@ section { padding: 80px 0; text-align: center; border-bottom: 1px solid #2a2a2a;
 .fomo-burbuja.visible { opacity: 1; transform: translateX(0); }
 .fomo-bandera { font-size: 1.5rem; margin-right: 10px; }
 
+/* ===== ESTILOS ESPECÍFICOS DE MAKUMOTO® SEGÚN SOLICITUD ===== */
+.makumoto-hero-highlight {
+    color: var(--color-primary); /* Amarillo */
+    text-shadow: 0 0 5px var(--color-secondary), 0 0 10px var(--color-secondary); /* Destello rojo */
+    font-weight: 700; /* Para que el destello se vea mejor */
+}
+
+.makumoto-triaje-h2 {
+    color: var(--color-primary); /* Amarillo */
+    text-shadow: 0 0 3px var(--color-secondary); /* Destello rojo más sutil */
+    font-size: 0.9em; /* Reduce el tamaño respecto al h2 contenedor */
+    text-transform: none; /* Asegura mayúsculas y minúsculas */
+    font-weight: 700;
+}
 
 /* ===== PUNTO 8: CIERRE ===== */
 .seccion-cierre { border-bottom: none; }

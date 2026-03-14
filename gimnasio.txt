@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Makumoto - Para Clínicas y Consultorios</title>
+    <title>Makumoto® - Para Gimnasios</title>
     <link rel="icon" type="image/png" href="imagenes/logo.png">
     <link rel="stylesheet" href="css/landing-quijada.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,18 +20,18 @@
         <!-- ===== HERO PERSONALIZADO ===== -->
         <section class="seccion-hero">
             <div class="container hero-content">
-                <h1 class="titulo-letal">Deja de Gestionar Citas.<br>Empieza a Orquestar la Lealtad del Paciente.</h1>
-                <p class="subtitulo-hero">Makumoto ofrece un seguimiento que tus pacientes amarán. Reduce las ausencias y multiplica la adherencia al tratamiento.</p>
+                <h1 class="titulo-letal">Deja de Vender Clases.<br>Empieza a Construir una Comunidad Adicta.</h1>
+                <p class="subtitulo-hero">La competencia vende máquinas, tú vendes pertenencia. Makumoto® convierte a tus miembros en una legión que no puede concebir entrenar en otro lugar.</p>
             </div>
         </section>
 
         <!-- ===== CAPTURA DE LEAD (EBOOK) ===== -->
         <section class="seccion-oferta" style="background-color: var(--color-light-dark);">
             <div class="container">
-                <h2 class="titulo-seccion">El Plan de Experiencia del Paciente</h2>
-                <p>Descarga el protocolo de 5 estrellas para eliminar las ausencias y convertir pacientes en embajadores de tu clínica.</p>
-                <a href="ebooks/plan-experiencia-paciente.pdf" download class="cta-button-grande" style="margin-top: 20px;">
-                    <i class="fas fa-download"></i> DESCARGAR PROTOCOLO AHORA
+                <h2 class="titulo-seccion">La Guía Anti-Fuga</h2>
+                <p>Descarga el sistema definitivo para sellar la "puerta trasera" de tu gimnasio y convertir nuevos clientes en miembros de por vida.</p>
+                <a href="ebooks/guia-anti-fuga.pdf" download class="cta-button-grande" style="margin-top: 20px;">
+                    <i class="fas fa-download"></i> DESCARGAR PROTOCOLO DE RETENCIÓN
                 </a>
             </div>
         </section>
@@ -56,10 +56,10 @@
         <!-- ===== PRUEBA SOCIAL ESPECIALIZADA ===== -->
         <section class="seccion-prueba-social">
             <div class="container">
-                <h2 class="titulo-seccion">Inteligencia desde la Sala de Consulta</h2>
+                <h2 class="titulo-seccion">Inteligencia desde el Campo de Entrenamiento</h2>
                 <div class="testimonios-slider">
-                    <div class="testimonio active"><img src="imagenes/testimonio3.jpg" alt="Dr. Soto"><blockquote>"La adherencia al tratamiento de mis pacientes subió un 30%. Makumoto es mi nuevo asistente."</blockquote><cite>Dr. Soto - Clínica Dental Soto</cite></div>
-                    <div class="testimonio"><img src="imagenes/testimonio4.jpg" alt="Paciente"><blockquote>"Ahora entiendo mi tratamiento. La app me recuerda todo y puedo hacer preguntas. Me siento más seguro."</blockquote><cite>Paciente Anónimo - Clínica Soto</cite></div>
+                    <div class="testimonio active"><img src="imagenes/testimonio2.jpg" alt="Carlos R."><blockquote>"Mis clientes ahora compiten en la app. La retención se ha disparado. Increíble."</blockquote><cite>Carlos R. - Fundador de PowerFit Gym</cite></div>
+                    <div class="testimonio"><img src="imagenes/testimonio4.jpg" alt="Sofía G."><blockquote>"Honestamente, ahora me dan ganas de venir al gym todos los días. Los retos por equipos son adictivos."</blockquote><cite>Sofía G. - Miembro de Gimnasio</cite></div>
                 </div>
             </div>
         </section>
@@ -67,8 +67,8 @@
         <!-- ===== CIERRE Y CTA FINAL ===== -->
         <section class="seccion-cierre">
             <div class="container">
-                <h2 class="titulo-seccion">Un paciente que no vuelve es una confianza que no se construyó.</h2>
-                <a href="#seccion-precios" class="cta-button-grande cta-final">FORTALECER MI CLÍNICA AHORA</a>
+                <h2 class="titulo-seccion">Un miembro que se va es una victoria para tu competencia.</h2>
+                <a href="#seccion-precios" class="cta-button-grande cta-final">BLINDAR MI GIMNASIO AHORA</a>
             </div>
         </section>
 
@@ -76,30 +76,12 @@
 
     <footer id="main-footer">
         <div class="container">
-            <p>&copy; 2024 Makumoto. Todos los derechos reservados.</p>
+            <p>&copy; 2024 Makumoto®. Todos los derechos reservados.</p>
         </div>
     </footer>
     
     <!-- ===== IMPLANTE DEL ENLACE DE COMANDO (INICIALIZACIÓN DE FIREBASE) ===== -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-      import { getFunctions } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyB_7mUw2TD5YvPMBOFeGAgRgSKcikfSXog",
-        authDomain: "makumoto-app-2026.firebaseapp.com",
-        projectId: "makumoto-app-2026",
-        storageBucket: "makumoto-app-2026.appspot.com", // CORREGIDO: Quitado el 'firebase' duplicado
-        messagingSenderId: "398366272130",
-        appId: "1:398366272130:web:073b05e75ed299534ce29b"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      // Hacemos las funciones de Firebase disponibles globalmente para nuestros otros scripts
-      window.firebase = {
-          functions: getFunctions(app)
-      };
-    </script>
+    <script type="module" src="js/config.js"></script>
 
     <script src="js/app.state.js"></script>
     <script src="js/app.ui.js"></script>

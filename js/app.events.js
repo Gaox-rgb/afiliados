@@ -8,8 +8,21 @@ window.app.events = {
             button.addEventListener('click', this.handleTriageClick);
         });
 
-        // --- LÓGICA DE LANDING FUSIONADA ---
-        window.app.ui.initLandingDynamics(); // Llama a los inicializadores de UI (testimonios, fomo, etc)
+        // Lógica de inicialización condicional
+        if (document.getElementById('fortaleza-makumoto®')) { // Detecta la landing principal por su ID específico
+            window.app.ui.initLandingDynamics(); // Inicializa dinámicas específicas de la landing principal
+        } else if (document.getElementById('fortaleza-makumoto-segmento')) { // Detecta las páginas de segmento por su ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const segmentId = urlParams.get('id');
+            if (segmentId && window.app.segmentData && window.app.segmentData[segmentId]) {
+                window.app.ui.loadSegmentContent(segmentId);
+                window.app.ui.initSegmentPageDynamics(); // Inicializa dinámicas específicas de segmento (ej. slider de testimonios)
+            } else {
+                // Si no hay ID de segmento válido, redirige a la página principal o muestra error
+                console.error('ID de segmento no válido o no encontrado. Redirigiendo a index.html de Makumoto®.');
+                window.location.href = 'index.html';
+            }
+        }
     },
 
     // EL ANTIGUO MÉTODO DE SCROLL HA SIDO ELIMINADO. ERA INEFICIENTE Y FRÁGIL.
@@ -18,9 +31,10 @@ window.app.events = {
     // ===== NUEVO CONTROLADOR DE TRIAJE =====
     handleTriageClick: function(e) {
         const segment = e.currentTarget.dataset.segment;
-        console.log(`Abriendo portal dedicado para el segmento: ${segment}`);
+        console.log(`Redirigiendo a portal dedicado para el segmento: ${segment}`);
         
-        window.location.href = `${segment}.html`;
+        // Redirige a la página de segmento genérica con un parámetro ID
+        window.location.href = `segment.html?id=${segment}`;
     },
 
     // ===== MOTOR DE COMPRA DE PLANES =====

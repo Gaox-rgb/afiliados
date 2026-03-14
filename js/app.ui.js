@@ -2,17 +2,20 @@ window.app = window.app || {};
 
 window.app.ui = {
     // Selectores del DOM
-    heroSection: document.getElementById('seccion-hero'),
-    // Los selectores de Calculadora y Sandbox han sido eliminados.
+    // `heroSection` no es global; se accede localmente si es necesario.
    
     // Las funciones personalizeView, resetView y populateContent han sido expurgadas.
     // La página ahora sigue una lógica estática y unificada.
 
     toggleStickyBar: function() {
         // La barra aparece después de que el usuario ha pasado el 'hero'
-        if (window.scrollY > this.heroSection.offsetHeight) {
+        const hero = document.getElementById('seccion-hero');
+        // Se asume que this.stickyBar existe y se maneja por separado si es necesario.
+        // En esta refactorización, la sticky bar ya no es parte del flujo principal si se usaba así.
+        // Si necesitas una sticky bar, debe ser parte del _template.html y manejarse globalmente.
+        if (hero && window.scrollY > hero.offsetHeight && this.stickyBar) {
             this.stickyBar.classList.add('visible');
-        } else {
+        } else if (this.stickyBar) {
             this.stickyBar.classList.remove('visible');
         }
     },
@@ -22,10 +25,16 @@ window.app.ui = {
     // --- LÓGICA DE LA QUIJADA IMPLANTADA Y MEJORADA ---
     initLandingDynamics: function() {
         this.initDialogPlayer(); // PROTOCOLO TIERRA QUEMADA ACTIVO
-        this.initTestimonialSlider();
+        this.initTestimonialSlider('.testimonios-slider'); // Para el slider del index
         this.initFomoBubbles();
         this.initOfferCounter();
         this.initSmoothScroll(); // Lógica de scroll movida a su ubicación correcta
+    },
+
+    // --- LÓGICA DE DINÁMICAS PARA PÁGINAS DE SEGMENTO ---
+    initSegmentPageDynamics: function() {
+        this.initTestimonialSlider('#segment-testimonials-slider'); // Inicializar slider para los testimonios dinámicos
+        this.initSmoothScroll();
     },
 
     // PROTOCOLO DE DOMINACIÓN ABSOLUTA
@@ -92,7 +101,6 @@ window.app.ui = {
         }, { threshold: 0.5 });
         
         observer.observe(container);
-    // ... Lógica del initDialogPlayer ...
     },
     
     // ===== INTERFAZ DE PASARELA DE PAGO =====
@@ -142,10 +150,19 @@ window.app.ui = {
 
     // La función renderPayPalButton (simulación) ha sido eliminada.
 
-    initTestimonialSlider: function() {
-        const testimonios = document.querySelectorAll('.testimonio');
+    initTestimonialSlider: function(containerSelector = '.testimonios-slider') {
+        const container = document.querySelector(containerSelector);
+        if (!container) return;
+
+        const testimonios = container.querySelectorAll('.testimonio');
         if (testimonios.length > 0) {
             let testimonioActual = 0;
+            // Asegurarse de que solo el primer testimonio está activo al inicio
+            testimonios.forEach((t, i) => {
+                if (i === 0) t.classList.add('active');
+                else t.classList.remove('active');
+            });
+
             setInterval(() => {
                 testimonios[testimonioActual].classList.remove('active');
                 testimonioActual = (testimonioActual + 1) % testimonios.length;
@@ -204,15 +221,81 @@ window.app.ui = {
                 contadorElemento.textContent = paquetesRestantes;
             }, 15000);
         }
-}, // <-- Esta coma es ahora correcta, separa 'initOfferCounter' de 'initSmoothScroll'
-initSmoothScroll: function() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
+    },
+    
+    initSmoothScroll: function() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
-    });
-}
+    },
+
+    // ===== Lógica para cargar contenido de segmento dinámicamente =====
+    loadSegmentContent: async function(segmentId) {
+        const dynamicContentContainer = document.getElementById('dynamic-segment-content');
+        if (!dynamicContentContainer) {
+            console.error('Contenedor dinámico de segmento no encontrado.');
+            return;
+        }
+
+        try {
+            const response = await fetch('_template.html');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const templateHtml = await response.text();
+
+            // Insertar el contenido del _template.html en el contenedor dinámico
+            dynamicContentContainer.innerHTML = templateHtml;
+
+            // Ahora, rellenar con los datos específicos del segmento
+            const data = window.app.segmentData[segmentId];
+            if (!data) throw new Error(`Datos para el segmento '${segmentId}' de Makumoto® no encontrados.`);
+
+            document.getElementById('dynamic-title').textContent = data.title;
+            document.getElementById('segment-hero-h1').innerHTML = data.heroH1;
+            document.getElementById('segment-hero-subtitle').innerHTML = data.heroSubtitle;
+
+            document.getElementById('segment-ebook-title').textContent = data.ebookTitle;
+            document.getElementById('segment-ebook-description').textContent = data.ebookDescription;
+            const ebookLinkElement = document.getElementById('segment-ebook-link');
+            if (ebookLinkElement) {
+                ebookLinkElement.href = data.ebookLink;
+                // Opcional: Actualizar el texto del botón si es necesario o mantener el genérico
+                // ebookLinkElement.innerHTML = `<i class="fas fa-download"></i> ${data.ebookButtonText}`;
+            }
+
+            document.getElementById('segment-social-proof-title').textContent = data.socialProofTitle;
+            const testimonialsSlider = document.getElementById('segment-testimonials-slider');
+            if (testimonialsSlider) {
+                testimonialsSlider.innerHTML = ''; // Limpiar testimonios existentes
+                data.testimonials.forEach((t, index) => {
+                    const testimonioDiv = document.createElement('div');
+                    testimonioDiv.className = `testimonio ${index === 0 ? 'active' : ''}`;
+                    testimonioDiv.innerHTML = `
+                        <img src="${t.img}" alt="${t.alt}">
+                        <blockquote>"${t.quote}"</blockquote>
+                        <cite>${t.cite}</cite>
+                    `;
+                    testimonialsSlider.appendChild(testimonioDiv);
+                });
+            }
+
+            document.getElementById('segment-final-cta-h2').textContent = data.finalCtaH2;
+            document.getElementById('segment-final-cta-button').textContent = data.finalCtaButtonText;
+
+            console.log(`Contenido del segmento '${segmentId}' cargado y rellenado exitosamente para Makumoto®.`);
+            window.scrollTo(0, 0); // Ir al inicio de la página tras cargar
+        } catch (error) {
+            console.error('Error al cargar o rellenar el contenido del segmento:', error);
+            // Opcional: mostrar un mensaje de error en la página
+            dynamicContentContainer.innerHTML = `<p style="color:var(--color-secondary); text-align:center;">Error al cargar el contenido del segmento. Por favor, intente de nuevo más tarde o regrese a la <a href="index.html" style="color:var(--color-primary);">página principal de Makumoto®</a>.</p>`;
+        }
+    }
 };

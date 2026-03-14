@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Makumoto - [TÍTULO DEL SEGMENTO]</title>
+    <title id="dynamic-title">Makumoto® - Cargando...</title>
     <link rel="icon" type="image/png" href="imagenes/logo.png">
     <link rel="stylesheet" href="css/landing-quijada.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,18 +20,17 @@
         <!-- ===== HERO PERSONALIZADO ===== -->
         <section class="seccion-hero">
             <div class="container hero-content">
-                <h1 class="titulo-letal">[TÍTULO HERO DEL SEGMENTO]</h1>
-                <p class="subtitulo-hero">[SUBTÍTULO HERO DEL SEGMENTO]</p>
+                <h1 id="segment-hero-h1" class="titulo-letal"></h1>
+                <p id="segment-hero-subtitle" class="subtitulo-hero"></p>
             </div>
         </section>
 
         <!-- ===== CAPTURA DE LEAD (EBOOK) ===== -->
         <section class="seccion-oferta" style="background-color: var(--color-light-dark);">
             <div class="container">
-                <h2 class="titulo-seccion">[TÍTULO DEL EBOOK]</h2>
-                <p>[DESCRIPCIÓN CORTA DEL EBOOK]</p>
-                <!-- Aquí iría la imagen de la portada y el formulario de descarga -->
-                <a href="[LINK_AL_PDF_DEL_EBOOK]" download class="cta-button-grande" style="margin-top: 20px;">
+                <h2 id="segment-ebook-title" class="titulo-seccion"></h2>
+                <p id="segment-ebook-description"></p>
+                <a id="segment-ebook-link" href="#" download class="cta-button-grande" style="margin-top: 20px;">
                     <i class="fas fa-download"></i> DESCARGAR GUÍA TÁCTICA AHORA
                 </a>
             </div>
@@ -39,11 +38,18 @@
 
         <!-- ===== PRECIOS ===== -->
         <section id="seccion-precios" class="seccion-precios">
-            <!-- El contenido de la sección de precios es idéntico y se mantiene -->
+            <!-- El contenido de la sección de precios es idéntico para todos los segmentos -->
             <div class="container">
                 <h2 class="titulo-seccion">Elige tu Arsenal.</h2>
                 <div class="precios-grid">
-                    <!-- ... Las 4 tarjetas de precios van aquí ... -->
+                    <!-- Paquete starter_10 -->
+                    <div class="precio-tarjeta"><h3>Equipo Semilla</h3><p class="lema-paquete">"El primer paso para una cultura invencible."</p><p class="precio-valor">$2 <span class="precio-mes">/mes</span></p><ul><li><i class="fas fa-users"></i> <strong>Hasta 10</strong> Licencias</li><li><i class="fas fa-check"></i> Acceso Total a la Plataforma</li><li><i class="fas fa-tachometer-alt"></i> Dashboard Esencial</li></ul><button class="cta-precio" data-plan="starter_10" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button></div>
+                    <!-- Paquete growth_50 -->
+                    <div class="precio-tarjeta"><h3>Acelerador de Tribu</h3><p class="lema-paquete">"De un equipo a una tribu imparable."</p><p class="precio-valor">$5 <span class="precio-mes">/mes</span></p><ul><li><i class="fas fa-users"></i> <strong>Hasta 50</strong> Licencias</li><li><i class="fas fa-check"></i> Todo lo de Semilla +</li><li><i class="fas fa-fist-raised"></i> <strong>Power-Up:</strong> Kit de Comunidad</li></ul><button class="cta-precio" data-plan="growth_50">ELEGIR PLAN</button></div>
+                    <!-- Paquete business_200 - Recomendado -->
+                    <div class="precio-tarjeta recomendada"><span class="etiqueta-recomendada">NÚCLEO ESTRATEGA</span><h3>Business</h3><p class="lema-paquete">"La herramienta definitiva para la retención de talento."</p><p class="precio-valor">$10 <span class="precio-mes">/mes</span></p><ul><li><i class="fas fa-users"></i> <strong>Hasta 200</strong> Licencias</li><li><i class="fas fa-check"></i> Todo lo de Acelerador +</li><li><i class="fas fa-chart-line"></i> <strong>Power-Up:</strong> Kit de Analítica</li><li><i class="fas fa-headset"></i> Soporte Prioritario</li></ul><button class="cta-precio cta-recomendada" data-plan="business_200">ELEGIR PLAN</button></div>
+                    <!-- Paquete enterprise_500 -->
+                    <div class="precio-tarjeta"><h3>Flota Conquistador</h3><p class="lema-paquete">"Domine su industria desde adentro."</p><p class="precio-valor">$20 <span class="precio-mes">/mes</span></p><ul><li><i class="fas fa-users"></i> <strong>Hasta 500</strong> Licencias</li><li><i class="fas fa-check"></i> Todo lo de Business +</li><li><i class="fas fa-bullhorn"></i> <strong>Power-Up:</strong> Mando y Control</li><li><i class="fas fa-robot"></i> <strong>Power-Up:</strong> Automatización</li></ul><button class="cta-precio" data-plan="enterprise_500">ELEGIR PLAN</button></div>
                 </div>
             </div>
         </section>
@@ -51,20 +57,9 @@
         <!-- ===== PRUEBA SOCIAL ESPECIALIZADA ===== -->
         <section class="seccion-prueba-social">
             <div class="container">
-                <h2 class="titulo-seccion">Inteligencia desde el Frente de Batalla</h2>
-                <div class="testimonios-slider">
-                    <!-- Testimonio 1 -->
-                    <div class="testimonio active">
-                        <img src="[IMAGEN_TESTIMONIO_1]" alt="[NOMBRE_TESTIMONIO_1]">
-                        <blockquote>"[TEXTO DEL TESTIMONIO 1]"</blockquote>
-                        <cite>[NOMBRE_TESTIMONIO_1] - [CARGO_TESTIMONIO_1]</cite>
-                    </div>
-                    <!-- Testimonio 2 -->
-                    <div class="testimonio">
-                        <img src="[IMAGEN_TESTIMONIO_2]" alt="[NOMBRE_TESTIMONIO_2]">
-                        <blockquote>"[TEXTO DEL TESTIMONIO 2]"</blockquote>
-                        <cite>[NOMBRE_TESTIMONIO_2] - [CARGO_TESTIMONIO_2]</cite>
-                    </div>
+                <h2 id="segment-social-proof-title" class="titulo-seccion"></h2>
+                <div id="segment-testimonials-slider" class="testimonios-slider">
+                    <!-- Los testimonios se cargarán aquí dinámicamente -->
                 </div>
             </div>
         </section>
@@ -72,8 +67,8 @@
         <!-- ===== CIERRE Y CTA FINAL ===== -->
         <section class="seccion-cierre">
             <div class="container">
-                <h2 class="titulo-seccion">La inacción es la estrategia más cara.</h2>
-                <a href="#seccion-precios" class="cta-button-grande cta-final">ACTIVAR MI PLAN AHORA</a>
+                <h2 id="segment-final-cta-h2" class="titulo-seccion"></h2>
+                <a id="segment-final-cta-button" href="#seccion-precios" class="cta-button-grande cta-final"></a>
             </div>
         </section>
 
@@ -81,7 +76,7 @@
 
     <footer id="main-footer">
         <div class="container">
-            <p>&copy; 2024 Makumoto. Todos los derechos reservados.</p>
+            <p>&copy; 2024 Makumoto®. Todos los derechos reservados.</p>
         </div>
     </footer>
     

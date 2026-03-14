@@ -1,5 +1,5 @@
 // js/payments.js
-// VERSIÓN DE COMBATE FINAL - PROTOCOLO DE RE-ENSAMBLAJE
+// VERSIÓN DE COMBATE FINAL - PROTOCOLO DE RE-ENSAMBLAJE de Makumoto®
 window.app = window.app || {};
 
 window.app.payments = {
@@ -40,7 +40,7 @@ window.app.payments = {
                 createOrder: (data, actions) => {
                     return actions.order.create({
                         purchase_units: [{
-                            description: `Suscripción al Plan ${planData.name} de Makumoto`,
+                            description: `Suscripción al Plan ${planData.name} de Makumoto®`,
                             amount: {
                                 value: String(planData.price),
                                 currency_code: "USD"
