@@ -1,13 +1,14 @@
 // js/app.js
 console.log("MAKUMOTO® DEBUG: app.js comenzando. Este es el punto de entrada principal.");
 
-// PROTOCOLO DE INICIALIZACIÓN DE MAKUMOTO®: Asegurar que window.app exista primero.
+// PROTOCOLO DE INICIALIZACIÓN DE MAKUMOTO®: Asegurar que window.app exista primero y solo una vez.
 window.app = window.app || {};
 console.log("MAKUMOTO® DEBUG: window.app inicializado en app.js como:", window.app);
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("MAKUMOTO® DEBUG: DOMContentLoaded disparado. Iniciando el arsenal Makumoto®.");
-    
+    debugger; // DETENEDOR CRÍTICO: Activado para inspección manual al inicio del DOMContentLoaded
+
     // Verificación final de la integridad de los módulos cargados
     console.log("MAKUMOTO® DEBUG: Estado final de window.app.state:", window.app.state);
     console.log("MAKUMOTO® DEBUG: Estado final de window.app.payments:", window.app.payments);
