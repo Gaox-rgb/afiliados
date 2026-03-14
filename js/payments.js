@@ -26,7 +26,7 @@ window.app.payments = {
         };
         document.body.appendChild(script);
         console.log("MAKUMOTO® DEBUG: payments.js - loadPayPalSDK finalizado.");
-    },
+    }, // <-- AÑADÍ LA COMA FALTANTE AQUÍ
 
     renderButton: function(containerId, planData, clientId) {
         console.log("MAKUMOTO® DEBUG: payments.js - renderButton iniciado para containerId:", containerId);

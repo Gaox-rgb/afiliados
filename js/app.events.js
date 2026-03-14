@@ -60,7 +60,7 @@ window.app.events = {
             console.error("MAKUMOTO® ERROR CRÍTICO: window.app.ui.showPaymentGateway no está disponible. Fallo en la carga de módulos.");
         }
         console.log("MAKUMOTO® DEBUG: app.events.js - handlePlanPurchase finalizado.");
-    },
+    } // <-- ELIMINÉ LA COMA EXTRA DE AQUÍ
 
     // La función handleEbookFormSubmit ha sido aniquilada.
 };
