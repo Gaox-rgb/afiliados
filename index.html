@@ -3,15 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Makumoto® - Lidera una Tribu, No Gestiones Gente</title>
+<title>Makumoto® - Lidera una Tribu, aprovecha nuestro Programa de Afiliados</title>
 <link rel="icon" type="image/png" href="imagenes/logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 /* ===== IMPLANTE DE landing-quijada.css ===== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap');
 
+/* PROTOCOLO DE DIAGNÓSTICO DESACTIVADO */
+
 /* ===== ESTILOS PARA LA PASARELA DE PAGO ===== */
     .modal-overlay {
+
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-color: rgba(18, 18, 18, 0.95);
         display: flex; justify-content: center; align-items: center;
@@ -38,9 +41,15 @@
     .modal-content h3 { font-size: 1.8rem; color: var(--color-primary); margin-bottom: 10px; }
     .modal-content p { margin-bottom: 25px; font-size: 1.1rem; }
 
-    #paypal-button-container {
-        min-height: 50px;
-    }
+    /* DIRECTIVA DE CONTROL ABSOLUTO SOBRE WIDGET EXTERNO */
+   #paypal-button-container {
+    min-height: 50px;
+    margin: 20px auto 0;
+    max-width: 350px;
+    display: flex;
+    justify-content: center;
+}
+    /* DIRECTIVA DE CONTROL ABSOLUTO SOBRE WIDGET EXTERNO */
 
 
     :root {
@@ -67,60 +76,120 @@
     /* --- ESTILOS GENERALES DE SECCIÓN --- */
     section { padding: 80px 0; text-align: center; border-bottom: 1px solid #2a2a2a; }
     .titulo-seccion {
-        font-size: 2.8rem;
-        font-weight: 900;
-        margin-bottom: 40px;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 40px;
+            color: var(--color-primary);
+            text-transform: uppercase;
+        }
+
+        /* ===== PUNTO 1: HERO ===== */
+        .seccion-hero {
+            /* PROTOCOLO TIERRA FÉRTIL: Fondo de contingencia a prueba de fallos. */
+            background: radial-gradient(ellipse at center, rgba(30, 30, 30, 0.8) 0%, rgba(16, 16, 16, 1) 70%), linear-gradient(rgba(16, 16, 16, 0.8), rgba(16, 16, 16, 0.9));
+            background-size: cover;
+            background-position: center center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .titulo-letal {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+        }
+        .subtitulo-hero {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin: 20px auto 0;
+            opacity: 0.9;
+        }
+
+        /* ===== PUNTO 2 & 8: TRIAJE ===== */
+        .seccion-triaje, .seccion-cierre { background-color: var(--color-light-dark); }
+        .seccion-triaje .titulo-seccion {
+            font-size: 2.0rem;
+            line-height: 1.3;
+            color: var(--color-text);
+            text-transform: none;
+            max-width: 800px; /* Contenedor interno */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .nota-triaje {
+            font-size: 1.0rem; /* Calibre Reducido */
+            margin: -20px auto 30px; /* Ajuste de espaciado y centrado */
+            opacity: 0.8;
+            max-width: 600px; /* Contenedor interno MÁS AGRESIVO */
+        }
+        .triage-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .triage-btn {
+            background: var(--color-dark); color: var(--color-text);
+            border: 2px solid var(--color-primary);
+            padding: 20px 40px; font-size: 1.2rem; font-weight: 700;
+            cursor: pointer; border-radius: 8px; transition: all 0.3s ease;
+        }
+        .triage-btn:hover {
+            background: var(--color-primary); color: var(--color-dark);
+            transform: translateY(-5px);
+        }
+        .triage-btn i { margin-right: 10px; }
+
+    /* ===== PUNTO 2.5: REALIDADES ESTRATÉGICAS (FLIP CARDS) - VERSIÓN DEFINITIVA ===== */
+    .seccion-realidades { background-color: var(--color-dark); }
+    .flip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1200px; margin: 0 auto; }
+    .flip-card { background-color: transparent; height: 300px; perspective: 1000px; /* Perspectiva 3D para la tarjeta */ }
+    /* ===== PUNTO 2.5: RAZONES ESTRATÉGICAS (FLUJO DINÁMICO) ===== */
+    .seccion-razones { background-color: var(--color-dark); }
+    #seccion-razones .titulo-seccion { text-transform: none; margin-bottom: 25px; color: var(--color-text); }
+    .flow-container { 
+        height: 20vh;
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        text-align: center; 
+        position: relative;
+        margin-top: 20px;
+    }
+    .flow-reason { 
+        position: absolute; 
+        opacity: 0; 
+        transform: scale(0.8); 
+        transition: opacity 0.8s ease, transform 0.8s ease;
+        width: 100%;
+        max-width: 650px;
+    }
+    .flow-reason.active { opacity: 1; transform: scale(1); }
+    .flow-reason h4 {
         color: var(--color-primary);
-        text-transform: uppercase;
-    }
-
-    /* ===== PUNTO 1: HERO ===== */
-    .seccion-hero {
-        /* PROTOCOLO TIERRA FÉRTIL: Fondo de contingencia a prueba de fallos. */
-        background: radial-gradient(ellipse at center, rgba(30, 30, 30, 0.8) 0%, rgba(16, 16, 16, 1) 70%), linear-gradient(rgba(16, 16, 16, 0.8), rgba(16, 16, 16, 0.9));
-        background-size: cover;
-        background-position: center center;
-        min-height: 60vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .titulo-letal {
-        font-size: 4rem;
+        font-size: 1.5rem;
         font-weight: 900;
-        line-height: 1.1;
-        text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+        margin-bottom: 8px;
     }
-    .subtitulo-hero {
-        font-size: 1.4rem;
-        max-width: 700px;
-        margin: 20px auto 0;
-        opacity: 0.9;
+    .flow-reason p {
+        color: var(--color-text);
+        font-size: 1.2rem;
+        line-height: 1.3;
+        margin: 0 auto;
+        max-width: 90%; /* MARCO DE CONTENCIÓN */
     }
-
-    /* ===== PUNTO 2 & 8: TRIAJE ===== */
-    .seccion-triaje, .seccion-cierre { background-color: var(--color-light-dark); }
-    .triage-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
+    @media (max-width: 768px) {
+        .flow-container { height: 25vh; }
+        .flow-reason h4 { font-size: 1.3rem; }
+        .flow-reason p { font-size: 1.0rem; }
     }
-    .triage-btn {
-        background: var(--color-dark); color: var(--color-text);
-        border: 2px solid var(--color-primary);
-        padding: 20px 40px; font-size: 1.2rem; font-weight: 700;
-        cursor: pointer; border-radius: 8px; transition: all 0.3s ease;
-    }
-    .triage-btn:hover {
-        background: var(--color-primary); color: var(--color-dark);
-        transform: translateY(-5px);
-    }
-    .triage-btn i { margin-right: 10px; }
 
     /* ===== PUNTO 3: MANIFIESTO ===== */
     .texto-manifiesto { font-size: 1.2rem; max-width: 800px; margin: 0 auto 40px; }
     .imagen-preview {
+
         width: 100%;
         max-width: 800px;
         border-radius: 10px;
@@ -317,8 +386,8 @@
 
     /* --- RESPONSIVIDAD GENERAL --- */
     @media (max-width: 768px) {
-        .titulo-letal { font-size: 2.5rem; }
-        .titulo-seccion { font-size: 2rem; }
+        .titulo-letal { font-size: 2.3rem; }
+        .titulo-seccion { font-size: 1.8rem; }
         .triage-btn { padding: 15px 20px; font-size: 1rem; }
         .cta-button-grande { padding: 15px 30px; font-size: 1.2rem; }
         #fomo-container { left: 10px; bottom: 10px; width: calc(100% - 20px); }
@@ -332,7 +401,7 @@
     <!-- ===== PUNTO 1: EL TÍTULO QUE MATA ===== -->
     <section id="seccion-hero" class="seccion-hero">
         <div class="container hero-content">
-            <h1 id="dynamic-h1" class="titulo-letal">DEJA DE GESTIONAR GENTE.<br>EMPIEZA A LIDERAR UNA TRIBU.</h1>
+            <h1 id="dynamic-h1" class="titulo-letal"><span style="color: var(--color-primary);">¿Buscas exclusividad para tus clientes o empleados?</span><br>Afilialos a nuestra TRIBU.</h1>
             <p id="dynamic-h2" class="subtitulo-hero">Mientras Facebook e Instagram los distraen, <span class="makumoto-hero-highlight">Makumoto®</span> crea, transforma y explota el potencial humano.</p>
         </div>
     </section>
@@ -340,7 +409,8 @@
     <!-- ===== PUNTO 2: EL TRIAJE (FILTRO DE INTENCIÓN) ===== -->
     <section id="seccion-triaje" class="seccion-triaje">
         <div class="container">
-            <h2 class="titulo-seccion">Vendemos afiliaciones <span class="makumoto-triaje-h2">Makumoto®</span> para tus clientes o empleados. El beneficio es incalculable: comunicación directa y proactividad total. Elige tu camino.</h2>
+            <h2 class="titulo-seccion">Vendemos afiliaciones <span class="makumoto-hero-highlight">Makumoto®</span> a precios verdaderamente ridículos</h2>
+                <p class="nota-triaje">Cubrimos tres sectores estratégicos, elige tu camino.</p>
 
             <div class="triage-buttons">
                 <button class="triage-btn" data-segment="empresa"><i class="fas fa-building"></i> Lidero una Empresa</button>
@@ -350,7 +420,74 @@
         </div>
     </section>
     
-    <!-- ===== PUNTO 3: MAKUMOTO®: LA CHINGONERÍA (EL CEBO) ===== -->
+    <!-- ===== PUNTO 2.5: LAS 10 RAZONES ESTRATÉGICAS ===== -->
+    <section id="seccion-razones" class="seccion-razones">
+        <div class="container">
+            <h2 class="titulo-seccion">¿Por qué debo comprar una afiliación en <span style="color: var(--color-primary);">Makumoto®</span>?</h2>
+            <div class="flow-container">
+                <div class="flow-reason active"><h4>Creas un ecosistema</h4><p>privado y controlado para ti, dentro de nuestra red social.</p></div>
+                <div class="flow-reason"><h4>Convierte la obligación</h4><p>en una competencia adictiva para todos.</p></div>
+                <div class="flow-reason"><h4>Te da un radar</h4><p>para saber quién está a punto de irse, antes de que sea tarde.</p></div>
+                <div class="flow-reason"><h4>Forjas una tribu</h4><p>leal que es inmune a las ofertas de tu competencia.</p></div>
+                <div class="flow-reason"><h4>Incentivas el bienestar</h4><p>a través de retos y sanas competencias que unen a tu gente.</p></div>
+                <div class="flow-reason"><h4>Abres un canal</h4><p>de comunicación formal y divertido, todo en un mismo lugar.</p></div>
+                <div class="flow-reason"><h4>Rompes el tabú</h4><p>de ser "el jefe" y te unes a la comunidad de tu propio negocio.</p></div>
+                <div class="flow-reason"><h4>Obtienes una ventaja</h4><p>tan injusta que tus rivales no sabrán qué los golpeó.</p></div>
+                <div class="flow-reason"><h4>Dejas de rogar</h4><p>por participación y empiezas a gestionar el entusiasmo.</p></div>
+                <div class="flow-reason"><h4>Resuelves tu problema</h4><p>más grande y caro por menos de lo que gastas en cafés.</p></div>
+            </div>
+        </div>
+    </section>
+    <!-- ===== PUNTO 2.6: TABLA DE PRECIOS PARA CORRECCIÓN ===== -->
+    <section id="seccion-precios-directa" class="seccion-precios">
+        <div class="container">
+            <h2 class="titulo-seccion">Elige tu Arsenal.</h2>
+            <div class="precios-grid">
+                <div class="precio-tarjeta">
+                    <h3>starter_10</h3><p class="lema-paquete">"El primer paso para una cultura invencible."</p><p class="precio-valor">$2 USD <span>/mes</span></p>
+                    <ul>
+                        <li><i class="fas fa-users"></i> <strong>Hasta 10</strong> Afiliados</li>
+                        <li><i class="fas fa-tachometer-alt"></i> Acceso al Dashboard principal de <strong>Makumoto®</strong></li>
+                        <li><i class="fas fa-check-circle"></i> Beneficios básicos según tu sector <small>(empresa, gimnasio, clínica)</small></li>
+                        <li><i class="fas fa-rocket"></i> Conoce los beneficios</li>
+                    </ul>
+                    <button class="cta-precio" data-plan="starter_10" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
+                </div>
+                <div class="precio-tarjeta">
+                    <h3>growth_50</h3><p class="lema-paquete">"De un equipo a una tribu imparable."</p><p class="precio-valor">$5 USD <span>/mes</span></p>
+                    <ul>
+                        <li><i class="fas fa-users"></i> <strong>Hasta 50</strong> Afiliados</li>
+                        <li><i class="fas fa-tachometer-alt"></i> Acceso al Dashboard principal de <strong>Makumoto®</strong></li>
+                        <li><i class="fas fa-check-circle"></i> Beneficios básicos según tu sector <small>(empresa, gimnasio, clínica)</small></li>
+                        <li><i class="fas fa-rocket"></i> Conoce más beneficios</li>
+                    </ul>
+                    <button class="cta-precio" data-plan="growth_50" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
+                </div>
+                <div class="precio-tarjeta recomendada">
+                    <span class="etiqueta-recomendada">NÚCLEO ESTRATEGA</span><h3>business_200</h3><p class="lema-paquete">"La herramienta definitiva para la retención."</p><p class="precio-valor">$10 USD <span>/mes</span></p>
+                    <ul>
+                        <li><i class="fas fa-users"></i> <strong>Hasta 200</strong> Afiliados</li>
+                        <li><i class="fas fa-tachometer-alt"></i> Acceso al Dashboard principal de <strong>Makumoto®</strong></li>
+                        <li><i class="fas fa-check-circle"></i> Beneficios básicos según tu sector <small>(empresa, gimnasio, clínica)</small></li>
+                        <li><i class="fas fa-rocket"></i> Conoce más beneficios</li>
+                    </ul>
+                    <button class="cta-precio cta-recomendada" data-plan="business_200" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
+                </div>
+                <div class="precio-tarjeta">
+                    <h3>enterprise_500</h3><p class="lema-paquete">"Domine su industria desde adentro."</p><p class="precio-valor">$20 USD <span>/mes</span></p>
+                    <ul>
+                        <li><i class="fas fa-users"></i> <strong>Hasta 500</strong> Afiliados</li>
+                        <li><i class="fas fa-tachometer-alt"></i> Acceso al Dashboard principal de <strong>Makumoto®</strong></li>
+                        <li><i class="fas fa-check-circle"></i> Beneficios básicos según tu sector <small>(empresa, gimnasio, clínica)</small></li>
+                        <li><i class="fas fa-rocket"></i> Conoce más beneficios</li>
+                    </ul>
+                    <button class="cta-precio" data-plan="enterprise_500" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
+                </div>
+            </div>
+            <div class="apologia-precios"><p><strong>Seamos honestos.</strong> El plan de $10 es lo que gastas en un almuerzo. Nosotros te damos inteligencia de negocios para 200 personas. <strong>Esto no es un gasto, es el robo del siglo... a tu favor.</strong></p></div>
+        </div>
+    </section>
+
     <section id="seccion-manifiesto" class="seccion-manifiesto">
         <div class="container">
             <h2 class="titulo-seccion">Olvida todo lo que sabes sobre "apps de trabajo".</h2>
@@ -397,9 +534,6 @@
         </button>
         </div>
     </section>
-
-    <!-- ===== PUNTO 5: LOS PRECIOS (CARGADOS DINÁMICAMENTE) ===== -->
-    <div id="pricing-section-container"></div>
 
     <!-- ===== PUNTO 6: LA OFERTA IRRESISTIBLE (EL ANZUELO) ===== -->
     <section id="seccion-oferta" class="seccion-oferta">
@@ -460,7 +594,9 @@
 
 <!-- ===== NÚCLEO DEL MONOLITO MAKUMOTO® (JS FUSIONADO) ===== -->
 <script>
-// ===== START: config.js (Adaptado para Monolito) =====
+// ===== START: NÚCLEO DE INICIALIZACIÓN UNIFICADO =====
+window.app = window.app || {}; // ESTA ES LA LÍNEA MÁS IMPORTANTE. DEBE IR PRIMERO.
+
 const firebaseConfig = {
   apiKey: "AIzaSyB_7mUw2TD5YvPMBOFeGAgRgSKcikfSXog",
   authDomain: "makumoto-app-2026.firebaseapp.com",
@@ -470,15 +606,12 @@ const firebaseConfig = {
   appId: "1:398366272130:web:073b05e75ed299534ce29b"
 };
 
-const app = firebase.initializeApp(firebaseConfig);
-window.firebase.functions = firebase.functions();
-// ===== END: config.js =====
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+window.app.functions = firebase.functions(); // Ahora esto es seguro, porque window.app ya existe.
+// ===== END: NÚCLEO DE INICIALIZACIÓN =====
 
 
-// ===== START: app.js (Módulo de inicialización) =====
-window.app = window.app || {};
-console.log("MAKUMOTO® DEBUG: window.app inicializado en app.js como:", window.app);
-// ===== END: app.js =====
+// ===== app.js (Módulo de inicialización) ya no es necesario, se ha unificado. =====
 
 
 // ===== START: app.state.js =====
@@ -488,79 +621,7 @@ console.log("MAKUMOTO® DEBUG: app.state.js finalizado.");
 // ===== END: app.state.js =====
 
 
-// ===== START: payments.js =====
-console.log("MAKUMOTO® DEBUG: payments.js comenzando.");
-window.app.payments = {
-    loadPayPalSDK: function(clientId, callback) {
-        console.log("MAKUMOTO® DEBUG: payments.js - loadPayPalSDK iniciado.");
-        if (window.paypal) {
-            if (callback) callback(); return;
-        }
-        const script = document.createElement('script');
-        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD&components=buttons`;
-        script.onload = () => { if (callback) callback(); };
-        script.onerror = (e) => {
-            console.error("MAKUMOTO® ERROR CRÍTICO: El SDK de PayPal no pudo cargarse.", e);
-            const container = document.getElementById('paypal-button-container');
-            if (container) container.innerHTML = `<p style="color:var(--color-secondary);">Error al cargar PayPal.</p>`;
-        };
-        document.body.appendChild(script);
-    },
-
-    renderButton: function(containerId, planData, clientId) {
-        this.loadPayPalSDK(clientId, () => {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            
-            container.innerHTML = '';
-
-            if (!window.paypal || !window.paypal.Buttons) {
-                container.innerHTML = `<p style="color:var(--color-secondary);">Error al inicializar PayPal.</p>`;
-                return;
-            }
-            
-            window.paypal.Buttons({
-                style: { shape: 'pill', color: 'gold', layout: 'vertical', label: 'pay' },
-                createOrder: (data, actions) => {
-                    return actions.order.create({
-                        purchase_units: [{
-                            description: `Suscripción al Plan ${planData.name} de Makumoto®`,
-                            amount: { value: String(planData.price), currency_code: "USD" },
-                            custom_id: planData.id
-                        }]
-                    });
-                },
-                onApprove: (data, actions) => {
-                    container.innerHTML = `<div style="text-align:center; padding:15px; color:var(--color-primary);"><i class="fas fa-spinner fa-spin"></i> Verificando...</div>`;
-                    
-                    const processPurchase = firebase.functions().httpsCallable('processAffiliatePurchase');
-                    
-                    processPurchase({ orderID: data.orderID })
-                        .then(result => {
-                            if (result.data.success) {
-                                container.innerHTML = `<div style="text-align:center; padding:15px; color:#2ecc71;"><i class="fas fa-check-circle"></i> ¡Pago Verificado!</div>`;
-                                setTimeout(() => {
-                                    alert(`¡Gracias por tu compra! Revisa tu correo para obtener tus credenciales.`);
-                                    const modal = document.getElementById('payment-gateway-modal');
-                                    if(modal) modal.remove();
-                                }, 2000);
-                            } else {
-                                throw new Error('La verificación del pago falló en el backend.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('MAKUMOTO® ERROR CRÍTICO:', error);
-                            container.innerHTML = `<p style="color:var(--color-secondary); font-size:0.8rem;">Error al verificar pago. Contacta a soporte.</p>`;
-                        });
-                },
-                onCancel: (data) => console.warn("MAKUMOTO® DEBUG: Transacción cancelada."),
-                onError: (err) => console.error('MAKUMOTO® ERROR CRÍTICO: Error de PayPal:', err)
-            }).render(`#${containerId}`);
-        });
-    }
-};
-console.log("MAKUMOTO® DEBUG: payments.js finalizado.");
-// ===== END: payments.js =====
+// ===== payments.js (OBSOLETO) - La lógica ahora vive en el backend. =====
 
 
 // ===== START: app.ui.js =====
@@ -572,6 +633,7 @@ window.app.ui = {
         this.initFomoBubbles();
         this.initOfferCounter();
         this.initSmoothScroll();
+        this.initReasonsSlider();
     },
 
     initDialogPlayer: function() {
@@ -618,34 +680,33 @@ window.app.ui = {
         
         observer.observe(container);
     },
-    
-    showPaymentGateway: function(planData) {
-        const oldModal = document.getElementById('payment-gateway-modal');
-        if (oldModal) oldModal.remove();
 
-        const modalHTML = `
-            <div id="payment-gateway-modal" class="modal-overlay">
-                <div class="modal-content">
-                    <button class="modal-close-btn">&times;</button>
-                    <h3>Confirmación de Arsenal</h3>
-                    <p>Estás a punto de activar el <strong>Plan ${planData.name}</strong> por <strong>$${planData.price.toFixed(2)} USD/mes</strong>.</p>
-                    <div id="paypal-button-container"><div style="text-align:center; padding:15px; color:#aaa;"><i class="fas fa-spinner fa-spin"></i> Cargando...</div></div>
-                    <p style="font-size: 0.8rem; color: #888; margin-top: 15px;">Serás redirigido a PayPal.</p>
+    initReasonsSlider: function() {
+        const flowReasons = document.querySelectorAll('.flow-reason');
+        if (flowReasons.length > 0) {
+            let currentFlowIndex = 0;
+            setInterval(() => {
+                flowReasons[currentFlowIndex].classList.remove('active');
+                currentFlowIndex = (currentFlowIndex + 1) % flowReasons.length;
+                flowReasons[currentFlowIndex].classList.add('active');
+            }, 4000);
+        }
+    },
+    
+    showLoader: function(message) {
+        const loaderHTML = `
+            <div id="makumoto-loader" class="modal-overlay visible" style="justify-content: center; align-items: center;">
+                <div style="text-align:center; color:var(--color-primary);">
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
+                    <p style="margin-top: 15px; font-size: 1.2rem;">${message || 'Procesando...'}</p>
                 </div>
             </div>`;
+        document.body.insertAdjacentHTML('beforeend', loaderHTML);
+    },
 
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        const modal = document.getElementById('payment-gateway-modal');
-        setTimeout(() => modal.classList.add('visible'), 10);
-        modal.querySelector('.modal-close-btn').addEventListener('click', () => modal.remove());
-
-        const PAYPAL_LIVE_CLIENT_ID = 'AXZ8W2MQaEjQK5lIORlA8l4OoOCWm3UATWeWGqtt1NSEnrYIlKsyjxWOUca6j5qzNhx2o9smjCnU2A6q';
-        
-        if (!window.app || !window.app.payments || typeof window.app.payments.renderButton !== 'function') {
-            document.getElementById('paypal-button-container').innerHTML = `<p style="color:var(--color-secondary);">Error crítico: Módulo de pago no encontrado.</p>`;
-            return;
-        }
-        window.app.payments.renderButton('paypal-button-container', planData, PAYPAL_LIVE_CLIENT_ID);
+    hideLoader: function() {
+        const loader = document.getElementById('makumoto-loader');
+        if (loader) loader.remove();
     },
 
     initTestimonialSlider: function() {
@@ -699,42 +760,6 @@ window.app.ui = {
         }
     },
     
-    renderPricingSection: function(containerId) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-
-        container.innerHTML = `
-            <section id="seccion-precios" class="seccion-precios">
-                <div class="container">
-                    <h2 class="titulo-seccion">Elige tu Arsenal.</h2>
-                    <div class="precios-grid">
-                        <div class="precio-tarjeta">
-                            <h3>Equipo Semilla</h3><p class="lema-paquete">"El primer paso para una cultura invencible."</p><p class="precio-valor">$2 <span>/mes</span></p>
-                            <ul><li><i class="fas fa-users"></i> <strong>Hasta 10</strong> Licencias</li><li><i class="fas fa-check"></i> Acceso Total</li><li><i class="fas fa-tachometer-alt"></i> Dashboard Esencial</li></ul>
-                            <button class="cta-precio" data-plan="starter_10" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
-                        </div>
-                        <div class="precio-tarjeta">
-                            <h3>Acelerador de Tribu</h3><p class="lema-paquete">"De un equipo a una tribu imparable."</p><p class="precio-valor">$5 <span>/mes</span></p>
-                            <ul><li><i class="fas fa-users"></i> <strong>Hasta 50</strong> Licencias</li><li><i class="fas fa-check"></i> Todo lo de Semilla +</li><li><i class="fas fa-fist-raised"></i> <strong>Power-Up:</strong> Kit de Comunidad</li></ul>
-                            <button class="cta-precio" data-plan="growth_50" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
-                        </div>
-                        <div class="precio-tarjeta recomendada">
-                            <span class="etiqueta-recomendada">NÚCLEO ESTRATEGA</span><h3>Business</h3><p class="lema-paquete">"La herramienta definitiva para la retención."</p><p class="precio-valor">$10 <span>/mes</span></p>
-                            <ul><li><i class="fas fa-users"></i> <strong>Hasta 200</strong> Licencias</li><li><i class="fas fa-check"></i> Todo lo de Acelerador +</li><li><i class="fas fa-chart-line"></i> <strong>Power-Up:</strong> Kit de Analítica</li><li><i class="fas fa-headset"></i> Soporte Prioritario</li></ul>
-                            <button class="cta-precio cta-recomendada" data-plan="business_200" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
-                        </div>
-                        <div class="precio-tarjeta">
-                            <h3>Flota Conquistador</h3><p class="lema-paquete">"Domine su industria desde adentro."</p><p class="precio-valor">$20 <span>/mes</span></p>
-                            <ul><li><i class="fas fa-users"></i> <strong>Hasta 500</strong> Licencias</li><li><i class="fas fa-check"></i> Todo lo de Business +</li><li><i class="fas fa-bullhorn"></i> <strong>Power-Up:</strong> Mando y Control</li><li><i class="fas fa-robot"></i> <strong>Power-Up:</strong> Automatización</li></ul>
-                            <button class="cta-precio" data-plan="enterprise_500" onclick="window.app.events.handlePlanPurchase(this)">ELEGIR PLAN</button>
-                        </div>
-                    </div>
-                    <div class="apologia-precios"><p><strong>Seamos honestos.</strong> El plan de $10 es lo que gastas en un almuerzo. Nosotros te damos inteligencia de negocios para 200 personas. <strong>Esto no es un gasto, es el robo del siglo... a tu favor.</strong></p></div>
-                </div>
-            </section>
-        `;
-    },
-
     initSmoothScroll: function() {
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -766,17 +791,30 @@ window.app.events = {
         window.location.href = `${segment}.html`;
     },
 
-    handlePlanPurchase: function(buttonElement) {
+   handlePlanPurchase: async function(buttonElement) {
         const card = buttonElement.closest('.precio-tarjeta');
         if (!card) return;
-        const planId = buttonElement.dataset.plan;
-        const planName = card.querySelector('h3').textContent;
-        const planPrice = card.querySelector('.precio-valor').textContent.replace('$', '').replace('/mes', '').trim();
-        const planData = { id: planId, name: planName, price: parseFloat(planPrice) };
 
-        if (window.app.ui && typeof window.app.ui.showPaymentGateway === 'function') {
-            window.app.ui.showPaymentGateway(planData);
-        } else { console.error("MAKUMOTO® CRITICAL: ui.showPaymentGateway no disponible."); }
+        const planId = buttonElement.dataset.plan;
+        
+        window.app.ui.showLoader('Conectando con pasarela de pago...');
+
+        try {
+            // Se usa la función de Firebase directamente
+            const createOrderFunction = window.app.functions.httpsCallable('createAffiliatePaypalOrder');
+            const result = await createOrderFunction({ planId: planId });
+
+            if (result.data && result.data.approveUrl) {
+                // Redirección directa a PayPal
+                window.location.href = result.data.approveUrl;
+            } else {
+                throw new Error("La respuesta del servidor no contiene una URL de aprobación.");
+            }
+        } catch (error) {
+            console.error("MAKUMOTO® ERROR CRÍTICO AL CREAR ORDEN:", error);
+            window.app.ui.hideLoader();
+            alert("Error al crear la orden de pago. Por favor, inténtalo de nuevo o contacta a soporte.");
+        }
     }
 };
 console.log("MAKUMOTO® DEBUG: app.events.js finalizado.");
@@ -790,10 +828,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.app.events && typeof window.app.events.init === 'function') {
         window.app.events.init();
     } else { console.error("MAKUMOTO® CRITICAL: events.init no disponible."); }
-    
-    if (window.app.ui && typeof window.app.ui.renderPricingSection === 'function') {
-        window.app.ui.renderPricingSection('pricing-section-container');
-    } else { console.error("MAKUMOTO® CRITICAL: ui.renderPricingSection no disponible."); }
     
     console.log("MAKUMOTO® DEBUG: app.js - DOMContentLoaded finalizado. Preparado para la batalla.");
 });
