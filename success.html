@@ -56,6 +56,26 @@
         .cta-button:hover {
             transform: scale(1.05);
         }
+     @media (max-width: 600px) {
+            body {
+                padding: 15px;
+                height: auto;
+                min-height: 100vh;
+            }
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            .cta-button {
+                font-size: 1rem;
+                padding: 12px 25px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -67,7 +87,19 @@
         <p>
             <strong>Próximos Pasos:</strong> En los próximos minutos, recibirás un correo electrónico con tus credenciales de acceso y las instrucciones para ingresar a tu panel de control.
         </p>
-        <a href="https://makumoto.com" target="_blank" class="cta-button">Ir al Portal de Makumoto®</a>
-    </div>
-</body>
-</html>
+        <a href="https://makumoto.com" class="cta-button" target="_blank">Ir al Portal de Makumoto®</a>
+            <a href="https://afiliados.makumoto.com" class="back-link">Regresar al inicio</a>
+        </div>
+        <style>
+            /* Estilos CSS */
+            .back-link {
+                display: inline-block;
+                margin-top: 15px;
+                color: #aaa;
+                text-decoration: none;
+                font-size: 0.9rem;
+            }
+            .back-link:hover {
+                color: #fff;
+                text-decoration: underline;
+            }
