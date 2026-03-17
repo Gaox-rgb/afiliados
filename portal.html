@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Makumoto® - Centro de Mando</title>
+<link rel="icon" type="image/png" href="imagenes/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    /* Estilos base y variables (copiados de la landing para consistencia) */
+    :root {
+        --color-primary: #FFD700; --color-secondary: #ff4d4d;
+        --color-dark: #101010; --color-light-dark: #1E1E1E;
+        --color-text: #E0E0E0; --color-text-dark: #333;
+        --font-family: 'Poppins', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: var(--font-family); background-color: var(--color-dark);
+        color: var(--color-text); line-height: 1.6;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .loader { text-align: center; margin-top: 50px; font-size: 1.5rem; color: var(--color-primary); }
+    
+    /* Estilos del Portal */
+    header { background: var(--color-dark); padding: 15px 0; border-bottom: 2px solid var(--color-primary); }
+    .header-container { display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 10px; color: var(--color-primary); font-weight: bold; }
+    .logo img { height: 30px; }
+    .portal-logout-btn { background: var(--color-secondary); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+    #manager-portal { padding: 40px 0; }
+    #portal-title { font-size: 2.5rem; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
+    th, td { padding: 12px 15px; border: 1px solid #333; text-align: left; }
+    th { background-color: #1E1E1E; color: var(--color-primary); text-transform: uppercase; }
+    tr:nth-child(even) { background-color: #1a1a1a; }
+</style>
+/* Estilos para el formulario de invitación */
+    .invite-container { background-color: #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 3px solid var(--color-primary); }
+    .invite-container h3 { margin-bottom: 15px; }
+    #invite-form { display: flex; gap: 10px; }
+    #invite-form input { flex-grow: 1; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #222; color: white; font-size: 1rem; }
+    #invite-form button { background: var(--color-primary); color: var(--color-dark); border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
+    #invite-form button:hover { background-color: #fff08d; }
+
+    /* Estilos para la Consola de Power-Ups */
+    .power-up-console { background-color: #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 3px solid var(--color-secondary); }
+    .power-up-console h3 { margin-bottom: 15px; color: var(--color-secondary); }
+    #challenge-form { display: flex; flex-direction: column; gap: 10px; }
+    #challenge-form input, #challenge-form textarea, #challenge-form select, #challenge-form button { width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #222; color: white; font-size: 1rem; font-family: var(--font-family); }
+    #challenge-form textarea { resize: vertical; min-height: 80px; }
+    #challenge-form button { background-color: var(--color-secondary); font-weight: bold; cursor: pointer; }
+
+    .btn-action { padding: 5px 10px; font-size: 0.8rem; border-radius: 4px; border: none; cursor: pointer; }
+    .btn-remove { background-color: var(--color-secondary); color: white; }
+    .btn-action:disabled { background-color: #444; color: #888; cursor: not-allowed; }
+    .role-selector { background-color: #333; color: var(--color-text); border: 1px solid #555; border-radius: 4px; padding: 5px; }
+    
+    /* Estilos para el Arsenal de Power-Ups */
+    #power-up-arsenal { margin-top: 50px; }
+    .arsenal-title { font-size: 2rem; color: var(--color-primary); margin-bottom: 20px; text-align: center; }
+    .power-up-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .power-up-card { background: var(--color-light-dark); border-radius: 8px; padding: 25px; border: 1px solid #333; transition: all 0.3s ease; position: relative; overflow: hidden; }
+    .power-up-card:hover { transform: translateY(-5px); border-color: var(--color-primary); }
+    .power-up-card .icon { font-size: 2.5rem; color: var(--color-primary); margin-bottom: 15px; }
+    .power-up-card h3 { font-size: 1.3rem; margin-bottom: 10px; }
+    .power-up-card p { font-size: 0.9rem; opacity: 0.8; }
+    .power-up-card .btn-contratar { width: 100%; margin-top: 20px; background: var(--color-secondary); color: white; padding: 12px; border-radius: 5px; text-align: center; text-decoration: none; font-weight: bold; display: block; }
+    .tag-active { position: absolute; top: 15px; right: -40px; background: var(--color-primary); color: var(--color-dark); padding: 5px 40px; font-size: 0.8rem; font-weight: bold; transform: rotate(45deg); }
+    
+    /* Estilos para el Dashboard de KPIs */
+    #dashboard-kpis { margin-bottom: 40px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .kpi-card { background-color: #1E1E1E; padding: 20px; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--color-primary); }
+    .kpi-card .value { font-size: 2.5rem; font-weight: bold; color: var(--color-primary); }
+    .kpi-card .label { font-size: 0.9rem; opacity: 0.8; margin-top: 5px; }
+
+    /* Estilos para Gestión de Departamentos */
+    .department-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .department-card { background-color: #1E1E1E; padding: 15px; border-radius: 8px; }
+    .department-card h3 { color: var(--color-primary); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
+    .department-members { min-height: 50px; list-style: none; }
+    .department-members li { background-color: #2c3e50; padding: 8px; margin-bottom: 5px; border-radius: 4px; cursor: grab; }
+    .new-department-card form { display: flex; flex-direction: column; gap: 10px; }
+    .new-department-card input { padding: 10px; /* ... etc */ }
+    
+    /* Estilos para La Armería */
+    .rewards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .reward-card { background-color: #1E1E1E; padding: 15px; border-radius: 8px; text-align: center; }
+    .reward-card h3 { color: var(--color-primary); }
+    .reward-card .cost { font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
+    .reward-card .cost i { font-size: 1rem; color: var(--color-primary); }
+    .new-reward-card form { display: flex; flex-direction: column; gap: 10px; }
+</style>
+    /* Estilos para el Dashboard de KPIs */
+    #dashboard-kpis { margin-bottom: 40px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .kpi-card { background-color: #1E1E1E; padding: 20px; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--color-primary); }
+    .kpi-card .value { font-size: 2.5rem; font-weight: bold; color: var(--color-primary); }
+    .kpi-card .label { font-size: 0.9rem; opacity: 0.8; margin-top: 5px; }
+    .kpi-card .value.risk { color: var(--color-secondary); }
+</style>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <img src="imagenes/logo.png" alt="Makumoto Logo">
+            <span id="portal-sector-name">MAKUMOTO®</span>
+        </div>
+        <button id="btn-logout" class="portal-logout-btn">Cerrar Sesión</button>
+    </div>
+</header>
+
+<main id="manager-portal" class="container" style="display:none;">
+    <h1 id="portal-title">Cargando Centro de Mando...</h1>
+    
+    <section id="dashboard-kpis">
+        <div class="kpi-grid">
+            <!-- Las tarjetas de inteligencia se generarán aquí -->
+        </div>
+    </section>
+
+    <!-- La tabla de miembros del equipo -->
+    <section id="team-roster">
+        <!-- Próximamente -->
+    </section>
+
+    <!-- La tabla de miembros del equipo -->
+    <section id="team-roster">
+        <h2 id="roster-title">Miembros</h2>
+        
+        <!-- *** CONSOLA DE IMPULSO PERSONALIZADO (CONDICIONAL) *** -->
+        <div id="impulse-console" class="power-up-console" style="display: none;">
+            <h3><i class="fas fa-bullseye"></i> Lanzar Impulso Personalizado</h3>
+            <form id="challenge-form">
+                <input type="text" id="challenge-title" placeholder="Título del Reto (ej: 5 min. de meditación)" required>
+                <textarea id="challenge-desc" placeholder="Descripción breve del reto." required></textarea>
+                <select id="challenge-target" required></select>
+                <button type="submit">Lanzar Reto</button>
+            </form>
+        </div>
+        
+        <div class="invite-container">
+            <h3><i class="fas fa-user-plus"></i> Invitar Nuevo Miembro</h3>
+            <form id="invite-form">
+                <input type="email" id="invite-email" placeholder="correo@ejemplo.com" required>
+                <button type="submit">Enviar Invitación</button>
+            </form>
+        </div>
+        <div id="roster-container">
+             <div class="loader"><i class="fas fa-spinner fa-spin"></i> Cargando datos...</div>
+        </div>
+    </section>
+
+    <!-- Gestión de Departamentos -->
+    <section id="department-management">
+        <h2 class="section-title">Guerras de Departamentos</h2>
+        <div class="department-grid">
+            <div id="department-container">
+                <!-- Los departamentos se cargarán aquí -->
+            </div>
+            <div class="department-card new-department-card">
+                <h3><i class="fas fa-plus-circle"></i> Crear Nuevo Departamento</h3>
+                <form id="create-department-form">
+                    <input type="text" id="department-name-input" placeholder="Nombre del Departamento" required>
+                    <button type="submit">Crear</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- La Armería: Gestión de Recompensas -->
+    <section id="rewards-management">
+        <h2 class="section-title">La Armería: Recompensas del Equipo</h2>
+        <div class="rewards-grid">
+            <div id="rewards-container">
+                <!-- Las recompensas definidas se cargarán aquí -->
+            </div>
+            <div class="reward-card new-reward-card">
+                <h3><i class="fas fa-plus-circle"></i> Añadir Nueva Recompensa</h3>
+                <form id="create-reward-form">
+                    <input type="text" id="reward-name-input" placeholder="Nombre (ej: Media Jornada Libre)" required>
+                    <input type="number" id="reward-cost-input" placeholder="Costo en Puntos de Lealtad" required>
+                    <button type="submit">Añadir a la Armería</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- El Pizarrón de Power-Ups -->
+    <section id="power-up-arsenal">
+        <h2 class="arsenal-title">Arsenal Estratégico</h2>
+        <div id="power-up-grid" class="power-up-grid">
+            <!-- El contenido se generará dinámicamente -->
+        </div>
+    </section>
+</main>
+
+<!-- SDKs de Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+<script>
+// Configuración de Firebase (debería moverse a config.js más adelante)
+const firebaseConfig = {
+  apiKey: "AIzaSyB_7mUw2TD5YvPMBOFeGAgRgSKcikfSXog",
+  authDomain: "makumoto-app-2026.firebaseapp.com",
+  projectId: "makumoto-app-2026",
+  storageBucket: "makumoto-app-2026.appspot.com",
+  messagingSenderId: "398366272130",
+  appId: "1:398366272130:web:073b05e75ed299534ce29b"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const functions = firebase.functions();
+
+// =======================================================================
+//  NÚCLEO DEL CENTRO DE MANDO MAKUMOTO®
+// =======================================================================
+document.addEventListener('DOMContentLoaded', () => {
+
+    const btnLogout = document.getElementById('btn-logout');
+    const mainPortalContent = document.getElementById('manager-portal');
+    const rosterContainer = document.getElementById('roster-container');
+    const powerUpGrid = document.getElementById('power-up-grid');
+
+    // --- EVENT DELEGATION para el Arsenal Estratégico ---
+    powerUpGrid.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('btn-contratar')) {
+            e.preventDefault(); // Prevenir cualquier acción por defecto del enlace
+            const powerUpId = e.target.dataset.powerupid;
+            await handlePowerUpPurchase(powerUpId, e.target);
+        }
+    });
+
+    async function handlePowerUpPurchase(powerUpId, buttonElement) {
+        buttonElement.textContent = 'INICIANDO PROTOCOLO...';
+        buttonElement.style.pointerEvents = 'none'; // Deshabilitar clics repetidos
+        
+        try {
+            const createPowerUpPurchaseOrder = functions.httpsCallable('createPowerUpPurchaseOrder');
+            const result = await createPowerUpPurchaseOrder({ powerUpId: powerUpId });
+
+            if (result.data && result.data.approveUrl) {
+                // Redirección segura a la pasarela de pago
+                window.location.href = result.data.approveUrl;
+            } else {
+                throw new Error("La respuesta del servidor no contiene una URL de aprobación.");
+            }
+        } catch (error) {
+            alert(`Error al iniciar la compra: ${error.message}`);
+            console.error("Fallo crítico al crear orden de Power-Up:", error);
+            buttonElement.textContent = 'ADQUIRIR PODER';
+            buttonElement.style.pointerEvents = 'auto';
+        }
+    }
+    const powerUpGrid = document.getElementById('power-up-grid');
+
+    // --- EVENT DELEGATION para el Arsenal Estratégico ---
+    powerUpGrid.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('btn-contratar')) {
+            e.preventDefault(); // Prevenir cualquier acción por defecto del enlace
+            const powerUpId = e.target.dataset.powerupid;
+            await handlePowerUpPurchase(powerUpId, e.target);
+        }
+    });
+
+    async function handlePowerUpPurchase(powerUpId, buttonElement) {
+        buttonElement.textContent = 'INICIANDO PROTOCOLO...';
+        buttonElement.style.pointerEvents = 'none'; // Deshabilitar clics repetidos
+        
+        try {
+            const createPowerUpPurchaseOrder = functions.httpsCallable('createPowerUpPurchaseOrder');
+            const result = await createPowerUpPurchaseOrder({ powerUpId: powerUpId });
+
+            if (result.data && result.data.approveUrl) {
+                // Redirección segura a la pasarela de pago
+                window.location.href = result.data.approveUrl;
+            } else {
+                throw new Error("La respuesta del servidor no contiene una URL de aprobación.");
+            }
+        } catch (error) {
+            alert(`Error al iniciar la compra: ${error.message}`);
+            console.error("Fallo crítico al crear orden de Power-Up:", error);
+            buttonElement.textContent = 'ADQUIRIR PODER';
+            buttonElement.style.pointerEvents = 'auto';
+        }
+    }
+
+    // --- EVENT DELEGATION para acciones en la tabla de miembros ---
+    rosterContainer.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('btn-remove')) {
+            const memberUid = e.target.dataset.uid;
+            const memberName = e.target.dataset.name;
+            
+            if (confirm(`¿Estás seguro de que quieres revocar el acceso a ${memberName}? Esta acción no se puede deshacer.`)) {
+                await handleRemoveMember(memberUid, e.target);
+            }
+        }
+    });
+
+    rosterContainer.addEventListener('change', async (e) => {
+        if (e.target.classList.contains('role-selector')) {
+            const selector = e.target;
+            const uidToUpdate = selector.dataset.uid;
+            const newRole = selector.value;
+            const currentRole = selector.dataset.currentRole;
+
+            if (confirm(`¿Estás seguro de que quieres cambiar el rol de este miembro a "${newRole}"?`)) {
+                await handleUpdateRole(uidToUpdate, newRole, selector);
+            } else {
+                // Si el usuario cancela, revertir el cambio visual en el dropdown
+                selector.value = currentRole;
+            }
+        }
+    });
+
+    async function handleUpdateRole(uid, newRole, selectorElement) {
+        selectorElement.disabled = true;
+        try {
+            const updateTeamMemberRole = functions.httpsCallable('updateTeamMemberRole');
+            const result = await updateTeamMemberRole({ uidToUpdate: uid, newRole: newRole });
+            alert(result.data.message);
+            // Actualizar el estado 'data-current-role' para futuras acciones
+            selectorElement.dataset.currentRole = newRole;
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+            // Revertir el cambio visual si la operación falla
+            selectorElement.value = selectorElement.dataset.currentRole;
+        } finally {
+            selectorElement.disabled = false;
+        }
+    }
+            const memberName = e.target.dataset.name;
+            
+            if (confirm(`¿Estás seguro de que quieres revocar el acceso a ${memberName}? Esta acción no se puede deshacer.`)) {
+                await handleRemoveMember(memberUid, e.target);
+            }
+        }
+    });
+
+    async function handleRemoveMember(uid, buttonElement) {
+        buttonElement.textContent = 'Procesando...';
+        buttonElement.disabled = true;
+        try {
+            const removeTeamMember = functions.httpsCallable('removeTeamMember');
+            const result = await removeTeamMember({ uidToRemove: uid });
+            alert(result.data.message);
+            loadPortalData(); // Recargamos para ver la lista actualizada
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+            console.error("Fallo al revocar acceso:", error);
+            buttonElement.textContent = 'Revocar';
+            buttonElement.disabled = false;
+        }
+    }
+
+    // --- GUARDIÁN DE SESIÓN ---
+    // Esta es la pieza más crítica. Si no hay usuario, se va.
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            // Usuario autenticado. ¡Bienvenido al Centro de Mando!
+            console.log("Acceso autorizado para:", user.email);
+            mainPortalContent.style.display = 'block';
+            loadPortalData(); // Iniciamos la carga de datos.
+        } else {
+            // ¡INTRUSO! No hay sesión activa. Redirigir a la fortaleza de captación.
+            console.warn("Acceso no autorizado. Redirigiendo a index.html");
+            window.location.href = 'index.html';
+        }
+    });
+
+    // --- MANEJADOR DE EVENTOS ---
+    if (btnLogout) {
+        btnLogout.onclick = async () => {
+            await auth.signOut();
+            // onAuthStateChanged se encargará de la redirección.
+        };
+    }
+
+    const inviteForm = document.getElementById('invite-form');
+    if (inviteForm) {
+        inviteForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const emailInput = document.getElementById('invite-email');
+            const email = emailInput.value;
+            
+            // Proporcionar feedback visual inmediato
+            const originalButtonText = e.target.querySelector('button').textContent;
+            e.target.querySelector('button').textContent = 'Enviando...';
+            e.target.querySelector('button').disabled = true;
+
+            try {
+                const inviteTeamMember = functions.httpsCallable('inviteTeamMember');
+                const result = await inviteTeamMember({ email: email });
+                
+                alert(result.data.message); // Mostrar mensaje de éxito
+                emailInput.value = ''; // Limpiar el campo
+                loadPortalData(); // Recargar la lista de miembros para ver el nuevo integrante
+
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+                console.error("Fallo al invitar miembro:", error);
+            } finally {
+                // Restaurar el botón
+                e.target.querySelector('button').textContent = originalButtonText;
+                e.target.querySelector('button').disabled = false;
+            }
+        };
+    }
+
+    // --- LÓGICA DE DATOS (FUTURA FASE 1) ---
+    async function loadPortalData() {
+        const container = document.getElementById('roster-container');
+        try {
+            const getPortalData = functions.httpsCallable('getPortalData');
+            const result = await getPortalData();
+            const { company, roster, powerUps, dashboardMetrics } = result.data;
+            
+            // La inteligencia se delega al Renderizador Camaleónico.
+            renderPortal(company, roster, powerUps, dashboardMetrics);
+
+        } catch (error) {
+            container.innerHTML = `<p style="color: var(--color-secondary);">Error de conexión con el Centro de Mando: ${error.message}</p>`;
+            document.getElementById('portal-title').textContent = "Error de Carga";
+            console.error(error);
+        }
+    }
+
+    /**
+     * El Renderizador Camaleónico: Transforma la UI según el sector.
+     */
+    function renderPortal(company, roster, powerUps, metrics) {
+        let config = {};
+
+        // 1. Definir la configuración basada en el sector
+        switch (company.sector) {
+            case 'fitness':
+                config = {
+                    portalTitle: 'Centro de Coach',
+                    rosterTitle: 'Miembros Activos',
+                    headers: ['Miembro', 'Email', 'Asistencia (7d)'],
+                    logoText: `MAKUMOTO® // ${company.name}`
+                };
+                break;
+            case 'health':
+                config = {
+                    portalTitle: 'Portal de Terapeuta',
+                    rosterTitle: 'Pacientes en Seguimiento',
+                    headers: ['Paciente', 'Email', 'Adherencia al Plan'],
+                    logoText: `MAKUMOTO® // ${company.name}`
+                };
+                break;
+            default: // 'corporate' y cualquier otro caso
+                config = {
+                    portalTitle: 'Panel de Gerente',
+                    rosterTitle: 'Miembros del Equipo',
+                    headers: ['Empleado', 'Email', 'Rol'],
+                    logoText: `MAKUMOTO® // ${company.name}`
+                };
+                break;
+        }
+
+        // 2. Aplicar la configuración al DOM
+        document.getElementById('portal-title').textContent = config.portalTitle;
+        document.getElementById('roster-title').textContent = config.rosterTitle;
+        document.getElementById('portal-sector-name').textContent = config.logoText;
+
+        // 3. Renderizar las Tarjetas de Inteligencia
+        renderKpiCards(metrics, company.sector, roster);
+
+        // 4. Renderizar la tabla con la configuración y los datos correctos
+        renderRoster(roster, config.headers, company.sector);
+
+        // 5. Renderizar el Arsenal de Power-Ups
+        renderPowerUps(powerUps);
+
+        // 6. Activar Consolas de Power-Ups Adquiridos
+        activatePowerUpConsoles(powerUps, roster);
+    }
+
+    function renderRoster(roster) {
+        const container = document.getElementById('roster-container');
+        if (!roster || roster.length === 0) {
+            container.innerHTML = '<p>Aún no hay miembros en tu equipo. ¡Es hora de reclutar!</p>';
+            return;
+        }
+
+        headers.push('Acciones'); // Añadimos la nueva columna de forma dinámica
+        const tableHeaders = headers.map(h => `<th>${h}</th>`).join('');
+
+        const tableRows = roster.map(member => {
+            // Evitar que un gerente se elimine a sí mismo
+            const isSelf = auth.currentUser.uid === member.uid;
+
+            // Lógica de renderizado por fila, adaptada al sector
+            let rowData = `<td>${member.name}</td><td>${member.email}</td>`;
+            switch (sector) {
+                case 'fitness':
+                    rowData += `<td>${formatKpi(member.kpi)}</td>`;
+                    break;
+                case 'health':
+                    rowData += `<td>${formatKpi(member.kpi)}</td>`;
+                    break;
+                default: 
+                    rowData += `<td>${formatKpi(member.kpi)}</td>`;
+            }
+
+            // Añadimos la celda de acción
+            const actionCell = isSelf 
+                ? `<td><button class="btn-action" disabled>Tú</button></td>`
+                : `<td><button class="btn-action btn-remove" data-uid="${member.uid}" data-name="${member.name}">Revocar</button></td>`;
+            
+            return `<tr>${rowData}${actionCell}</tr>`;
+        }).join('');
+
+        container.innerHTML = `
+            <table>
+                <thead><tr>${tableHeaders}</tr></thead>
+                <tbody>${tableRows}</tbody>
+            </table>
+        `;
+    }
+
+    /**
+     * Genera el HTML para el selector de roles de un miembro.
+     */
+    function generateRoleSelector(member, isSelf) {
+        if (isSelf) return `<strong>${member.role}</strong>`; // El gerente no puede cambiar su propio rol
+
+        const roles = ['member', 'leader']; // Roles disponibles para asignar
+        const options = roles.map(role => 
+            `<option value="${role}" ${member.role === role ? 'selected' : ''}>${role}</option>`
+        ).join('');
+
+        return `<select class="role-selector" data-uid="${member.uid}" data-current-role="${member.role}">${options}</select>`;
+    }
+
+    /**
+     * Activa las consolas de control para los Power-Ups que la compañía posee.
+     */
+    function activatePowerUpConsoles(powerUps, roster) {
+        const impulseConsole = document.getElementById('impulse-console');
+        const ownedImpulse = powerUps.find(p => p.id === 'impulse_custom' && p.isOwned);
+
+        if (ownedImpulse && impulseConsole) {
+            impulseConsole.style.display = 'block';
+            
+            // Poblar el selector de objetivos
+            const targetSelect = document.getElementById('challenge-target');
+            targetSelect.innerHTML = '<option value="all">Para Todo el Equipo</option>';
+            roster.forEach(member => {
+                targetSelect.innerHTML += `<option value="${member.uid}">${member.name}</option>`;
+            });
+
+            // Conectar el formulario
+            const challengeForm = document.getElementById('challenge-form');
+            challengeForm.onsubmit = handleChallengeSubmit;
+        }
+    }
+    
+    async function handleChallengeSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const button = form.querySelector('button');
+        button.textContent = 'Lanzando...';
+        button.disabled = true;
+
+        const payload = {
+            title: form.querySelector('#challenge-title').value,
+            description: form.querySelector('#challenge-desc').value,
+            targetUid: form.querySelector('#challenge-target').value,
+        };
+
+        try {
+            const createMicroChallenge = functions.httpsCallable('createMicroChallenge');
+            const result = await createMicroChallenge(payload);
+            alert(result.data.message);
+            form.reset(); // Limpiar el formulario
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        } finally {
+            button.textContent = 'Lanzar Reto';
+            button.disabled = false;
+        }
+    }
+
+    /**
+     * Renderiza las tarjetas de KPIs agregados en la parte superior del portal.
+     */
+    function renderKpiCards(metrics, sector, roster) {
+        const grid = document.querySelector('#dashboard-kpis .kpi-grid');
+        if (!grid || !metrics) return;
+
+        let kpiLabels = { avg: 'Engagement Promedio', top: 'Miembro más Activo', risk: 'Miembros en Riesgo' };
+        
+        switch (sector) {
+            case 'fitness': kpiLabels = { avg: 'Asistencia Media (7d)', top: 'Más Consistente', risk: 'Baja Asistencia' }; break;
+            case 'health': kpiLabels = { avg: 'Adherencia Promedio', top: 'Más Comprometido', risk: 'Baja Adherencia' }; break;
+        }
+
+        grid.innerHTML = `
+            <div class="kpi-card">
+                <div class="value">${metrics.topMemberName.split(' ')[0]}</div>
+                <div class="label">${kpiLabels.top}</div>
+            </div>
+        `;
+        
+        // Inicializar la gestión de departamentos
+        initializeDepartmentManagement(roster); 
+    }
+
+    /**
+     * Formatea un objeto KPI para mostrarlo de forma legible.
+     */
+    function formatKpi(kpi) {
+        if (!kpi || kpi.value === undefined) return 'N/D';
+        switch (kpi.type) {
+            case 'attendance': return `${kpi.value.toFixed(0)} / 7d`;
+            case 'adherence': return `${kpi.value.toFixed(0)}%`;
+            case 'engagement': return `${kpi.value.toFixed(0)}`;
+            default: return kpi.value;
+        }
+    }
+        const grid = document.querySelector('#dashboard-kpis .kpi-grid');
+        if (!grid || roster.length === 0) return;
+
+        // Calcular métricas agregadas
+        const kpiValues = roster.map(m => m.kpi.value);
+        const average = kpiValues.reduce((a, b) => a + b, 0) / kpiValues.length;
+        const topMember = roster.reduce((prev, current) => (prev.kpi.value > current.kpi.value) ? prev : current);
+        
+        let kpiLabels = { avg: 'Promedio', top: 'Más Activo', risk: 'En Riesgo' };
+        let atRiskThreshold = 60; // Para engagement
+        
+        switch (sector) {
+            case 'fitness': 
+                kpiLabels = { avg: 'Asistencia Media (7d)', top: 'Más Consistente', risk: 'Baja Asistencia' };
+                atRiskThreshold = 1; // Menos de 1 asistencia
+                break;
+            case 'health':
+                kpiLabels = { avg: 'Adherencia Media', top: 'Más Comprometido', risk: 'Baja Adherencia' };
+                atRiskThreshold = 75; // Menos de 75%
+                break;
+        }
+        
+        const atRiskCount = roster.filter(m => m.kpi.value <= atRiskThreshold).length;
+
+        grid.innerHTML = `
+            <div class="kpi-card">
+                <div class="value">${formatKpi({type: roster[0].kpi.type, value: average})}</div>
+                <div class="label">${kpiLabels.avg}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="value">${atRiskCount}</div>
+                <div class="label">${kpiLabels.risk}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="value">${topMember.name.split(' ')[0]}</div>
+                <div class="label">${kpiLabels.top}</div>
+            </div>
+        `;
+    }
+
+    /**
+     * Formatea un objeto KPI para mostrarlo de forma legible.
+     */
+    function formatKpi(kpi) {
+        if (!kpi) return 'N/D';
+        switch (kpi.type) {
+            case 'attendance': return `${kpi.value.toFixed(0)} / 7d`;
+            case 'adherence': return `${kpi.value.toFixed(0)}%`;
+            case 'engagement': return `${kpi.value.toFixed(0)}`;
+            default: return kpi.value;
+        }
+    }
+
+    /**
+     * Renderiza el Pizarrón de Power-Ups de forma dinámica y espectacular.
+     */
+    function renderPowerUps(powerUps) {
+        const grid = document.getElementById('power-up-grid');
+        if (!grid) return;
+
+        if (powerUps.length === 0) {
+            grid.innerHTML = "<p>No hay Power-Ups disponibles para tu sector en este momento.</p>";
+            return;
+        }
+
+        grid.innerHTML = powerUps.map(pu => `
+            <div class="power-up-card">
+                ${pu.isOwned ? '<span class="tag-active">ACTIVO</span>' : ''}
+                <div class="icon"><i class="fas ${pu.icon || 'fa-star'}"></i></div>
+                <h3>${pu.name}</h3>
+                <p>${pu.description}</p>
+                ${!pu.isOwned ? `<a href="#" class="btn-contratar" data-powerupid="${pu.id}">ADQUIRIR PODER</a>` : ''}
+            </div>
+        `).join('');
+    }
+});
+</script>
+</body>
+</html>
