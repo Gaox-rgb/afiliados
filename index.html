@@ -428,14 +428,18 @@
     /* --- RESPONSIVIDAD GENERAL --- */
     @media (max-width: 768px) {
         .titulo-letal { font-size: 2.3rem; }
-        .titulo-wrapper {
-            max-width: 320px; /* Ancho máximo estricto para el contenedor del título */
-            margin-left: auto;
-            margin-right: auto;
+        .titulo-seccion {
+            font-size: 1.8rem;
+            line-height: 1.2;
         }
 
-        .titulo-seccion { 
-            font-size: 1.6rem; /* Un tamaño de fuente seguro y legible */
+        /* DIRECTIVA DE CONTENCIÓN ABSOLUTA PARA TÍTULOS PROBLEMÁTICOS */
+        #seccion-triaje .titulo-seccion,
+        #seccion-precios-directa .titulo-seccion {
+            font-size: 1.6rem; /* Calibre reducido y final */
+            text-transform: none; /* Anula el uppercase que expande el texto */
+            overflow-wrap: break-word; /* Rompe la palabra para evitar desbordamiento */
+            hyphens: auto; /* Activa la división silábica inteligente */
             line-height: 1.25;
         }
         .texto-manifiesto { font-size: 1.0rem; }
@@ -525,9 +529,7 @@
     <!-- PUNTO 3: TU TRIBU (EL TRIAJE PERSONALIZADO) -->
     <section id="seccion-triaje" class="seccion-triaje">
         <div class="container">
-             <div class="titulo-wrapper">
-                <h2 class="titulo-seccion">Tu Tribu, Tus Reglas. Así se Juega en tu Sector.</h2>
-            </div>
+             <h2 class="titulo-seccion">Tu Tribu, Tus Reglas. Así se Juega en tu Sector.</h2>
             <p class="nota-triaje">Elige tu sector y descubre los beneficios específicos que podrás implementar para tus afiliados.</p>
             <div class="triage-buttons">
                 <button class="triage-btn" data-segment="empresa"><i class="fas fa-building"></i> Lidero una Empresa</button>
@@ -540,9 +542,7 @@
     <!-- PUNTO 4: LOS PLANES (PRECIOS CLAROS) -->
     <section id="seccion-precios-directa" class="seccion-precios">
         <div class="container">
-            <div class="titulo-wrapper">
-                 <h2 class="titulo-seccion">Planes de Afiliados: Elige el Tamaño de tu Tribu.</h2>
-            </div>
+             <h2 class="titulo-seccion">Planes de Afiliados: Elige el Tamaño de tu Tribu.</h2>
 
              <div class="precios-grid">
                  <div class="precio-tarjeta">
