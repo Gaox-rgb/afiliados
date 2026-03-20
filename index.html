@@ -428,9 +428,14 @@
     /* --- RESPONSIVIDAD GENERAL --- */
     @media (max-width: 768px) {
         .titulo-letal { font-size: 2.3rem; }
-        .titulo-seccion { 
-            font-size: 1.5rem; /* Reducción drástica de calibre */
-            line-height: 1.2;  /* Interlineado ajustado para títulos */
+        .titulo-seccion {
+            font-size: 1.7rem; /* Calibre ajustado para impacto visual */
+            line-height: 1.25; /* Espacio vertical para respirar */
+            letter-spacing: -1px; /* Compacta el texto para mejor ajuste */
+            word-break: break-word; /* Directiva de anti-desbordamiento */
+            -webkit-hyphens: auto; /* Permite división silábica inteligente */
+            -ms-hyphens: auto;
+            hyphens: auto;
         }
         .texto-manifiesto { font-size: 1.0rem; }
         .nota-triaje { font-size: 0.9rem; }
