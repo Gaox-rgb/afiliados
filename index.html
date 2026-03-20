@@ -360,7 +360,9 @@
     .testimonio blockquote { font-style: italic; margin-bottom: 15px; font-size: 1.1rem; }
     .testimonio cite { font-weight: 700; color: var(--color-primary); }
 
-    #fomo-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; }
+    #fomo-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; width: auto; }
+    #fomo-container.position-right { left: auto; right: 20px; }
+
     .fomo-burbuja {
         display: flex; align-items: center;
         background: rgba(30, 30, 30, 0.95);
@@ -371,9 +373,15 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         margin-bottom: 10px;
         opacity: 0;
-        transform: translateX(-100%);
+        transform: translateX(-120%); /* Ajustado para que desaparezca completamente */
         transition: all 0.5s ease-in-out;
         font-size: 0.85rem; /* Letra más pequeña */
+    }
+
+    #fomo-container.position-right .fomo-burbuja {
+        transform: translateX(120%); /* Animación desde la derecha */
+        border-left: none;
+        border-right: 3px solid var(--color-primary);
     }
     .fomo-burbuja.visible { opacity: 1; transform: translateX(0); }
     .fomo-bandera { font-size: 1.5rem; margin-right: 10px; }
@@ -908,26 +916,33 @@ window.app.ui = {
         const container = document.getElementById('fomo-container');
         if (container) {
             const data = [
-                { p: '🚀', n: "TechCorp", c: "Bogotá", l: "Business", b: "🇨🇴" }, { p: '💪', n: "PowerFit Gym", c: "Miami", l: "Acelerador de Tribu", b: "🇺🇸" },
-                { p: '✨', n: "Clínica Soto", c: "Madrid", l: "Equipo Semilla", b: "🇪🇸" }, { p: '🔥', n: "Juan P.", c: "CDMX", l: "Equipo Semilla", b: "🇲🇽" },
-                { p: '🏆', n: "Laura M.", c: "Santiago", l: "Business", b: "🇨🇱" },
+                { p: '🚀', n: "TechCorp", c: "Bogotá", l: "business_200", b: "🇨🇴" },
+                { p: '💪', n: "PowerFit Gym", c: "Miami", l: "growth_50", b: "🇺🇸" },
+                { p: '✨', n: "Clínica Soto", c: "Madrid", l: "starter_10", b: "🇪🇸" },
+                { p: '🔥', n: "Juan P.", c: "CDMX", l: "starter_10", b: "🇲🇽" },
+                { p: '🏆', n: "Laura M.", c: "Santiago", l: "business_200", b: "🇨🇱" },
             ];
             let index = 0;
 
             const showBubble = () => {
+                // Posicionamiento aleatorio
+                container.classList.toggle('position-right', Math.random() < 0.5);
+
                 const item = data[index];
                 index = (index + 1) % data.length;
                 const bubble = document.createElement('div');
                 bubble.className = 'fomo-burbuja';
                 bubble.innerHTML = `<span class="fomo-bandera">${item.b}</span><div>${item.p} <strong>${item.n}</strong> de ${item.c} se unió con el <strong>Plan ${item.l}</strong>.</div>`;
                 container.appendChild(bubble);
+
                 setTimeout(() => bubble.classList.add('visible'), 100);
                 setTimeout(() => {
                     bubble.classList.remove('visible');
                     setTimeout(() => bubble.remove(), 500);
-                }, 6000);
+                }, 6000); // Duración de la burbuja en pantalla
             };
-            setTimeout(() => { showBubble(); setInterval(showBubble, 30000); }, 5000);
+            // Intervalo de aparición de 2 minutos (120000 ms)
+            setTimeout(() => { showBubble(); setInterval(showBubble, 120000); }, 5000);
         }
     },
 
