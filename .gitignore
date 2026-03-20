@@ -1,0 +1,46 @@
+# ===================================================================
+# Archivo de Ignorados para el Proyecto Makumoto
+# ===================================================================
+
+# SECCIÓN CRÍTICA: Archivos de configuración y secretos
+# NUNCA subir este archivo a GitHub. Contiene las claves de API.
+afiliados/js/firebase-config.js
+
+# Archivos de entorno que pueden contener secretos
+.env
+.env.local
+.env.*
+
+# ===================================================================
+# Dependencias y Paquetes (NUNCA SUBIR)
+# ===================================================================
+# Estos paquetes se instalan con 'npm install' y ocupan mucho espacio.
+/node_modules
+
+# ===================================================================
+# Archivos de Build y Salida de Compilación
+# ===================================================================
+# Estos archivos son generados automáticamente.
+/dist
+/build
+/out
+
+# ===================================================================
+# Logs y Archivos de Diagnóstico
+# ===================================================================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# ===================================================================
+# Archivos del Sistema Operativo
+# ===================================================================
+.DS_Store
+Thumbs.db
+
+# ===================================================================
+# Configuraciones de Entornos de Desarrollo (IDE)
+# ===================================================================
+.vscode/
+.idea/
