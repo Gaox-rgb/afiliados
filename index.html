@@ -429,16 +429,15 @@
     @media (max-width: 768px) {
         .titulo-letal { font-size: 2.3rem; }
         .titulo-seccion { 
-            font-size: 1.8rem; /* Calibre base para móviles */
-            line-height: 1.2;
+            font-size: 1.8rem; /* Calibre estándar para títulos en móvil */
+            line-height: 1.2;  /* Interlineado ajustado para títulos */
         }
 
-        /* --- OVERRIDE QUIRÚRGICO PARA TÍTULOS LARGOS --- */
-        .seccion-triaje .titulo-seccion,
-        .seccion-precios .titulo-seccion {
-            font-size: 1.5rem; /* Reducción de calibre específica */
-            text-transform: none; /* Anula el forzado a mayúsculas */
-            letter-spacing: normal; /* Restaura el espaciado natural */
+        /* Directiva de corrección para títulos con texto extenso */
+        #seccion-triaje .titulo-seccion, 
+        #seccion-precios-directa .titulo-seccion {
+            font-size: 1.45rem; /* Reducción de calibre drástica y específica */
+            line-height: 1.3;
         }
         .texto-manifiesto { font-size: 1.0rem; }
         .nota-triaje { font-size: 0.9rem; }
