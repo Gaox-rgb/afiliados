@@ -428,14 +428,17 @@
     /* --- RESPONSIVIDAD GENERAL --- */
     @media (max-width: 768px) {
         .titulo-letal { font-size: 2.3rem; }
-        .titulo-seccion {
-            font-size: 1.7rem; /* Calibre ajustado para impacto visual */
-            line-height: 1.25; /* Espacio vertical para respirar */
-            letter-spacing: -1px; /* Compacta el texto para mejor ajuste */
-            word-break: break-word; /* Directiva de anti-desbordamiento */
-            -webkit-hyphens: auto; /* Permite división silábica inteligente */
-            -ms-hyphens: auto;
-            hyphens: auto;
+        .titulo-seccion { 
+            font-size: 1.8rem; /* Calibre base para móviles */
+            line-height: 1.2;
+        }
+
+        /* --- OVERRIDE QUIRÚRGICO PARA TÍTULOS LARGOS --- */
+        .seccion-triaje .titulo-seccion,
+        .seccion-precios .titulo-seccion {
+            font-size: 1.5rem; /* Reducción de calibre específica */
+            text-transform: none; /* Anula el forzado a mayúsculas */
+            letter-spacing: normal; /* Restaura el espaciado natural */
         }
         .texto-manifiesto { font-size: 1.0rem; }
         .nota-triaje { font-size: 0.9rem; }
