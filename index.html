@@ -1109,19 +1109,30 @@ window.app.events = {
             return;
         }
 
-        window.app.ui.showLoader('Iniciando proceso de pago...');
+        window.app.ui.showLoader('Contactando a PayPal...');
 
         try {
-            // Se asume la existencia de una Cloud Function 'createCheckoutSession'
-            // que gestiona la creación de la sesión de pago de forma segura en el backend.
-            const createAffiliateOrder = window.app.functions.httpsCallable('createAffiliatePaypalOrder');
-            const result = await createAffiliateOrder({ planId: planId });
+            if (!window.firebaseConfig || !window.firebaseConfig.projectId) {
+                throw new Error("La configuración de Firebase (firebaseConfig) no está disponible o no contiene el projectId.");
+            }
+            const functionUrl = `https://us-central1-${window.firebaseConfig.projectId}.cloudfunctions.net/createAffiliatePaypalOrder`;
+
+            const response = await fetch(functionUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: { planId: planId } })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || `Error del servidor: ${response.statusText}`);
+            }
 
             if (result.data && result.data.approveUrl) {
-                // Redirigir al cliente a la pasarela de pago
-                window.location.href = result.data.checkoutUrl;
+                window.location.href = result.data.approveUrl;
             } else {
-                throw new Error("Respuesta inválida del servidor de pagos.");
+                throw new Error("Respuesta inválida del servidor de pagos. No se encontró la URL de aprobación.");
             }
 
         } catch (error) {
