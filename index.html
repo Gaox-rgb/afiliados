@@ -437,6 +437,13 @@
         margin-right: 10px;
         font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif; /* FUENTES DE RESPALDO PARA EMOJIS */
     }
+    .fomo-bandera img {
+        width: 24px;
+        height: auto;
+        border-radius: 3px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        vertical-align: middle; /* Alinea la bandera con el texto */
+    }
     .fomo-plan { font-weight: bold; }
     .plan-starter { color: #3498db; }
     .plan-growth { color: #2ecc71; }
@@ -843,7 +850,7 @@ window.app.state = {
         empresas: ["InnovaCorp", "Quantum Solutions", "Cielito Lindo Tech", "Nexus Strategy Group", "Blue Horizon Systems", "Altura Software", "Terra Nova Logística", "Stellar Media", "Vertex Consulting", "Alpha Global Tech", "Orion Data Services", "Synergy Partners", "Prism Digital", "Zenith Engineering", "Flow Dynamics", "Capital Vision", "Core Solutions", "Impact Global", "Silver Oak Enterprises", "Tech Wave Co.", "Summit Financial", "Master Key Systems", "Evolution Marketing", "Pacific Rim Trading", "Blue Chip Advisors", "Nomad Creative", "Iron Bridge Logistics", "Aura Energy", "Streamline Corp", "Velocity Apps"],
         gimnasios: ["Acero Fit", "Olympus Gym", "Ritmo & Fuerza", "Titán Fitness", "Iron Temple", "Vitality Center", "Power Zone", "Spartan Training Hub", "Zen & Strength", "Elite Performance", "Dynamic Body", "Warrior Forge", "Core & Cardio", "Legend Fitness", "Peak Physique", "Velocity Gym", "Alpha Athletics", "Kinetic Studio", "Fusion Fitness", "Steel & Sweat", "Momentum Wellness", "Prime Body", "Atlas Gym", "Nitro Fitness", "Rebel Strength", "Infinity Health", "Bold Fitness", "Gravity Studio", "Total Body Lab", "Phoenix Training"],
         clinicas: ["Clínica Dental Sonrisa Plena", "Dr. Esteban Morales", "NutriBienestar Consultorio", "Centro Médico San Lucas", "Dra. Lucía Valenzuela", "Clínica Pediátrica Arcoíris", "Centro Oftalmológico Visión Clara", "Psicología Integral Mente Sana", "Fisioterapia Movimiento Vital", "Clínica de Especialidades San José", "Laboratorio Clínico Alfa", "Dra. Mariana Ríos", "Consultorio Dental Élite", "Centro de Rehabilitación Avanzada", "Dr. Roberto Méndez", "Clínica Estética Bella Piel", "Unidad Médica del Norte", "Dra. Sofía Castellanos", "Clínica de Ojos Cristal", "Consultorio de Nutrición ProLife", "Psiquiatría & Salud Emocional", "Dr. Hugo Ferrante", "Centro Médico Familiar", "Clínica de Alergias Respirar", "Dra. Elena Paz", "Odontología Estética Moderna", "Clínica de Salud Deportiva", "Dr. Carlos Duarte", "Podología Caminando Bien", "Centro de Diagnóstico Imagenología"],
-        paises: [ { nombre: 'Antigua y Barbuda', emoji: '&#127462;&#127468;' }, { nombre: 'Argentina', emoji: '&#127462;&#127479;' }, { nombre: 'Bahamas', emoji: '&#127463;&#127480;' }, { nombre: 'Barbados', emoji: '&#127463;&#127463;' }, { nombre: 'Belice', emoji: '&#127463;&#127487;' }, { nombre: 'Bolivia', emoji: '&#127463;&#127476;' }, { nombre: 'Brasil', emoji: '&#127463;&#127479;' }, { nombre: 'Canadá', emoji: '&#127464;&#127462;' }, { nombre: 'Chile', emoji: '&#127464;&#127473;' }, { nombre: 'Colombia', emoji: '&#127464;&#127476;' }, { nombre: 'Costa Rica', emoji: '&#127464;&#127479;' }, { nombre: 'Cuba', emoji: '&#127464;&#127482;' }, { nombre: 'Dominica', emoji: '&#127465;&#127474;' }, { nombre: 'Ecuador', emoji: '&#127466;&#127464;' }, { nombre: 'El Salvador', emoji: '&#127480;&#127483;' }, { nombre: 'Estados Unidos', emoji: '&#127482;&#127480;' }, { nombre: 'Granada', emoji: '&#127468;&#127465;' }, { nombre: 'Guatemala', emoji: '&#127468;&#127481;' }, { nombre: 'Guyana', emoji: '&#127468;&#127486;' }, { nombre: 'Haití', emoji: '&#127469;&#127481;' }, { nombre: 'Honduras', emoji: '&#127469;&#127475;' }, { nombre: 'Jamaica', emoji: '&#127471;&#127474;' }, { nombre: 'México', emoji: '&#127474;&#127485;' }, { nombre: 'Nicaragua', emoji: '&#127475;&#127470;' }, { nombre: 'Panamá', emoji: '&#127477;&#127462;' }, { nombre: 'Paraguay', emoji: '&#127477;&#127486;' }, { nombre: 'Perú', emoji: '&#127477;&#127466;' }, { nombre: 'República Dominicana', emoji: '&#127465;&#127476;' }, { nombre: 'Surinam', emoji: '&#127480;&#127479;' }, { nombre: 'Trinidad y Tobago', emoji: '&#127481;&#127481;' }, { nombre: 'Uruguay', emoji: '&#127482;&#127486;' }, { nombre: 'Venezuela', emoji: '&#127483;&#127466;' } ],
+        paises: [ { nombre: 'Antigua y Barbuda', code: 'ag' }, { nombre: 'Argentina', code: 'ar' }, { nombre: 'Bahamas', code: 'bs' }, { nombre: 'Barbados', code: 'bb' }, { nombre: 'Belice', code: 'bz' }, { nombre: 'Bolivia', code: 'bo' }, { nombre: 'Brasil', code: 'br' }, { nombre: 'Canadá', code: 'ca' }, { nombre: 'Chile', code: 'cl' }, { nombre: 'Colombia', code: 'co' }, { nombre: 'Costa Rica', code: 'cr' }, { nombre: 'Cuba', code: 'cu' }, { nombre: 'Dominica', code: 'dm' }, { nombre: 'Ecuador', code: 'ec' }, { nombre: 'El Salvador', code: 'sv' }, { nombre: 'Estados Unidos', code: 'us' }, { nombre: 'Granada', code: 'gd' }, { nombre: 'Guatemala', code: 'gt' }, { nombre: 'Guyana', code: 'gy' }, { nombre: 'Haití', code: 'ht' }, { nombre: 'Honduras', code: 'hn' }, { nombre: 'Jamaica', code: 'jm' }, { nombre: 'México', code: 'mx' }, { nombre: 'Nicaragua', code: 'ni' }, { nombre: 'Panamá', code: 'pa' }, { nombre: 'Paraguay', code: 'py' }, { nombre: 'Perú', code: 'pe' }, { nombre: 'República Dominicana', code: 'do' }, { nombre: 'Surinam', code: 'sr' }, { nombre: 'Trinidad y Tobago', code: 'tt' }, { nombre: 'Uruguay', code: 'uy' }, { nombre: 'Venezuela', code: 've' } ],
         planes: ["starter_10", "growth_50", "business_200", "enterprise_500"],
         mensajes: [
             "adquirió el Plan [plan]. ¡Éxito!",
@@ -974,13 +981,13 @@ window.app.ui = {
             
             const planHtml = `<span class="fomo-plan ${planClasses[plan]}">${plan}</span>`;
             const mensaje = mensajeTemplate.replace('[plan]', planHtml);
-            const banderaReal = window.app.ui.decodeHtmlEntities(pais.emoji);
+            const banderaHtml = `<img src="https://cdn.jsdelivr.net/gh/lipis/flag-icons/svg/${pais.code}.svg" alt="Bandera de ${pais.nombre}">`;
 
             const bubble = document.createElement('div');
             bubble.className = 'fomo-burbuja';
             
             bubble.innerHTML = `
-                <span class="fomo-bandera">${banderaReal}</span>
+                <span class="fomo-bandera">${banderaHtml}</span>
                 <div>
                     <strong style="color:#000;">${nombreEntidad}</strong> ${mensaje}
                 </div>
