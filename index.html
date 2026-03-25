@@ -864,6 +864,12 @@ console.log("MAKUMOTO® DEBUG: app.state.js finalizado.");
 // ===== START: app.ui.js =====
 console.log("MAKUMOTO® DEBUG: app.ui.js comenzando.");
 window.app.ui = {
+    decodeHtmlEntities: function(text) {
+        const textArea = document.createElement('textarea');
+        textArea.innerHTML = text;
+        return textArea.value;
+    },
+
     initLandingDynamics: function() {
         this.initTestimonialSlider();
         this.initFomoBubbles();
@@ -968,14 +974,13 @@ window.app.ui = {
             
             const planHtml = `<span class="fomo-plan ${planClasses[plan]}">${plan}</span>`;
             const mensaje = mensajeTemplate.replace('[plan]', planHtml);
+            const banderaReal = window.app.ui.decodeHtmlEntities(pais.emoji);
 
-           
-            
             const bubble = document.createElement('div');
             bubble.className = 'fomo-burbuja';
             
             bubble.innerHTML = `
-                <span class="fomo-bandera">${pais.emoji}</span>
+                <span class="fomo-bandera">${banderaReal}</span>
                 <div>
                     <strong style="color:#000;">${nombreEntidad}</strong> ${mensaje}
                 </div>
