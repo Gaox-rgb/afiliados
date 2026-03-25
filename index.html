@@ -1099,6 +1099,41 @@ window.app.ui = {
     }
 };
     
+    // ===== START: app.events.js =====
+console.log("MAKUMOTO® DEBUG: app.events.js comenzando.");
+window.app.events = {
+    handlePlanPurchase: async function(button) {
+        const planId = button.dataset.plan;
+        if (!planId) {
+            console.error("Error: Atributo data-plan no encontrado en el botón.");
+            return;
+        }
+
+        window.app.ui.showLoader('Iniciando proceso de pago...');
+
+        try {
+            // Se asume la existencia de una Cloud Function 'createCheckoutSession'
+            // que gestiona la creación de la sesión de pago de forma segura en el backend.
+            const createCheckoutSession = window.app.functions.httpsCallable('createCheckoutSession');
+            const result = await createCheckoutSession({ planId: planId });
+
+            if (result.data && result.data.checkoutUrl) {
+                // Redirigir al cliente a la pasarela de pago
+                window.location.href = result.data.checkoutUrl;
+            } else {
+                throw new Error("Respuesta inválida del servidor de pagos.");
+            }
+
+        } catch (error) {
+            console.error("Error crítico al procesar el pago:", error);
+            window.app.ui.hideLoader();
+            alert("Hubo un problema al conectar con el sistema de pagos. Por favor, inténtelo de nuevo más tarde.");
+        }
+    }
+};
+console.log("MAKUMOTO® DEBUG: app.events.js finalizado.");
+// ===== END: app.events.js =====
+    
     // ===== START: MÓDULO DE EJECUCIÓN CENTRALIZADO =====
 document.addEventListener('DOMContentLoaded', () => {
     console.log("MAKUMOTO® DEBUG: DOMContentLoaded. Iniciando arsenal.");
