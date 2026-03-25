@@ -377,6 +377,11 @@
         .precios-grid { grid-template-columns: repeat(2, 1fr); }
         .precio-tarjeta.recomendada { transform: scale(1.05); }
     }
+    @media (max-width: 992px) { /* Tabletas y móviles */
+        .oferta-grid {
+            grid-template-columns: 1fr;
+        }
+    }
     @media (min-width: 1200px) {
         .precios-grid { grid-template-columns: repeat(4, 1fr); }
     }
@@ -384,28 +389,42 @@
 
     /* ===== PUNTO 6: OFERTA ===== */
     .seccion-oferta { background: var(--color-light-dark); padding: 60px 0; }
-    .banner-oferta h2 { color: white; font-size: 2.5rem; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+    .banner-oferta h2 { color: var(--color-primary); font-size: 2.5rem; text-shadow: none; }
     .texto-oferta { font-size: 1.2rem; margin: 15px auto; color: white; max-width: 700px; }
-    .oferta-beneficios {
-        list-style: none;
-        padding: 0;
-        margin: 25px auto;
-        max-width: 650px;
-        text-align: left;
+    
+    .oferta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-top: 40px;
     }
-    .oferta-beneficios li {
-        font-size: 1.1rem;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: flex-start;
+    .beneficio-card {
+        background: var(--color-dark);
+        padding: 30px 25px;
+        border-radius: 8px;
+        border-top: 4px solid var(--color-primary);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .oferta-beneficios li::before {
-        content: '✅';
-        margin-right: 12px;
-        margin-top: 2px;
+    .beneficio-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
     }
-    .oferta-beneficios strong {
+    .beneficio-card i {
+        font-size: 2.5rem;
         color: var(--color-primary);
+        margin-bottom: 20px;
+    }
+    .beneficio-card h4 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        color: var(--color-text);
+        text-transform: uppercase;
+    }
+    .beneficio-card p {
+        font-size: 0.95rem;
+        opacity: 0.8;
+        line-height: 1.6;
     }
     .contador-oferta {
         display: inline-block; background: var(--color-dark); color: var(--color-primary);
@@ -711,11 +730,23 @@
             <div class="banner-oferta">
                 <h2><i class="fas fa-gift"></i> ¡OFERTA DE SEMANA SANTA!</h2>
                 <p class="texto-oferta">Esta Semana Santa, impulsa tu comunidad como nunca. Las primeras <strong>100</strong> empresas en afiliarse desbloquean este paquete de crecimiento estratégico sin costo adicional:</p>
-                <ul class="oferta-beneficios">
-                    <li><strong>Un Mes Adicional GRATIS:</strong> Duplica el impacto inicial de tu tribu con 60 días de servicio por el precio de 30.</li>
-                    <li><strong>10 Boonies Promocionales:</strong> Anuncia tu página web directamente en nuestra app durante 10 días, generando tráfico y visibilidad exclusivos.</li>
-                    <li><strong>Acceso Fundador:</strong> Asegura tu lugar para recibir los mejores descuentos y promociones en futuras herramientas de expansión.</li>
-                </ul>
+                <div class="oferta-grid">
+                    <div class="beneficio-card">
+                        <i class="fas fa-layer-group"></i>
+                        <h4>Doble Impacto</h4>
+                        <p>Duplica el impulso inicial de tu tribu con un mes adicional de servicio totalmente gratis. 60 días de lealtad por el precio de 30.</p>
+                    </div>
+                    <div class="beneficio-card">
+                        <i class="fas fa-bullseye"></i>
+                        <h4>Visibilidad Directa</h4>
+                        <p>Inyecta tu marca en nuestra app con 10 Boonies promocionales. Genera tráfico y conversiones desde nuestra comunidad a tu web durante 10 días.</p>
+                    </div>
+                    <div class="beneficio-card">
+                        <i class="fas fa-crown"></i>
+                        <h4>Estatus de Fundador</h4>
+                        <p>Asegura tu acceso prioritario a los mejores descuentos y promociones en todas las futuras herramientas de expansión de Makumoto®.</p>
+                    </div>
+                </div>
                 <div class="contador-oferta">
                     QUEDAN: <span id="contador-paquetes">47</span> PASES CON ESTA PROMOCIÓN
                 </div>
