@@ -112,7 +112,7 @@
         .seccion-triaje .titulo-seccion {
             font-size: 2.0rem;
             line-height: 1.3;
-            color: var(--color-text);
+            color: var(--color-primary);
             text-transform: none;
             max-width: 800px; /* Contenedor interno */
             margin-left: auto;
@@ -121,7 +121,7 @@
         }
         .subtitulo-triaje {
             font-size: 1.5rem;
-            color: var(--color-text);
+            color: var(--color-primary);
             opacity: 0.9;
             max-width: 800px;
             margin: 0 auto 30px; /* Espaciado limpio y controlado */
@@ -136,7 +136,8 @@
         }
         .triage-buttons {
             display: flex;
-            justify-content: center;
+            flex-direction: column; /* Alineación vertical */
+            align-items: center; /* Centrado horizontal */
             gap: 20px;
             flex-wrap: wrap;
         }
@@ -160,18 +161,51 @@
         }
 
     /* ===== PUNTO 2.5: REALIDADES ESTRATÉGICAS (FLIP CARDS) - VERSIÓN DEFINITIVA ===== */
-    #benefits-injector {
-        flex-basis: 100%;
+   #benefits-injector {
         width: 100%;
         margin-top: 25px;
-        padding: 20px;
         background-color: var(--color-dark);
         border-radius: 8px;
         border: 1px solid var(--color-primary);
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        padding: 0 20px;
+        transition: max-height 0.7s ease, opacity 0.5s ease, padding 0.7s ease;
+    }
+    #benefits-injector.visible {
+        max-height: 500px; /* Altura suficiente para el contenido */
+        opacity: 1;
+        padding: 20px;
     }
     .seccion-realidades { background-color: var(--color-dark); }
-    .flip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1200px; margin: 0 auto; }
-    .flip-card { background-color: transparent; height: 300px; perspective: 1000px; /* Perspectiva 3D para la tarjeta */ }
+    /* === RECONSTRUCCIÓN DEL MODAL DE BENEFICIOS === */
+    #benefits-modal .modal-content {
+        padding: 25px; /* Más compacto */
+        max-width: 450px;
+    }
+    #benefits-modal-icon {
+        font-size: 3rem !important; /* Tamaño de emoji reducido */
+        margin-bottom: 10px !important;
+    }
+    #benefits-modal-title {
+        font-size: 1.5rem !important; /* Título reducido */
+        margin-bottom: 20px !important;
+    }
+    #benefits-modal-list {
+        max-height: 45vh !important; /* Asegura espacio para scroll */
+        font-size: 0.9rem !important; /* Texto de beneficios reducido */
+    }
+    #benefits-modal-list li {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: flex-start; /* Alineación superior para textos largos */
+        line-height: 1.4;
+    }
+    #benefits-modal-list .emoji-bullet {
+        margin-right: 12px;
+        margin-top: 2px;
+    }
     /* ===== PUNTO 2.5: RAZONES ESTRATÉGICAS (FLUJO DINÁMICO) ===== */
     .seccion-razones { background-color: var(--color-dark); }
     #seccion-razones .titulo-seccion { text-transform: none; margin-bottom: 25px; color: var(--color-text); }
@@ -220,10 +254,15 @@
         margin: 0 auto;
         max-width: 90%; /* MARCO DE CONTENCIÓN */
     }
+    #benefits-injector .flow-reason p {
+        font-size: 1.0rem; /* Tamaño de texto reducido */
+        line-height: 1.5;
+    }
+
     @media (max-width: 768px) {
-        .flow-container { height: 25vh; }
+        .flow-container { height: auto; min-height: 100px; } /* Altura auto-ajustable */
         .flow-reason h4 { font-size: 1.3rem; }
-        .flow-reason p { font-size: 1.0rem; }
+        #benefits-injector .flow-reason p { font-size: 0.8rem; } /* Aún más pequeño en móvil */
     }
 
     /* ===== PUNTO 3: MANIFIESTO ===== */
@@ -244,18 +283,25 @@
     }
     .cta-button-grande:hover { transform: scale(1.05); }
 
-    /* ===== ESTILOS PARA LA NUEVA SECCIÓN ARSENAL ===== */
-    .seccion-arsenal { background-color: var(--color-light-dark); }
-    .arsenal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-    .arma-makumoto {
-        background: var(--color-dark); padding: 30px; border-radius: 10px;
-        border-top: 3px solid var(--color-primary); text-align: center;
-        transition: transform 0.3s ease;
+    .link-brillante {
+        display: inline-block;
+        margin-top: 10px;
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.2rem;
+        text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+        transition: text-shadow 0.3s ease;
     }
-    .arma-makumoto:hover { transform: translateY(-10px); }
-    .arma-makumoto i { font-size: 3rem; color: var(--color-primary); margin-bottom: 20px; }
-    .arma-makumoto h4 { font-size: 1.5rem; margin-bottom: 10px; color: var(--color-text); }
-    .arma-makumoto p { font-size: 1rem; line-height: 1.5; }
+    .link-brillante:hover {
+        text-shadow: 0 0 15px rgba(255, 215, 0, 1), 0 0 25px rgba(255, 215, 0, 0.8);
+    }
+.link-brillante .texto-blanco-estatico {
+        color: var(--color-text) !important; /* FORZAR COLOR BLANCO */
+        text-shadow: none !important; /* FORZAR LA ANULACIÓN DEL BRILLO */
+        margin-right: 8px; /* Añade un espacio entre las palabras */
+    }
+
     .seccion-dialogo {
         background-color: var(--color-light-dark);
     }
@@ -360,31 +406,42 @@
     .testimonio blockquote { font-style: italic; margin-bottom: 15px; font-size: 1.1rem; }
     .testimonio cite { font-weight: 700; color: var(--color-primary); }
 
-    #fomo-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; width: auto; }
-    #fomo-container.position-right { left: auto; right: 20px; }
-
+    #fomo-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2147483647; /* Valor máximo para garantizar la capa superior absoluta */
+        width: auto;
+        max-width: 90vw;
+    }
     .fomo-burbuja {
-        display: flex; align-items: center;
-        background: rgba(30, 30, 30, 0.95);
-        border-left: 3px solid var(--color-primary); /* Borde lateral para más estilo */
-        color: var(--color-text);
-        padding: 12px 18px; /* Más compacto */
+        display: flex;
+        align-items: center;
+        background: #f0f0f0; /* Fondo blanco/gris claro */
+        color: var(--color-text-dark); /* Texto oscuro para contraste */
+        border-left: 4px solid var(--color-primary);
+        padding: 10px 15px;
         border-radius: 8px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.4);
         margin-bottom: 10px;
         opacity: 0;
-        transform: translateX(-120%); /* Ajustado para que desaparezca completamente */
+        transform: scale(0.7);
         transition: all 0.5s ease-in-out;
-        font-size: 0.85rem; /* Letra más pequeña */
+        font-size: 0.8rem; /* Letra más pequeña */
     }
 
-    #fomo-container.position-right .fomo-burbuja {
-        transform: translateX(120%); /* Animación desde la derecha */
-        border-left: none;
-        border-right: 3px solid var(--color-primary);
+    .fomo-burbuja.visible { opacity: 1; transform: scale(1); }
+    .fomo-bandera {
+        font-size: 1.3rem;
+        margin-right: 10px;
+        font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif; /* FUENTES DE RESPALDO PARA EMOJIS */
     }
-    .fomo-burbuja.visible { opacity: 1; transform: translateX(0); }
-    .fomo-bandera { font-size: 1.5rem; margin-right: 10px; }
+    .fomo-plan { font-weight: bold; }
+    .plan-starter { color: #3498db; }
+    .plan-growth { color: #2ecc71; }
+    .plan-business { color: var(--color-primary); }
+    .plan-enterprise { color: var(--color-secondary); }
 
     /* ===== ESTILOS ESPECÍFICOS DE MAKUMOTO® SEGÚN SOLICITUD ===== */
     .makumoto-hero-highlight {
@@ -474,8 +531,7 @@
         .nota-triaje { font-size: 0.9rem; }
         .triage-btn { padding: 15px 20px; font-size: 1rem; }
         .cta-button-grande { padding: 15px 30px; font-size: 1.2rem; }
-        #fomo-container { left: 10px; bottom: 10px; width: calc(100% - 20px); }
-
+        
 }
     /* === ESTILOS PARA EL NUEVO HEADER Y PORTAL DE GERENTE === */
     #main-header { background: var(--color-dark); padding: 15px 0; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 1000; }
@@ -524,33 +580,9 @@
             <h2 class="titulo-seccion">Vendemos más que un servicio. Vendemos Pertenencia.</h2>
             <p class="texto-manifiesto">Con <strong>MAKUMOTO®</strong>, ofreces a tus clientes o empleados acceso exclusivo a una red social de bienestar que se siente como un juego. No es solo una app; es un ecosistema donde creas <strong>tu propia tribu privada</strong>. Ellos compiten, mejoran y se divierten bajo tu marca, mientras tú te vuelves indispensable.</p>
             <img src="imagenes/pantalla_makumoto.png" alt="Interfaz adictiva y divertida de Makumoto®" class="imagen-preview">
-            <a href="https://makumoto.com" target="_blank" class="cta-button-grande">
-                <i class="fas fa-rocket"></i> EXPLORA MAKUMOTO.COM
+            <a href="https://makumoto.com" target="_blank" class="link-brillante">
+                <span class="texto-blanco-estatico">Conoce</span> MAKUMOTO.COM
             </a>
-        </div>
-    </section>
-
-    <!-- PUNTO 2: LA FÓRMULA (QUÉ HACE GENIAL A MAKUMOTO) -->
-    <section id="seccion-formula" class="seccion-arsenal">
-        <div class="container">
-            <h2 class="titulo-seccion">La Experiencia que Ofrecerás: 3 Ingredientes Adictivos.</h2>
-            <div class="arsenal-grid">
-                <div class="arma-makumoto">
-                    <i class="fas fa-gamepad"></i>
-                    <h4>Tu Vida, el Videojuego</h4>
-                    <p>Tus afiliados transformarán sus metas en misiones y su progreso en XP. Desbloquearán logros y subirán de nivel. Es la forma más divertida de mejorar.</p>
-                </div>
-                <div class="arma-makumoto">
-                    <i class="fas fa-robot"></i>
-                    <h4>Lyra: IA Coach y Fan #1</h4>
-                    <p>Cada miembro de tu tribu recibe a Lyra, una IA que crea planes, da ánimos y celebra victorias. Es un coach de élite en su bolsillo, 24/7.</p>
-                </div>
-                <div class="arma-makumoto">
-                    <i class="fas fa-star"></i>
-                    <h4>Contenido que Inspira</h4>
-                    <p>Acceso a píldoras de contenido sobre Fitness, Bienestar y Estilo. Herramientas prácticas para que tu gente se sienta y se vea genial. Un equipo feliz es un equipo leal.</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -559,12 +591,14 @@
         <div class="container">
              <h2 class="titulo-seccion">Tu Tribu, Tus Reglas.</h2>
              <p class="subtitulo-triaje">Así se Juega en tu Sector.</p>
-            <p class="nota-triaje">Elige tu sector y descubre los beneficios específicos que podrás implementar para tus afiliados.</p>
+            <p class="nota-triaje">Pulsa sobre tu sector para descubrir los beneficios únicos que obtendrás. Al afiliar a tus empleados o clientes, les otorgas acceso a una experiencia exclusiva que fortalece su lealtad.</p>
             <div class="triage-buttons">
                 <button class="triage-btn" data-segment="empresa"><i class="fas fa-building"></i> Lidero una Empresa</button>
                 <button class="triage-btn" data-segment="gimnasio"><i class="fas fa-dumbbell"></i> Dirijo un Gimnasio</button>
                 <button class="triage-btn" data-segment="clinica"><i class="fas fa-stethoscope"></i> Gestiono una Clínica</button>
             </div>
+            <!-- CONTENEDOR PARA EL FLUJO DE BENEFICIOS DINÁMICO -->
+            <div id="benefits-injector"></div>
         </div>
     </section>
 
@@ -649,21 +683,36 @@
     <!-- FIN DEL NUEVO FLUJO                                               -->
     <!-- =================================================================== -->
     
-    <!-- Elemento para las burbujas de compra (FOMO). El JS lo poblará. -->
-    <div id="fomo-container"></div>
+    </main>
 
-</main>
+<!-- MODAL ESTRATÉGICO DE BENEFICIOS (Oculto por defecto) -->
+<div id="benefits-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div id="benefits-modal-icon" style="font-size: 4rem; color: var(--color-primary); margin-bottom: 15px;"></div>
+        <h3 id="benefits-modal-title"></h3>
+        <ul id="benefits-modal-list" style="text-align: left; list-style: none; padding: 0; margin: 25px 0; max-height: 40vh; overflow-y: auto;"></ul>
+        <button id="close-benefits-modal" class="cta-precio">ENTENDIDO</button>
+    </div>
+</div>
 
 <!-- MODAL DE LOGIN (Oculto por defecto) -->
 <div id="login-modal" class="modal-overlay">
     <div class="modal-content">
         <span class="modal-close-btn" id="close-login-modal">&times;</span>
         <h3>Acceso de Gerente</h3>
-        <p>Ingresa tus credenciales para acceder al panel.</p>
-        <form id="login-form">
-            <input type="email" id="login-email" placeholder="Correo Electrónico" required>
-            <input type="password" id="login-password" placeholder="Contraseña" required>
-            <button type="submit" class="cta-precio">Ingresar</button>
+        <p>Ingresa tus credenciales para acceder a tu dashboard.</p>
+        <div class="bm-login-form">
+            <div class="bm-input-group">
+                <i class="fas fa-user-shield"></i>
+                <input type="email" id="login-email" placeholder="EMAIL" required style="text-transform: none;">
+            </div>
+            <div class="bm-input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="login-password" placeholder="CONTRASEÑA" required>
+            </div>
+        </div>
+        <form id="login-form" class="bm-gatekeeper__actions">
+            <button type="submit" class="bm-btn bm-btn--primary">Ingresar al Centro de Mando</button>
         </form>
     </div>
 </div>
@@ -681,7 +730,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
 <!-- ===== CONFIGURACIÓN SEGURA DE FIREBASE (NO VERSIONADA) ===== -->
-<script src="afiliados/js/firebase-config.js"></script>
+<script src="js/firebase-config.js"></script>
 
 <!-- ===== NÚCLEO DEL MONOLITO MAKUMOTO® (JS FUSIONADO) ===== -->
 <script>
@@ -789,6 +838,21 @@ window.app.state = {
             "Notifica al paciente al instante cuando sus resultados de laboratorio están listos."
         ]
     }
+,
+    fomoData: {
+        empresas: ["InnovaCorp", "Quantum Solutions", "Cielito Lindo Tech", "Nexus Strategy Group", "Blue Horizon Systems", "Altura Software", "Terra Nova Logística", "Stellar Media", "Vertex Consulting", "Alpha Global Tech", "Orion Data Services", "Synergy Partners", "Prism Digital", "Zenith Engineering", "Flow Dynamics", "Capital Vision", "Core Solutions", "Impact Global", "Silver Oak Enterprises", "Tech Wave Co.", "Summit Financial", "Master Key Systems", "Evolution Marketing", "Pacific Rim Trading", "Blue Chip Advisors", "Nomad Creative", "Iron Bridge Logistics", "Aura Energy", "Streamline Corp", "Velocity Apps"],
+        gimnasios: ["Acero Fit", "Olympus Gym", "Ritmo & Fuerza", "Titán Fitness", "Iron Temple", "Vitality Center", "Power Zone", "Spartan Training Hub", "Zen & Strength", "Elite Performance", "Dynamic Body", "Warrior Forge", "Core & Cardio", "Legend Fitness", "Peak Physique", "Velocity Gym", "Alpha Athletics", "Kinetic Studio", "Fusion Fitness", "Steel & Sweat", "Momentum Wellness", "Prime Body", "Atlas Gym", "Nitro Fitness", "Rebel Strength", "Infinity Health", "Bold Fitness", "Gravity Studio", "Total Body Lab", "Phoenix Training"],
+        clinicas: ["Clínica Dental Sonrisa Plena", "Dr. Esteban Morales", "NutriBienestar Consultorio", "Centro Médico San Lucas", "Dra. Lucía Valenzuela", "Clínica Pediátrica Arcoíris", "Centro Oftalmológico Visión Clara", "Psicología Integral Mente Sana", "Fisioterapia Movimiento Vital", "Clínica de Especialidades San José", "Laboratorio Clínico Alfa", "Dra. Mariana Ríos", "Consultorio Dental Élite", "Centro de Rehabilitación Avanzada", "Dr. Roberto Méndez", "Clínica Estética Bella Piel", "Unidad Médica del Norte", "Dra. Sofía Castellanos", "Clínica de Ojos Cristal", "Consultorio de Nutrición ProLife", "Psiquiatría & Salud Emocional", "Dr. Hugo Ferrante", "Centro Médico Familiar", "Clínica de Alergias Respirar", "Dra. Elena Paz", "Odontología Estética Moderna", "Clínica de Salud Deportiva", "Dr. Carlos Duarte", "Podología Caminando Bien", "Centro de Diagnóstico Imagenología"],
+        paises: [ { nombre: 'Antigua y Barbuda', emoji: '&#127462;&#127468;' }, { nombre: 'Argentina', emoji: '&#127462;&#127479;' }, { nombre: 'Bahamas', emoji: '&#127463;&#127480;' }, { nombre: 'Barbados', emoji: '&#127463;&#127463;' }, { nombre: 'Belice', emoji: '&#127463;&#127487;' }, { nombre: 'Bolivia', emoji: '&#127463;&#127476;' }, { nombre: 'Brasil', emoji: '&#127463;&#127479;' }, { nombre: 'Canadá', emoji: '&#127464;&#127462;' }, { nombre: 'Chile', emoji: '&#127464;&#127473;' }, { nombre: 'Colombia', emoji: '&#127464;&#127476;' }, { nombre: 'Costa Rica', emoji: '&#127464;&#127479;' }, { nombre: 'Cuba', emoji: '&#127464;&#127482;' }, { nombre: 'Dominica', emoji: '&#127465;&#127474;' }, { nombre: 'Ecuador', emoji: '&#127466;&#127464;' }, { nombre: 'El Salvador', emoji: '&#127480;&#127483;' }, { nombre: 'Estados Unidos', emoji: '&#127482;&#127480;' }, { nombre: 'Granada', emoji: '&#127468;&#127465;' }, { nombre: 'Guatemala', emoji: '&#127468;&#127481;' }, { nombre: 'Guyana', emoji: '&#127468;&#127486;' }, { nombre: 'Haití', emoji: '&#127469;&#127481;' }, { nombre: 'Honduras', emoji: '&#127469;&#127475;' }, { nombre: 'Jamaica', emoji: '&#127471;&#127474;' }, { nombre: 'México', emoji: '&#127474;&#127485;' }, { nombre: 'Nicaragua', emoji: '&#127475;&#127470;' }, { nombre: 'Panamá', emoji: '&#127477;&#127462;' }, { nombre: 'Paraguay', emoji: '&#127477;&#127486;' }, { nombre: 'Perú', emoji: '&#127477;&#127466;' }, { nombre: 'República Dominicana', emoji: '&#127465;&#127476;' }, { nombre: 'Surinam', emoji: '&#127480;&#127479;' }, { nombre: 'Trinidad y Tobago', emoji: '&#127481;&#127481;' }, { nombre: 'Uruguay', emoji: '&#127482;&#127486;' }, { nombre: 'Venezuela', emoji: '&#127483;&#127466;' } ],
+        planes: ["starter_10", "growth_50", "business_200", "enterprise_500"],
+        mensajes: [
+            "adquirió el Plan [plan]. ¡Éxito!",
+            "acaba de comprar el Plan [plan]. ¡Felicidades!",
+            "se unió con el Plan [plan]. ¡Genial! &#10024;",
+            "activó el Plan [plan]. ¡A crecer! &#128640;",
+            "eligió el Plan [plan]. ¡Bienvenido/a! &#128075;"
+        ]
+    }
 };
 console.log("MAKUMOTO® DEBUG: app.state.js finalizado.");
 // ===== END: app.state.js =====
@@ -806,67 +870,35 @@ window.app.ui = {
         this.initOfferCounter();
         this.initSmoothScroll();
         this.initReasonsSlider();
+        this.initializeBenefitsModal();
     },
 
-    currentBenefitInterval: null,
-
-    showSegmentBenefits: function(segment, clickedButton) {
-        const isAlreadyActive = clickedButton.classList.contains('active');
-        const injector = document.getElementById('benefits-injector');
-
-        // Detenemos cualquier ciclo de animación y eliminamos el panel de beneficios existente.
-        if (this.currentBenefitInterval) {
-            clearInterval(this.currentBenefitInterval);
+    initializeBenefitsModal: function() {
+        const modal = document.getElementById('benefits-modal');
+        const closeBtn = document.getElementById('close-benefits-modal');
+        if (modal && closeBtn) {
+            closeBtn.onclick = () => modal.classList.remove('visible');
+            modal.onclick = (e) => {
+                if (e.target === modal) modal.classList.remove('visible');
+            };
         }
-        if (injector) {
-            injector.remove();
-        }
+    },
 
-        // Limpiamos el estado activo de TODOS los botones.
-        document.querySelectorAll('.triage-btn').forEach(btn => btn.classList.remove('active'));
+    showBenefitsModal: function(segment) {
+        const modalData = {
+            empresa: { icon: '🚀', title: '¡Despega tu Empresa!', bullet: '💼' },
+            gimnasio: { icon: '🏆', title: '¡Forja Campeones!', bullet: '🔥' },
+            clinica: { icon: '🩺', title: '¡Cuida a tus Pacientes!', bullet: '❤️' }
+        };
 
-        // Si el botón ya estaba activo, la acción era ocultar el panel. Ya lo hicimos. Misión cumplida.
-        if (isAlreadyActive) {
-            return;
-        }
-
-        // --- Si llegamos aquí, es porque se está activando un nuevo botón ---
-
-        // 1. Marcamos el nuevo botón como activo.
-        clickedButton.classList.add('active');
-
-        // 2. Creamos y configuramos el nuevo panel inyector.
-        const newInjector = document.createElement('div');
-        newInjector.id = 'benefits-injector';
-        newInjector.innerHTML = `
-            <div class="flow-container" style="min-height: 100px;">
-                <p id="dynamic-benefit-text" class="flow-reason"></p>
-            </div>
-            <a href="#seccion-precios-directa" class="cta-button-grande" style="background-color: var(--color-secondary); margin-top: 20px;">
-                <i class="fas fa-bolt"></i> VER PLANES AHORA
-            </a>
-        `;
-        
-        // 3. Lo insertamos en la posición correcta.
-        clickedButton.after(newInjector);
-
-        // 4. Poblamos el panel e iniciamos el nuevo ciclo de animación.
-        const textElement = document.getElementById('dynamic-benefit-text');
+        const data = modalData[segment];
         const benefits = window.app.state.benefits[segment];
-        let currentIndex = 0;
 
-        textElement.textContent = benefits[currentIndex];
-        void textElement.offsetWidth;
-        textElement.classList.add('active');
-
-        this.currentBenefitInterval = setInterval(() => {
-            textElement.classList.remove('active');
-            setTimeout(() => {
-                currentIndex = (currentIndex + 1) % benefits.length;
-                textElement.textContent = benefits[currentIndex];
-                textElement.classList.add('active');
-            }, 500);
-        }, 4000);
+        document.getElementById('benefits-modal-icon').innerHTML = data.icon;
+        document.getElementById('benefits-modal-title').textContent = data.title;
+        document.getElementById('benefits-modal-list').innerHTML = benefits.map(b => `<li><span class="emoji-bullet">${data.bullet}</span><span>${b}</span></li>`).join('');
+        
+        document.getElementById('benefits-modal').classList.add('visible');
     },
     
     initReasonsSlider: function() {
@@ -911,36 +943,59 @@ window.app.ui = {
 
     initFomoBubbles: function() {
         const container = document.getElementById('fomo-container');
-        if (container) {
-            const data = [
-                { p: '🚀', n: "TechCorp", c: "Bogotá", l: "business_200", b: "🇨🇴" },
-                { p: '💪', n: "PowerFit Gym", c: "Miami", l: "growth_50", b: "🇺🇸" },
-                { p: '✨', n: "Clínica Soto", c: "Madrid", l: "starter_10", b: "🇪🇸" },
-                { p: '🔥', n: "Juan P.", c: "CDMX", l: "starter_10", b: "🇲🇽" },
-                { p: '🏆', n: "Laura M.", c: "Santiago", l: "business_200", b: "🇨🇱" },
-            ];
-            let index = 0;
+        if (!container || !window.app.state.fomoData) return;
 
-            const showBubble = () => {
-                // Posicionamiento aleatorio
-                container.classList.toggle('position-right', Math.random() < 0.5);
+        const { empresas, gimnasios, clinicas, paises, planes, mensajes } = window.app.state.fomoData;
+        const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-                const item = data[index];
-                index = (index + 1) % data.length;
-                const bubble = document.createElement('div');
-                bubble.className = 'fomo-burbuja';
-                bubble.innerHTML = `<span class="fomo-bandera">${item.b}</span><div>${item.p} <strong>${item.n}</strong> de ${item.c} se unió con el <strong>Plan ${item.l}</strong>.</div>`;
-                container.appendChild(bubble);
+        const planClasses = {
+            "starter_10": "plan-starter",
+            "growth_50": "plan-growth",
+            "business_200": "plan-business",
+            "enterprise_500": "plan-enterprise"
+        };
 
-                setTimeout(() => bubble.classList.add('visible'), 100);
-                setTimeout(() => {
-                    bubble.classList.remove('visible');
-                    setTimeout(() => bubble.remove(), 500);
-                }, 6000); // Duración de la burbuja en pantalla
-            };
-            // Intervalo de aparición de 60 segundos (60000 ms)
-            setTimeout(() => { showBubble(); setInterval(showBubble, 60000); }, 5000);
-        }
+        const showBubble = () => {
+            const tipoEntidad = getRandomItem(['empresa', 'gimnasio', 'clinica']);
+            let nombreEntidad;
+            if (tipoEntidad === 'empresa') nombreEntidad = getRandomItem(empresas);
+            else if (tipoEntidad === 'gimnasio') nombreEntidad = getRandomItem(gimnasios);
+            else nombreEntidad = getRandomItem(clinicas);
+
+            const pais = getRandomItem(paises);
+            const plan = getRandomItem(planes);
+            const mensajeTemplate = getRandomItem(mensajes);
+            
+            const planHtml = `<span class="fomo-plan ${planClasses[plan]}">${plan}</span>`;
+            const mensaje = mensajeTemplate.replace('[plan]', planHtml);
+
+           
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'fomo-burbuja';
+            
+            bubble.innerHTML = `
+                <span class="fomo-bandera">${pais.emoji}</span>
+                <div>
+                    <strong style="color:#000;">${nombreEntidad}</strong> ${mensaje}
+                </div>
+            `;
+            container.appendChild(bubble);
+
+            setTimeout(() => bubble.classList.add('visible'), 100);
+            setTimeout(() => {
+                bubble.classList.remove('visible');
+                setTimeout(() => bubble.remove(), 500);
+            }, 6000);
+        };
+        
+        // Estrategia de temporizador robusta:
+        // 1. Muestra la primera burbuja a los 5 segundos para un feedback rápido.
+        setTimeout(() => {
+            showBubble();
+            // 2. Después de la primera, inicia el ciclo infinito cada 30 segundos.
+            setInterval(showBubble, 30000);
+        }, 5000);
     },
 
     initOfferCounter: function() {
@@ -964,72 +1019,38 @@ window.app.ui = {
         });
     }
 };
-console.log("MAKUMOTO® DEBUG: app.ui.js finalizado.");
-// ===== END: app.ui.js =====
-
-
-// ===== START: app.events.js =====
-console.log("MAKUMOTO® DEBUG: app.events.js comenzando.");
-window.app.events = {
-    init: function() {
-        document.querySelectorAll('.triage-btn').forEach(button => {
-            button.addEventListener('click', (e) => this.handleTriageClick(e));
-        });
-
-        if (window.app.ui && typeof window.app.ui.initLandingDynamics === 'function') {
-            window.app.ui.initLandingDynamics();
-        } else { console.error("MAKUMOTO® CRITICAL: ui.initLandingDynamics no disponible."); }
-    },
-
-    handleTriageClick: function(e) {
-        const segment = e.currentTarget.dataset.segment;
-        // Pasamos el propio botón como segundo argumento
-        window.app.ui.showSegmentBenefits(segment, e.currentTarget);
-    },
-
-   handlePlanPurchase: async function(buttonElement) {
-        const card = buttonElement.closest('.precio-tarjeta');
-        if (!card) return;
-
-        const planId = buttonElement.dataset.plan;
-        
-        window.app.ui.showLoader('Conectando con pasarela de pago...');
-
-        try {
-            // Se usa la función de Firebase directamente
-            const createOrderFunction = window.app.functions.httpsCallable('createAffiliatePaypalOrder');
-            const result = await createOrderFunction({ planId: planId });
-
-            if (result.data && result.data.approveUrl) {
-                // Redirección directa a PayPal
-                window.location.href = result.data.approveUrl;
-            } else {
-                throw new Error("La respuesta del servidor no contiene una URL de aprobación.");
-            }
-        } catch (error) {
-            console.error("MAKUMOTO® ERROR CRÍTICO AL CREAR ORDEN:", error);
-            window.app.ui.hideLoader();
-            alert("Error al crear la orden de pago. Por favor, inténtalo de nuevo o contacta a soporte.");
-        }
-    }
-};
-console.log("MAKUMOTO® DEBUG: app.events.js finalizado.");
-// ===== END: app.events.js =====
-
-
-// ===== START: app.js (Módulo de ejecución) =====
+    
+    // ===== START: MÓDULO DE EJECUCIÓN CENTRALIZADO =====
 document.addEventListener('DOMContentLoaded', () => {
     console.log("MAKUMOTO® DEBUG: DOMContentLoaded. Iniciando arsenal.");
 
-    if (window.app.events && typeof window.app.events.init === 'function') {
-        window.app.events.init();
-    } else { console.error("MAKUMOTO® CRITICAL: events.init no disponible."); }
+    // 1. Asignar los listeners a los botones de triaje
+    document.querySelectorAll('.triage-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const segment = e.currentTarget.dataset.segment;
+            window.app.ui.showBenefitsModal(segment);
+        });
+    });
+    console.log("MAKUMOTO® DEBUG: Listeners de triaje asignados.");
 
-    initializeAuthHandlers(); // <<-- ACTIVACIÓN DEL NUEVO MÓDULO DE AUTENTICACIÓN
+    // 2. Inicializar las dinámicas de la UI (incluyendo el nuevo modal)
+    if (window.app.ui && typeof window.app.ui.initLandingDynamics === 'function') {
+        window.app.ui.initLandingDynamics();
+        console.log("MAKUMOTO® DEBUG: Dinámicas de UI inicializadas.");
+    } else { 
+        console.error("MAKUMOTO® CRITICAL: ui.initLandingDynamics no disponible."); 
+    }
+
+    // 3. Inicializar los manejadores de autenticación
+    initializeAuthHandlers();
     
-    console.log("MAKUMOTO® DEBUG: app.js - DOMContentLoaded finalizado. Preparado para la batalla.");
+    console.log("MAKUMOTO® DEBUG: Módulo de ejecución finalizado. Sistema listo.");
 });
-// ===== END: app.js =====
+// ===== END: MÓDULO DE EJECUCIÓN =====
 </script>
+
+<!-- Elemento para las burbujas de compra (FOMO). El JS lo poblará. -->
+<div id="fomo-container"></div>
+
 </body>
 </html>

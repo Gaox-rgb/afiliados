@@ -102,9 +102,39 @@
     .kpi-card { background-color: #1E1E1E; padding: 20px; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--color-primary); }
     .kpi-card .value { font-size: 2.5rem; font-weight: bold; color: var(--color-primary); }
     .kpi-card .label { font-size: 0.9rem; opacity: 0.8; margin-top: 5px; }
-    .kpi-card .value.risk { color: var(--color-secondary); }
+    
+    /* Estilos para el nuevo Leaderboard */
+    #leaderboard-container { display: flex; flex-direction: column; gap: 10px; }
+    .leaderboard-item { display: grid; grid-template-columns: 50px 1fr 100px; align-items: center; gap: 15px; background: var(--color-light-dark); padding: 10px 15px; border-radius: 8px; border-left: 3px solid transparent; transition: all 0.2s ease-in-out; }
+    .leaderboard-item:hover { background: #2a2a2a; }
+    .leaderboard-rank { font-size: 1.5rem; font-weight: bold; color: var(--color-primary); text-align: center; }
+    .leaderboard-name { font-weight: 600; }
+    .leaderboard-xp { font-size: 1.2rem; font-weight: bold; text-align: right; }
+    .leaderboard-item.rank-1 { border-left-color: #FFD700; }
+    .leaderboard-item.rank-2 { border-left-color: #C0C0C0; }
+    .leaderboard-item.rank-3 { border-left-color: #CD7F32; }
+
+    /* Estilos para Notificaciones del Gerente */
+    .header-actions { display: flex; align-items: center; gap: 20px; }
+    .notification-bell { position: relative; cursor: pointer; font-size: 1.5rem; color: var(--color-text); }
+    .notification-count { position: absolute; top: -5px; right: -8px; background: var(--color-secondary); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .notification-panel { display: none; position: absolute; top: 150%; right: 0; background: var(--color-light-dark); border: 1px solid #333; border-radius: 8px; width: 320px; max-height: 400px; overflow-y: auto; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    .notification-panel.show { display: block; }
+    .notification-item { padding: 12px 15px; border-bottom: 1px solid #333; font-size: 0.9rem; }
+    .notification-item:last-child { border-bottom: none; }
+    .notification-item strong { color: var(--color-primary); }
+    .no-notifications { padding: 20px; text-align: center; color: #888; }
+
+    /* Estilos para el Historial de Transmisiones */
+    .history-item { background: var(--color-dark); padding: 15px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #555; }
+    .history-item.type-mission { border-left-color: var(--color-primary); }
+    .history-item.type-announcement { border-left-color: var(--color-secondary); }
+    .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .history-title { font-weight: bold; }
+    .history-title i { margin-right: 8px; }
+    .history-date { font-size: 0.8rem; color: #888; }
+    .history-content { font-size: 0.9rem; color: #ccc; }
 </style>
-<body>
 
 <header>
     <div class="container header-container">
@@ -112,7 +142,16 @@
             <img src="imagenes/logo.png" alt="Makumoto Logo">
             <span id="portal-sector-name">MAKUMOTO®</span>
         </div>
-        <button id="btn-logout" class="portal-logout-btn">Cerrar Sesión</button>
+        <div class="header-actions">
+            <div id="notification-bell" class="notification-bell">
+                <i class="fas fa-bell"></i>
+                <span id="notification-count" class="notification-count" style="display: none;">0</span>
+                <div id="notification-panel" class="notification-panel">
+                    <!-- Las notificaciones se cargarán aquí -->
+                </div>
+            </div>
+            <button id="btn-logout" class="portal-logout-btn">Cerrar Sesión</button>
+        </div>
     </div>
 </header>
 
@@ -124,10 +163,13 @@
             <!-- Las tarjetas de inteligencia se generarán aquí -->
         </div>
     </section>
-
-    <!-- La tabla de miembros del equipo -->
-    <section id="team-roster">
-        <!-- Próximamente -->
+    
+    <!-- *** NUEVO: LEADERBOARD DE RENDIMIENTO *** -->
+    <section id="leaderboard">
+        <h2 class="section-title" style="color: var(--color-primary); text-align: left;">Clasificación de la Tribu</h2>
+        <div id="leaderboard-container">
+            <!-- El Leaderboard se generará dinámicamente aquí -->
+        </div>
     </section>
 
     <!-- La tabla de miembros del equipo -->
@@ -157,10 +199,33 @@
         </div>
     </section>
 
+    <!-- *** NUEVA CONSOLA DE TRANSMISIONES *** -->
+    <section id="broadcast-console">
+        <h2 class="section-title">Consola de Transmisiones</h2>
+        <div class="power-up-console" style="border-left-color: var(--color-primary);">
+            <h3><i class="fas fa-bullhorn"></i> Crear Nueva Transmisión para el Equipo</h3>
+            <form id="broadcast-form">
+                <select id="broadcast-type" required>
+                    <option value="mission">Misión (Tarea a realizar)</option>
+                    <option value="announcement">Aviso (Informativo)</option>
+                </select>
+                <input type="text" id="broadcast-title" placeholder="Título (ej: Pausa Activa de 5 min)" required>
+                <textarea id="broadcast-content" placeholder="Descripción breve de la misión o el aviso." required></textarea>
+                <button type="submit">Enviar a la Tribu</button>
+            </form>
+        </div>
+
+        <div id="broadcast-history-container" style="margin-top: 20px;">
+            <h3><i class="fas fa-history"></i> Historial Reciente</h3>
+            <div id="history-list" class="loader"><i class="fas fa-spinner fa-spin"></i> Cargando historial...</div>
+        </div>
+    </section>
+
     <!-- Gestión de Departamentos -->
     <section id="department-management">
         <h2 class="section-title">Guerras de Departamentos</h2>
         <div class="department-grid">
+
             <div id="department-container">
                 <!-- Los departamentos se cargarán aquí -->
             </div>
@@ -239,60 +304,11 @@ document.addEventListener('DOMContentLoaded', () => {
             await handlePowerUpPurchase(powerUpId, e.target);
         }
     });
-
-    async function handlePowerUpPurchase(powerUpId, buttonElement) {
-        buttonElement.textContent = 'INICIANDO PROTOCOLO...';
-        buttonElement.style.pointerEvents = 'none'; // Deshabilitar clics repetidos
-        
-        try {
-            const createPowerUpPurchaseOrder = functions.httpsCallable('createPowerUpPurchaseOrder');
-            const result = await createPowerUpPurchaseOrder({ powerUpId: powerUpId });
-
-            if (result.data && result.data.approveUrl) {
-                // Redirección segura a la pasarela de pago
-                window.location.href = result.data.approveUrl;
-            } else {
-                throw new Error("La respuesta del servidor no contiene una URL de aprobación.");
-            }
-        } catch (error) {
-            alert(`Error al iniciar la compra: ${error.message}`);
-            console.error("Fallo crítico al crear orden de Power-Up:", error);
-            buttonElement.textContent = 'ADQUIRIR PODER';
-            buttonElement.style.pointerEvents = 'auto';
-        }
-    }
     const powerUpGrid = document.getElementById('power-up-grid');
 
     // --- EVENT DELEGATION para el Arsenal Estratégico ---
     powerUpGrid.addEventListener('click', async (e) => {
-        if (e.target.classList.contains('btn-contratar')) {
-            e.preventDefault(); // Prevenir cualquier acción por defecto del enlace
-            const powerUpId = e.target.dataset.powerupid;
-            await handlePowerUpPurchase(powerUpId, e.target);
-        }
-    });
 
-    async function handlePowerUpPurchase(powerUpId, buttonElement) {
-        buttonElement.textContent = 'INICIANDO PROTOCOLO...';
-        buttonElement.style.pointerEvents = 'none'; // Deshabilitar clics repetidos
-        
-        try {
-            const createPowerUpPurchaseOrder = functions.httpsCallable('createPowerUpPurchaseOrder');
-            const result = await createPowerUpPurchaseOrder({ powerUpId: powerUpId });
-
-            if (result.data && result.data.approveUrl) {
-                // Redirección segura a la pasarela de pago
-                window.location.href = result.data.approveUrl;
-            } else {
-                throw new Error("La respuesta del servidor no contiene una URL de aprobación.");
-            }
-        } catch (error) {
-            alert(`Error al iniciar la compra: ${error.message}`);
-            console.error("Fallo crítico al crear orden de Power-Up:", error);
-            buttonElement.textContent = 'ADQUIRIR PODER';
-            buttonElement.style.pointerEvents = 'auto';
-        }
-    }
 
     // --- EVENT DELEGATION para acciones en la tabla de miembros ---
     rosterContainer.addEventListener('click', async (e) => {
@@ -416,16 +432,52 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    // *** NUEVO: Lógica para la Consola de Transmisiones ***
+    const broadcastForm = document.getElementById('broadcast-form');
+    if (broadcastForm) {
+        broadcastForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Transmitiendo...';
+
+            const payload = {
+                type: document.getElementById('broadcast-type').value,
+                title: document.getElementById('broadcast-title').value,
+                content: document.getElementById('broadcast-content').value,
+            };
+
+            try {
+                const createCompanyBroadcast = functions.httpsCallable('createCompanyBroadcast');
+                await createCompanyBroadcast(payload);
+                alert('¡Transmisión enviada con éxito!');
+                e.target.reset();
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        };
+    }
+
     // --- LÓGICA DE DATOS (FUTURA FASE 1) ---
     async function loadPortalData() {
         const container = document.getElementById('roster-container');
         try {
             const getPortalData = functions.httpsCallable('getPortalData');
-            const result = await getPortalData();
-            const { company, roster, powerUps, dashboardMetrics } = result.data;
+            const getHistory = functions.httpsCallable('getBroadcastHistory');
+            const getNotifications = functions.httpsCallable('getManagerNotifications');
+
+            const [portalResult, historyResult, notificationsResult] = await Promise.all([getPortalData(), getHistory(), getNotifications()]);
+
+            const { company, roster, powerUps, dashboardMetrics } = portalResult.data;
+            const broadcastHistory = historyResult.data;
+            const notifications = notificationsResult.data;
             
             // La inteligencia se delega al Renderizador Camaleónico.
-            renderPortal(company, roster, powerUps, dashboardMetrics);
+            renderPortal(company, roster, powerUps, dashboardMetrics, broadcastHistory);
 
         } catch (error) {
             container.innerHTML = `<p style="color: var(--color-secondary);">Error de conexión con el Centro de Mando: ${error.message}</p>`;
@@ -437,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * El Renderizador Camaleónico: Transforma la UI según el sector.
      */
-    function renderPortal(company, roster, powerUps, metrics) {
+    function renderPortal(company, roster, powerUps, metrics, history) {
         let config = {};
 
         // 1. Definir la configuración basada en el sector
@@ -474,51 +526,174 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('portal-sector-name').textContent = config.logoText;
 
         // 3. Renderizar las Tarjetas de Inteligencia
-        renderKpiCards(metrics, company.sector, roster);
+        renderKpiCards(metrics);
 
         // 4. Renderizar la tabla con la configuración y los datos correctos
-        renderRoster(roster, config.headers, company.sector);
+        renderRoster(roster, config);
 
         // 5. Renderizar el Arsenal de Power-Ups
         renderPowerUps(powerUps);
 
-        // 6. Activar Consolas de Power-Ups Adquiridos
+        // 6. Renderizar el Leaderboard
+        renderLeaderboard(roster);
+        
+        // 7. Renderizar el Historial de Transmisiones
+        renderBroadcastHistory(history);
+
+        // 8. Renderizar Notificaciones
+        renderManagerNotifications(notifications);
+
+        // 9. Activar Consolas de Power-Ups Adquiridos
         activatePowerUpConsoles(powerUps, roster);
     }
 
-    function renderRoster(roster) {
+    function renderManagerNotifications(notifications) {
+        const countBadge = document.getElementById('notification-count');
+        const panel = document.getElementById('notification-panel');
+        const bell = document.getElementById('notification-bell');
+
+        if (!countBadge || !panel || !bell) return;
+
+        if (notifications && notifications.length > 0) {
+            countBadge.textContent = notifications.length;
+            countBadge.style.display = 'flex';
+            panel.innerHTML = notifications.map(n => `<div class="notification-item">${n.message}</div>`).join('');
+        } else {
+            countBadge.style.display = 'none';
+            panel.innerHTML = '<div class="no-notifications">No hay notificaciones nuevas.</div>';
+        }
+
+        bell.onclick = () => {
+            const isVisible = panel.classList.toggle('show');
+            if (isVisible && notifications && notifications.length > 0) {
+                // Si abrimos el panel y hay notificaciones, las marcamos como leídas
+                const markAsRead = functions.httpsCallable('markManagerNotificationsAsRead');
+                markAsRead().then(() => {
+                    console.log('Notificaciones marcadas como leídas.');
+                    countBadge.style.display = 'none'; // Ocultar el contador inmediatamente
+                }).catch(e => console.error("Error al marcar notificaciones como leídas:", e));
+            }
+        };
+        // Cerrar panel si se hace clic fuera
+        document.addEventListener('click', (e) => {
+            if (!bell.contains(e.target)) {
+                panel.classList.remove('show');
+            }
+        }, true);
+    }
+
+    function renderBroadcastHistory(history) {
+        const container = document.getElementById('history-list');
+        if (!container) return;
+
+        if (!history || history.length === 0) {
+            container.innerHTML = '<p style="font-size: 0.9rem; color: #888;">Aún no has enviado ninguna transmisión.</p>';
+            container.classList.remove('loader');
+            return;
+        }
+
+        container.classList.remove('loader');
+        container.innerHTML = history.map(item => {
+            const isMission = item.type === 'mission';
+            const icon = isMission ? 'fa-flag-checkered' : 'fa-bullhorn';
+            const date = new Date(item.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            return `
+                <div class="history-item type-${item.type}">
+                    <div class="history-header">
+                        <span class="history-title"><i class="fas ${icon}"></i> ${item.title}</span>
+                        <span class="history-date">${date}</span>
+                    </div>
+                    <p class="history-content">${item.content}</p>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderRoster(roster, config) {
         const container = document.getElementById('roster-container');
         if (!roster || roster.length === 0) {
             container.innerHTML = '<p>Aún no hay miembros en tu equipo. ¡Es hora de reclutar!</p>';
             return;
         }
-
-        headers.push('Acciones'); // Añadimos la nueva columna de forma dinámica
+        
+        const headers = ['Empleado', 'Email', 'Rol', 'XP Acumulado', 'Misiones', 'Acciones'];
         const tableHeaders = headers.map(h => `<th>${h}</th>`).join('');
 
         const tableRows = roster.map(member => {
-            // Evitar que un gerente se elimine a sí mismo
             const isSelf = auth.currentUser.uid === member.uid;
-
-            // Lógica de renderizado por fila, adaptada al sector
-            let rowData = `<td>${member.name}</td><td>${member.email}</td>`;
-            switch (sector) {
-                case 'fitness':
-                    rowData += `<td>${formatKpi(member.kpi)}</td>`;
-                    break;
-                case 'health':
-                    rowData += `<td>${formatKpi(member.kpi)}</td>`;
-                    break;
-                default: 
-                    rowData += `<td>${formatKpi(member.kpi)}</td>`;
-            }
-
-            // Añadimos la celda de acción
+            
+            const roleSelector = generateRoleSelector(member, isSelf);
             const actionCell = isSelf 
                 ? `<td><button class="btn-action" disabled>Tú</button></td>`
                 : `<td><button class="btn-action btn-remove" data-uid="${member.uid}" data-name="${member.name}">Revocar</button></td>`;
             
-            return `<tr>${rowData}${actionCell}</tr>`;
+            return `
+                <tr>
+                    <td>${member.name}</td>
+                    <td>${member.email}</td>
+                    <td>${roleSelector}</td>
+                    <td>${member.xp}</td>
+                    <td>${member.missions}</td>
+                    ${actionCell}
+                </tr>`;
+        }).join('');
+
+        container.innerHTML = `
+            <table>
+                <thead><tr>${tableHeaders}</tr></thead>
+                <tbody>${tableRows}</tbody>
+            </table>
+        `;
+    }
+
+    function renderKpiCards(metrics) {
+        const grid = document.querySelector('#dashboard-kpis .kpi-grid');
+        if (!grid || !metrics) return;
+
+        grid.innerHTML = `
+            <div class="kpi-card">
+                <div class="value">${metrics.totalMembers || 0}</div>
+                <div class="label">Miembros Activos</div>
+            </div>
+            <div class="kpi-card">
+                <div class="value">${metrics.totalMissionsCompleted || 0}</div>
+                <div class="label">Misiones Completadas</div>
+            </div>
+            <div class="kpi-card">
+                <div class="value">${metrics.topPerformerName || 'N/A'}</div>
+                <div class="label">Agente más Valioso</div>
+            </div>
+        `;
+    }
+
+    function renderRoster(roster, config) {
+        const container = document.getElementById('roster-container');
+        if (!roster || roster.length === 0) {
+            container.innerHTML = '<p>Aún no hay miembros en tu equipo. ¡Es hora de reclutar!</p>';
+            return;
+        }
+        
+        const headers = [...config.headers, 'XP Acumulado', 'Misiones', 'Acciones'];
+        const tableHeaders = headers.map(h => `<th>${h}</th>`).join('');
+
+        const tableRows = roster.map(member => {
+            const isSelf = auth.currentUser.uid === member.uid;
+            
+            const roleSelector = generateRoleSelector(member, isSelf);
+            const actionCell = isSelf 
+                ? `<td><button class="btn-action" disabled>Tú</button></td>`
+                : `<td><button class="btn-action btn-remove" data-uid="${member.uid}" data-name="${member.name}">Revocar</button></td>`;
+            
+            return `
+                <tr>
+                    <td>${member.name}</td>
+                    <td>${member.email}</td>
+                    <td>${roleSelector}</td>
+                    <td>${member.xp}</td>
+                    <td>${member.missions}</td>
+                    ${actionCell}
+                </tr>`;
         }).join('');
 
         container.innerHTML = `
