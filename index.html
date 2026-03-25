@@ -383,9 +383,30 @@
 
 
     /* ===== PUNTO 6: OFERTA ===== */
-    .seccion-oferta { background: var(--color-secondary); padding: 60px 0; }
+    .seccion-oferta { background: var(--color-light-dark); padding: 60px 0; }
     .banner-oferta h2 { color: white; font-size: 2.5rem; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
-    .texto-oferta { font-size: 1.3rem; margin: 15px 0; color: white; }
+    .texto-oferta { font-size: 1.2rem; margin: 15px auto; color: white; max-width: 700px; }
+    .oferta-beneficios {
+        list-style: none;
+        padding: 0;
+        margin: 25px auto;
+        max-width: 650px;
+        text-align: left;
+    }
+    .oferta-beneficios li {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+    }
+    .oferta-beneficios li::before {
+        content: '✅';
+        margin-right: 12px;
+        margin-top: 2px;
+    }
+    .oferta-beneficios strong {
+        color: var(--color-primary);
+    }
     .contador-oferta {
         display: inline-block; background: var(--color-dark); color: var(--color-primary);
         padding: 10px 20px; border-radius: 5px; font-size: 1.5rem; font-weight: 900;
@@ -688,8 +709,13 @@
     <section id="seccion-oferta" class="seccion-oferta">
         <div class="container">
             <div class="banner-oferta">
-                <h2><i class="fas fa-gift"></i> ¡OFERTA DE LANZAMIENTO!</h2>
-                <p class="texto-oferta">Los primeros <strong>100</strong> líderes en crear su tribu reciben su <strong>SEGUNDO MES TOTALMENTE GRATIS.</strong></p>
+                <h2><i class="fas fa-gift"></i> ¡OFERTA DE SEMANA SANTA!</h2>
+                <p class="texto-oferta">Esta Semana Santa, impulsa tu comunidad como nunca. Las primeras <strong>100</strong> empresas en afiliarse desbloquean este paquete de crecimiento estratégico sin costo adicional:</p>
+                <ul class="oferta-beneficios">
+                    <li><strong>Un Mes Adicional GRATIS:</strong> Duplica el impacto inicial de tu tribu con 60 días de servicio por el precio de 30.</li>
+                    <li><strong>10 Boonies Promocionales:</strong> Anuncia tu página web directamente en nuestra app durante 10 días, generando tráfico y visibilidad exclusivos.</li>
+                    <li><strong>Acceso Fundador:</strong> Asegura tu lugar para recibir los mejores descuentos y promociones en futuras herramientas de expansión.</li>
+                </ul>
                 <div class="contador-oferta">
                     QUEDAN: <span id="contador-paquetes">47</span> PASES CON ESTA PROMOCIÓN
                 </div>
