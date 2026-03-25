@@ -1112,10 +1112,10 @@ window.app.events = {
         window.app.ui.showLoader('Contactando a PayPal...');
 
         try {
-            if (!window.firebaseConfig || !window.firebaseConfig.projectId) {
-                throw new Error("La configuración de Firebase (firebaseConfig) no está disponible o no contiene el projectId.");
+            if (!firebaseConfig || !firebaseConfig.projectId) {
+                throw new Error("La configuración de Firebase (firebaseConfig) no está disponible o no contiene el projectId. Asegúrate de que firebase-config.js se cargue correctamente.");
             }
-            const functionUrl = `https://us-central1-${window.firebaseConfig.projectId}.cloudfunctions.net/createAffiliatePaypalOrder`;
+            const functionUrl = `https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/createAffiliatePaypalOrder`;
 
             const response = await fetch(functionUrl, {
                 method: 'POST',
