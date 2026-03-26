@@ -161,9 +161,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const getPortalData = firebase.functions().httpsCallable('getPortalData');
             const portalResult = await getPortalData();
-            const { company, roster, powerUps } = portalResult.data;
+            console.log("DATOS RECIBIDOS DEL BACKEND:", portalResult.data); // Línea de diagnóstico
+            const { company, roster, powerUps, dashboardMetrics } = portalResult.data;
             
-            renderPortal(company, roster, powerUps);
+            renderPortal(company, roster, powerUps, dashboardMetrics);
 
         } catch (error) {
             container.innerHTML = `<p style="color: var(--color-secondary);">Error de conexión con el Centro de Mando: ${error.message}</p>`;
@@ -172,45 +173,76 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function renderPortal(company, roster, powerUps) {
-        // ... (Aquí iría la lógica completa de renderPortal, renderRoster, etc.)
-        // La pego directamente desde tu archivo refactorizado.
-        let config = {};
-        switch (company.sector) {
-            case 'fitness':
-                config = { portalTitle: 'Centro de Coach', rosterTitle: 'Miembros Activos', headers: ['Miembro', 'Email', 'Asistencia (7d)'], logoText: `MAKUMOTO® // ${company.name}` };
-                break;
-            case 'health':
-                config = { portalTitle: 'Portal de Terapeuta', rosterTitle: 'Pacientes en Seguimiento', headers: ['Paciente', 'Email', 'Adherencia al Plan'], logoText: `MAKUMOTO® // ${company.name}` };
-                break;
-            default:
-                config = { portalTitle: 'Panel de Gerente', rosterTitle: 'Miembros del Equipo', headers: ['Empleado', 'Email', 'Rol'], logoText: `MAKUMOTO® // ${company.name}` };
-                break;
-        }
-        document.getElementById('portal-title').textContent = config.portalTitle;
-        document.getElementById('roster-title').textContent = config.rosterTitle;
-        document.getElementById('portal-sector-name').textContent = config.logoText;
-        renderRoster(roster, config);
+    function renderPortal(company, roster, powerUps, dashboardMetrics) {
+        const portalTitleEl = document.getElementById('portal-title');
+        const rosterTitleEl = document.getElementById('roster-title');
+        const sectorNameEl = document.getElementById('portal-sector-name');
+
+        portalTitleEl.textContent = `Centro de Mando: ${company.name}`;
+        rosterTitleEl.textContent = `Tribu de ${company.name}`;
+        sectorNameEl.textContent = `MAKUMOTO® // ${company.sector.toUpperCase()}`;
+        
+        renderDashboard(dashboardMetrics);
+        renderRoster(roster, company.sector);
         renderPowerUps(powerUps);
         activatePowerUpConsoles(powerUps, roster);
     }
+    
+    function renderDashboard(metrics) {
+        const grid = document.querySelector('#dashboard-kpis .kpi-grid');
+        if (!grid || !metrics) return;
+        
+        grid.innerHTML = `
+            <div class="kpi-card">
+                <div class="value">${metrics.average.toFixed(1)}</div>
+                <div class="label">Rendimiento Promedio</div>
+            </div>
+            <div class="kpi-card">
+                <div class="value">${metrics.topMemberName}</div>
+                <div class="label">Miembro Destacado</div>
+            </div>
+            <div class="kpi-card">
+                <div class="value">${metrics.atRiskCount}</div>
+                <div class="label">Miembros en Riesgo</div>
+            </div>
+        `;
+    }
 
-    function renderRoster(roster, config) {
+    function renderRoster(roster, sector) {
         const container = document.getElementById('roster-container');
         if (!roster || roster.length === 0) {
             container.innerHTML = '<p>Aún no hay miembros en tu equipo. ¡Es hora de reclutar!</p>';
             return;
         }
-        const headers = [...config.headers, 'XP Acumulado', 'Misiones', 'Acciones'];
+
+        const kpiHeaderMap = {
+            fitness: 'Asistencia (7d)',
+            health: 'Adherencia (%)',
+            corporate: 'Engagement',
+        };
+        const kpiHeader = kpiHeaderMap[sector] || 'KPI';
+        
+        const headers = ['Miembro', 'Email', 'Rol', kpiHeader, 'Acciones'];
         const tableHeaders = headers.map(h => `<th>${h}</th>`).join('');
+
         const tableRows = roster.map(member => {
             const isSelf = firebase.auth().currentUser.uid === member.uid;
             const roleSelector = generateRoleSelector(member, isSelf);
+            const kpiValue = member.kpi ? member.kpi.value : 'N/A';
             const actionCell = isSelf 
                 ? `<td><button class="btn-action" disabled>Tú</button></td>`
-                : `<td><button class="btn-action btn-remove" data-uid="${member.uid}" data-name="${member.name}">Revocar</button></td>`;
-            return `<tr><td>${member.name}</td><td>${member.email}</td><td>${roleSelector}</td><td>${member.xp || 0}</td><td>${member.missions || 0}</td>${actionCell}</tr>`;
+                : `<td><button class="btn-action btn-remove" data-uid="${member.uid}" data-name="${member.name}">Revocar Acceso</button></td>`;
+            
+            return `
+                <tr>
+                    <td>${member.name}</td>
+                    <td>${member.email}</td>
+                    <td>${roleSelector}</td>
+                    <td>${kpiValue}</td>
+                    ${actionCell}
+                </tr>`;
         }).join('');
+
         container.innerHTML = `<table><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}</tbody></table>`;
     }
 
