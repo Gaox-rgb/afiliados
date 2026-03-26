@@ -11,40 +11,58 @@
             --color-primary: #FFD700; --color-secondary: #ff4d4d;
             --color-dark: #101010; --color-light-dark: #1E1E1E;
             --color-text: #E0E0E0; --color-text-dark: #333;
-            --font-family: 'Poppins', sans-serif; /* Reintroducimos la fuente correcta */
+            --font-family: 'Poppins', sans-serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: var(--color-dark);
             color: var(--color-text);
             font-family: var(--font-family);
-            line-height: 1.6;
+            line-height: 1.5; /* Ligeramente más compacto */
+            font-size: 16px; /* Establecemos una base consistente */
         }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         
-        header { padding: 15px 0; border-bottom: 2px solid var(--color-primary); }
+        header { padding: 1rem 0; border-bottom: 2px solid var(--color-primary); }
         .header-container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 10px; color: var(--color-primary); font-weight: bold; }
-        .logo img { height: 30px; }
+        .logo { display: flex; align-items: center; gap: 10px; color: var(--color-primary); }
+        .logo img { height: 28px; }
+        .logo span { font-size: 1rem; font-weight: 600; }
         
-        #manager-portal { padding: 40px 0; }
+        #manager-portal { padding: 2.5rem 0; } /* Padding reducido */
+
         .section-title, #portal-title {
-            font-size: 2.5rem;
-            margin-bottom: 30px; /* Espaciado consistente */
-            padding-bottom: 15px;
+            font-size: 1.8rem; /* Tamaño de fuente reducido */
+            font-weight: 600;
+            margin-bottom: 1.5rem; /* Espaciado reducido */
+            padding-bottom: 0.8rem;
             border-bottom: 1px solid #333;
         }
 
-        #dashboard-kpis { margin-bottom: 50px; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .kpi-card { background-color: #1E1E1E; padding: 20px; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--color-primary); }
-        .kpi-card .value { font-size: 2.5rem; font-weight: bold; color: var(--color-primary); }
-        .kpi-card .label { font-size: 0.9rem; opacity: 0.8; margin-top: 5px; }
+        #dashboard-kpis { margin-bottom: 3rem; } /* Espaciado reducido */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .kpi-card { background-color: #1E1E1E; padding: 1.2rem; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--color-primary); }
+        .kpi-card .value {
+            font-size: 2rem; /* Tamaño de fuente reducido */
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1.2;
+        }
+        .kpi-card .label {
+            font-size: 0.85rem; /* Tamaño de fuente reducido */
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
 
-        .portal-logout-btn { background: var(--color-secondary); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .portal-logout-btn { background: var(--color-secondary); color: white; border: none; padding: 0.6rem 1rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
         
-        /* Placeholder para futuras secciones */
-        .placeholder { min-height: 100px; background-color: #1a1a1a; border: 2px dashed #333; display:flex; align-items:center; justify-content:center; border-radius: 8px; color: #555; }
+        .placeholder {
+            min-height: 80px;
+            background-color: rgba(0,0,0,0.2);
+            border: 1px dashed #444;
+            display:flex; align-items:center; justify-content:center;
+            border-radius: 8px; color: #666; font-style: italic;
+        }
     </style>
 </head>
 <body>
