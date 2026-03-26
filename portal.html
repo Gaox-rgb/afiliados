@@ -18,8 +18,8 @@
             background-color: var(--color-dark);
             color: var(--color-text);
             font-family: var(--font-family);
-            line-height: 1.5;
-            font-size: 15px; /* Base más pequeña */
+            line-height: 1.4; /* Aún más compacto */
+            font-size: 15px;
         }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         
@@ -28,27 +28,23 @@
         .logo img { height: 26px; }
         .logo span { font-size: 0.95rem; font-weight: 600; color: var(--color-primary); }
         
-        #manager-portal { padding: 2rem 0; }
+        #manager-portal { padding: 1.5rem 0; } /* Padding principal reducido */
 
-        .portal-header {
+        .portal-actions-bar {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+        
+        #portal-title {
+            font-size: 1.7rem;
+            font-weight: 600;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid #333;
         }
 
-        .section-title, #portal-title {
-            font-size: 1.7rem;
-            font-weight: 600;
-            /* Se eliminan márgenes y bordes de aquí para controlar en .portal-header */
-            margin: 0; 
-            padding: 0;
-            border: none;
-        }
-
-        #dashboard-kpis { margin-bottom: 2.5rem; }
+        #dashboard-kpis { margin-bottom: 2rem; }
         .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         .kpi-card { background-color: #1E1E1E; padding: 1rem; border-radius: 6px; text-align: center; }
         .kpi-card .value { font-size: 1.8rem; font-weight: 700; color: var(--color-primary); line-height: 1.1; }
@@ -77,10 +73,11 @@
     </header>
 
     <main id="manager-portal" class="container">
-        <div class="portal-header">
-            <h1 id="portal-title">Cargando...</h1>
+        <div class="portal-actions-bar">
             <button id="btn-logout" class="portal-logout-btn">Cerrar Sesión</button>
         </div>
+
+        <h1 id="portal-title">Cargando...</h1>
         
         <section id="dashboard-kpis">
             <div class="kpi-grid">
