@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Pinta las tarjetas de miembro en su contenedor.
+     * Pinta las filas de miembro (Mobile-First) en su contenedor.
      */
     function renderRoster(roster, sector) {
         const container = document.getElementById('roster-container');
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         const kpiLabel = kpiLabelMap[sector] || 'KPI';
         
-        const memberCardsHTML = roster.map(member => {
+        const memberRowsHTML = roster.map(member => {
             const isSelf = firebase.auth().currentUser.uid === member.uid;
             const roleSelector = generateRoleSelector(member, isSelf);
             const kpiValue = member.kpi ? member.kpi.value : 'N/A';
@@ -99,29 +99,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 : `<button data-uid="${member.uid}" data-name="${member.name}">Revocar</button>`;
 
             return `
-            <div class="member-card">
-                <div class="member-main-info">
-                    <div class="member-details">
-                        <span class="member-name">${member.name}</span>
-                        <span class="member-email">${member.email}</span>
-                    </div>
-                    <div class="member-actions">${actionButton}</div>
+            <div class="member-row">
+                <div class="member-info">
+                    <div class="member-name">${member.name}</div>
+                    <div class="member-email">${member.email}</div>
                 </div>
-                <div class="member-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Rol</span>
-                        ${roleSelector}
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">${kpiLabel}</span>
-                        <span class="stat-value">${kpiValue}</span>
-                    </div>
+                <div class="member-role">
+                    <span class="kpi-label">Rol</span>
+                    ${roleSelector}
                 </div>
-            </div>
-            `;
+                <div class="member-kpi">
+                    <span class="kpi-label">${kpiLabel}</span>
+                    <span class="kpi-value">${kpiValue}</span>
+                </div>
+                <div class="member-action">${actionButton}</div>
+            </div>`;
         }).join('');
 
-        container.innerHTML = memberCardsHTML;
+        container.innerHTML = `<div class="roster-grid">${memberRowsHTML}</div>`;
     }
 
     function generateRoleSelector(member, isSelf) {
