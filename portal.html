@@ -74,6 +74,50 @@
             border-radius: 8px; color: #666; font-style: italic;
             padding: 1rem;
         }
+
+        .placeholder {
+            min-height: 80px;
+            background-color: transparent; /* Más sutil */
+            border: 1px dashed #444;
+            display:flex; align-items:center; justify-content:center;
+            border-radius: 8px; color: #666; font-style: italic;
+            padding: 1rem;
+        }
+
+        /* --- ESTILOS PARA EL FORMULARIO DE INVITACIÓN --- */
+        .invite-container {
+            background-color: #1a1a1a;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid var(--color-primary);
+        }
+        #invite-form {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        #invite-form input {
+            flex-grow: 1;
+            background: #2c2c2c;
+            border: 1px solid #444;
+            color: var(--color-text);
+            padding: 0.6rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-family: var(--font-family);
+        }
+        #invite-form button {
+            background: var(--color-primary);
+            color: var(--color-text-dark);
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
     </style>
 </head>
 <body>
@@ -104,6 +148,12 @@
 
         <section id="team-roster">
             <h2 id="roster-title" class="section-title">Miembros de la Tribu</h2>
+            <div class="invite-container">
+                <form id="invite-form">
+                    <input type="email" id="invite-email" placeholder="correo@delnuevomiembro.com" required>
+                    <button type="submit">Enviar Invitación</button>
+                </form>
+            </div>
             <div id="roster-container" class="placeholder">
                 <!-- El Roster se activará en la Fase 2 -->
             </div>
