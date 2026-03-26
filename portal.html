@@ -109,6 +109,49 @@
             font-size: 0.9rem;
         }
 
+        #invite-form button {
+            background: var(--color-primary);
+            color: var(--color-text-dark);
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* --- ESTILOS PARA LA TABLA DE MIEMBROS --- */
+        #roster-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            table-layout: fixed;
+        }
+        #roster-container th, #roster-container td {
+            padding: 0.7rem;
+            border: 1px solid #333;
+            text-align: left;
+            word-break: break-word;
+        }
+        #roster-container th {
+            background-color: var(--color-light-dark);
+            color: var(--color-primary);
+            font-weight: 600;
+            font-size: 0.75rem; /* <<< FUENTE MÁS PEQUEÑA PARA ENCABEZADOS */
+            text-transform: uppercase; /* Mejora la estética */
+            letter-spacing: 0.5px;
+        }
+        #roster-container .role-selector {
+            background-color: #333;
+            color: var(--color-text);
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 4px;
+            font-family: var(--font-family);
+            width: 100%; /* Ocupa el espacio de la celda */
+        }
+
     </style>
 </head>
 <body>

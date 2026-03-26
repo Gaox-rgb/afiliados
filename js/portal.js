@@ -113,12 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reintroducimos los estilos de la tabla
         const tableStyle = `<style>
             #roster-container table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
-            #roster-container th, #roster-container td { padding: 0.8rem; border: 1px solid #333; text-align: left; }
-            #roster-container th { background-color: #1E1E1E; color: var(--color-primary); }
-            #roster-container .role-selector { background-color: #333; color: var(--color-text); border: 1px solid #555; border-radius: 4px; padding: 5px; font-family: var(--font-family); }
-        </style>`;
-
-        container.innerHTML = `${tableStyle}<table><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}</tbody></table>`;
+            container.innerHTML = `<table><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}</tbody></table>`;
     }
 
     function generateRoleSelector(member, isSelf) {
