@@ -18,46 +18,61 @@
             background-color: var(--color-dark);
             color: var(--color-text);
             font-family: var(--font-family);
-            line-height: 1.4; /* Aún más compacto */
-            font-size: 15px;
+            line-height: 1.4;
+            font-size: 14px; /* Base de fuente más pequeña para mayor densidad */
         }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         
-        header { padding: 0.8rem 0; border-bottom: 2px solid var(--color-primary); }
+        header { padding: 0.7rem 0; border-bottom: 1px solid var(--color-primary); }
         .header-container { display: flex; align-items: center; gap: 10px; }
-        .logo img { height: 26px; }
-        .logo span { font-size: 0.95rem; font-weight: 600; color: var(--color-primary); }
+        .logo img { height: 24px; }
+        .logo span { font-size: 0.9rem; font-weight: 500; color: var(--color-primary); }
         
-        #manager-portal { padding: 1.5rem 0; } /* Padding principal reducido */
+        #manager-portal { padding: 1.5rem 0; }
 
         .portal-actions-bar {
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 1rem;
+            justify-content: center; /* <<< BOTÓN CENTRADO, COMO LO PEDISTE */
+            margin-bottom: 1.5rem;
         }
         
         #portal-title {
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            text-align: center; /* Título centrado para equilibrio */
+            margin-bottom: 2rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid #333;
         }
-
-        #dashboard-kpis { margin-bottom: 2rem; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        #roster-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            text-align: left;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+        
+        #dashboard-kpis { margin-bottom: 2.5rem; }
+        .kpi-grid {
+            display: grid;
+            /* Grid robusto y responsivo para columnas siempre parejas */
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
         .kpi-card { background-color: #1E1E1E; padding: 1rem; border-radius: 6px; text-align: center; }
-        .kpi-card .value { font-size: 1.8rem; font-weight: 700; color: var(--color-primary); line-height: 1.1; }
-        .kpi-card .label { font-size: 0.8rem; opacity: 0.7; margin-top: 0.4rem; }
+        .kpi-card .value { font-size: 1.8rem; font-weight: 700; color: var(--color-primary); }
+        .kpi-card .label { font-size: 0.75rem; opacity: 0.7; margin-top: 0.2rem; text-transform: uppercase; }
 
-        .portal-logout-btn { background: var(--color-secondary); color: white; border: none; padding: 0.5rem 0.9rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+        .portal-logout-btn { background: var(--color-secondary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
         
         .placeholder {
             min-height: 80px;
-            background-color: rgba(0,0,0,0.2);
+            background-color: transparent; /* Más sutil */
             border: 1px dashed #444;
             display:flex; align-items:center; justify-content:center;
             border-radius: 8px; color: #666; font-style: italic;
+            padding: 1rem;
         }
     </style>
 </head>
