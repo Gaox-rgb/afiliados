@@ -110,10 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </tr>`;
         }).join('');
 
-        // Reintroducimos los estilos de la tabla
-        const tableStyle = `<style>
-            #roster-container table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
-            container.innerHTML = `<table><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}</tbody></table>`;
+        container.innerHTML = `<table><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}</tbody></table>`;
     }
 
     function generateRoleSelector(member, isSelf) {
