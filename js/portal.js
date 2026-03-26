@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Orquestador principal de renderizado
             renderPortalHeader(company, dashboardMetrics);
             renderRoster(roster, company.sector);
+            renderPowerUps(portalResult.data.powerUps); // <<< Reactivamos el renderizado del Arsenal
 
         } catch (error) {
             document.getElementById('portal-title').textContent = "Error Crítico de Conexión";
@@ -119,6 +120,37 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = `<div class="roster-grid">${memberRowsHTML}</div>`;
     }
 
+    /**
+     * Pinta las tarjetas de Power-Ups en su contenedor.
+     */
+    function renderPowerUps(powerUps) {
+        const grid = document.getElementById('power-up-grid');
+        if (!grid) return;
+
+        if (!powerUps || powerUps.length === 0) {
+            grid.innerHTML = '<p style="text-align:center; color:#888;">No hay Power-Ups disponibles para tu sector en este momento.</p>';
+            return;
+        }
+
+        const powerUpsHTML = powerUps.map(pu => {
+            const buttonHTML = !pu.isOwned 
+                ? `<a href="#" class="power-up-button" data-powerupid="${pu.id}">ADQUIRIR</a>` 
+                : '';
+            
+            return `
+            <div class="power-up-card">
+                ${pu.isOwned ? '<span class="tag-active">ACTIVO</span>' : ''}
+                <div class="power-up-icon"><i class="fas ${pu.icon || 'fa-star'}"></i></div>
+                <h3>${pu.name}</h3>
+                <p>${pu.description}</p>
+                ${buttonHTML}
+            </div>
+            `;
+        }).join('');
+
+        grid.innerHTML = powerUpsHTML;
+    }
+
     function generateRoleSelector(member, isSelf) {
         if (isSelf || !member.role) return `<strong>${member.role || 'manager'}</strong>`;
         const roles = ['member', 'leader'];
@@ -134,6 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnLogout = document.getElementById('btn-logout');
         if (btnLogout) btnLogout.onclick = () => firebase.auth().signOut();
 
+        // Event Delegation para el Arsenal Estratégico
+        const powerUpGrid = document.getElementById('power-up-grid');
+        if (powerUpGrid) {
+            powerUpGrid.addEventListener('click', (e) => {
+                if (e.target.classList.contains('power-up-button')) {
+                    e.preventDefault();
+                    const powerUpId = e.target.dataset.powerupid;
+                    alert(`Funcionalidad de compra para '${powerUpId}' se habilitará próximamente.`);
+                }
+            });
+        }
+        
         // Formulario de Invitación
         const inviteForm = document.getElementById('invite-form');
         if (inviteForm) {
