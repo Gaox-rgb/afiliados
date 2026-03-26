@@ -87,6 +87,19 @@
             color: #fff;
             text-decoration: underline;
         }
+    .summary-box {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid #444;
+            border-left: 3px solid var(--color-primary);
+            padding: 15px;
+            margin: 30px 0;
+            text-align: left;
+            border-radius: 5px;
+        }
+        .summary-box p {
+            font-size: 1rem;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -95,9 +108,30 @@
         <p>
             ¡Felicidades y bienvenido a la Tribu Makumoto®! Hemos recibido tu pago y tu cuenta de Manager está siendo procesada.
         </p>
+        <div class="summary-box">
+            <p><strong>Usuario:</strong> <span id="user-email">Cargando...</span></p>
+            <p><strong>Plan Adquirido:</strong> <span id="plan-name">Cargando...</span></p>
+            <p><strong>Importe Pagado:</strong> <span id="plan-cost">Cargando...</span></p>
+        </div>
         <p>
             <strong>Próximos Pasos:</strong> En los próximos minutos, recibirás un correo electrónico con tus credenciales de acceso y las instrucciones para ingresar a tu panel de control.
         </p>
         <a href="instructivo.html" class="cta-button">VER INSTRUCCIONES DE ACCESO</a>
             <a href="index.html" class="back-link">Regresar al inicio</a>
         </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+
+            const payerEmail = params.get('payerEmail') || 'No disponible';
+            const planId = params.get('planId') || 'No especificado';
+            const amount = params.get('amount') || '0.00';
+            const currency = params.get('currency') || 'USD';
+
+            document.getElementById('user-email').textContent = payerEmail;
+            document.getElementById('plan-name').textContent = planId;
+            document.getElementById('plan-cost').textContent = `$${amount} ${currency}`;
+        });
+    </script>
+</body>
+</html>
