@@ -3,84 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Makumoto® - Centro de Mando (Prueba Limpia)</title>
+    <title>Makumoto® - Centro de Mando</title>
     <link rel="icon" type="image/png" href="imagenes/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- ESTILOS MÍNIMOS E INDISPENSABLES --- */
         :root {
-            --color-primary: #FFD700;
-            --color-secondary: #ff4d4d;
-            --color-dark: #101010;
-            --color-light-dark: #1E1E1E;
-            --color-text: #E0E0E0;
+            --color-primary: #FFD700; --color-secondary: #ff4d4d;
+            --color-dark: #101010; --color-light-dark: #1E1E1E;
+            --color-text: #E0E0E0; --color-text-dark: #333;
+            --font-family: 'Poppins', sans-serif; /* Reintroducimos la fuente correcta */
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: var(--color-dark);
             color: var(--color-text);
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: var(--font-family);
+            line-height: 1.6;
         }
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        header {
-            padding: 15px 0;
-            border-bottom: 2px solid var(--color-primary);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        #portal-title {
-            color: var(--color-primary);
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        
+        header { padding: 15px 0; border-bottom: 2px solid var(--color-primary); }
+        .header-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; color: var(--color-primary); font-weight: bold; }
+        .logo img { height: 30px; }
+        
+        #manager-portal { padding: 40px 0; }
+        .section-title, #portal-title {
             font-size: 2.5rem;
-            margin-bottom: 20px;
+            margin-bottom: 30px; /* Espaciado consistente */
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
         }
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-        .kpi-card {
-            background-color: var(--color-light-dark);
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .kpi-card .value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--color-primary);
-        }
-        .kpi-card .label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-top: 5px;
-        }
-        #btn-logout {
-             background: var(--color-secondary); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;
-        }
+
+        #dashboard-kpis { margin-bottom: 50px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .kpi-card { background-color: #1E1E1E; padding: 20px; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--color-primary); }
+        .kpi-card .value { font-size: 2.5rem; font-weight: bold; color: var(--color-primary); }
+        .kpi-card .label { font-size: 0.9rem; opacity: 0.8; margin-top: 5px; }
+
+        .portal-logout-btn { background: var(--color-secondary); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        
+        /* Placeholder para futuras secciones */
+        .placeholder { min-height: 100px; background-color: #1a1a1a; border: 2px dashed #333; display:flex; align-items:center; justify-content:center; border-radius: 8px; color: #555; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="container">
-            <span id="portal-sector-name">MAKUMOTO®</span>
-            <button id="btn-logout">Cerrar Sesión</button>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="imagenes/logo.png" alt="Makumoto Logo">
+                <span id="portal-sector-name">MAKUMOTO®</span>
+            </div>
+            <button id="btn-logout" class="portal-logout-btn">Cerrar Sesión</button>
         </div>
     </header>
 
     <main id="manager-portal" class="container">
-        <h1 id="portal-title">Cargando Centro de Mando...</h1>
+        <h1 id="portal-title">Cargando...</h1>
         
         <section id="dashboard-kpis">
             <div class="kpi-grid">
-                <!-- El JavaScript pintará el contenido aquí -->
+                <!-- El JavaScript seguirá pintando el Pizarrón aquí -->
             </div>
         </section>
+        
+        <!-- === INICIO DE LA REINTEGRACIÓN ESTRUCTURAL === -->
+
+        <section id="team-roster">
+            <h2 id="roster-title" class="section-title">Miembros de la Tribu</h2>
+            <div id="roster-container" class="placeholder">
+                <!-- El Roster se activará en la Fase 2 -->
+            </div>
+        </section>
+
+        <section id="power-up-arsenal" style="margin-top: 50px;">
+            <h2 class="section-title">Arsenal Estratégico</h2>
+            <div id="power-up-grid" class="placeholder">
+                <!-- El Arsenal se activará en la Fase 2 -->
+            </div>
+        </section>
+
+        <!-- Aquí se podrían añadir los demás contenedores vacíos si fuera necesario -->
+
     </main>
 
     <!-- SDKs de Firebase -->
@@ -91,7 +96,7 @@
     <!-- ===== CONFIGURACIÓN SEGURA DE FIREBASE (NO VERSIONADA) ===== -->
     <script src="js/firebase-config.js"></script>
 
-    <!-- ===== NÚCLEO DEL PORTAL DE MANAGER ===== -->
+    <!-- ===== NÚCLEO DEL PORTAL DE MANAGER (SIGUE SIENDO LA VERSIÓN MÍNIMA) ===== -->
     <script src="js/portal.js"></script>
 
 </body>
