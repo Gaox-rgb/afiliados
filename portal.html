@@ -1,241 +1,98 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Makumoto® - Centro de Mando</title>
-<link rel="icon" type="image/png" href="imagenes/logo.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-    /* Estilos base y variables (copiados de la landing para consistencia) */
-    :root {
-        --color-primary: #FFD700; --color-secondary: #ff4d4d;
-        --color-dark: #101010; --color-light-dark: #1E1E1E;
-        --color-text: #E0E0E0; --color-text-dark: #333;
-        --font-family: 'Poppins', sans-serif;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-        font-family: var(--font-family); background-color: var(--color-dark);
-        color: var(--color-text); line-height: 1.6;
-    }
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-    .loader { text-align: center; margin-top: 50px; font-size: 1.5rem; color: var(--color-primary); }
-    
-    /* Estilos del Portal */
-    header { background: var(--color-dark); padding: 15px 0; border-bottom: 2px solid var(--color-primary); }
-    .header-container { display: flex; justify-content: space-between; align-items: center; }
-    .logo { display: flex; align-items: center; gap: 10px; color: var(--color-primary); font-weight: bold; }
-    .logo img { height: 30px; }
-    .logo span { font-size: 1.1rem; }
-    .logo small { display: block; font-size: 0.7em; line-height: 1; opacity: 0.8; font-weight: 400; }
-    .portal-logout-btn { background: var(--color-secondary); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makumoto® - Centro de Mando (Prueba Limpia)</title>
+    <link rel="icon" type="image/png" href="imagenes/logo.png">
+    <style>
+        /* --- ESTILOS MÍNIMOS E INDISPENSABLES --- */
+        :root {
+            --color-primary: #FFD700;
+            --color-secondary: #ff4d4d;
+            --color-dark: #101010;
+            --color-light-dark: #1E1E1E;
+            --color-text: #E0E0E0;
+        }
+        body {
+            background-color: var(--color-dark);
+            color: var(--color-text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            padding: 15px 0;
+            border-bottom: 2px solid var(--color-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #portal-title {
+            color: var(--color-primary);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .kpi-card {
+            background-color: var(--color-light-dark);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .kpi-card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+        .kpi-card .label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        #btn-logout {
+             background: var(--color-secondary); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;
+        }
+    </style>
+</head>
+<body>
 
-    #manager-portal { padding: 40px 0; }
-    #portal-title { font-size: 2.5rem; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
-    th, td { padding: 12px 15px; border: 1px solid #333; text-align: left; }
-    th { background-color: #1E1E1E; color: var(--color-primary); text-transform: uppercase; }
-    tr:nth-child(even) { background-color: #1a1a1a; }
-</style>
-/* Estilos para el formulario de invitación */
-    .invite-container { background-color: #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 3px solid var(--color-primary); }
-    .invite-container h3 { margin-bottom: 15px; }
-    #invite-form { display: flex; gap: 10px; }
-    #invite-form input { flex-grow: 1; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #222; color: white; font-size: 1rem; }
-    #invite-form button { background: var(--color-primary); color: var(--color-dark); border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
-    #invite-form button:hover { background-color: #fff08d; }
-
-    /* Estilos para la Consola de Power-Ups */
-    .power-up-console { background-color: #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 3px solid var(--color-secondary); }
-    .power-up-console h3 { margin-bottom: 15px; color: var(--color-secondary); }
-    #challenge-form { display: flex; flex-direction: column; gap: 10px; }
-    #challenge-form input, #challenge-form textarea, #challenge-form select, #challenge-form button { width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #222; color: white; font-size: 1rem; font-family: var(--font-family); }
-    #challenge-form textarea { resize: vertical; min-height: 80px; }
-    #challenge-form button { background-color: var(--color-secondary); font-weight: bold; cursor: pointer; }
-
-    .btn-action { padding: 5px 10px; font-size: 0.8rem; border-radius: 4px; border: none; cursor: pointer; }
-    .btn-remove { background-color: var(--color-secondary); color: white; }
-    .btn-action:disabled { background-color: #444; color: #888; cursor: not-allowed; }
-    .role-selector { background-color: #333; color: var(--color-text); border: 1px solid #555; border-radius: 4px; padding: 5px; }
-    
-    /* Estilos para el Arsenal de Power-Ups */
-    #power-up-arsenal { margin-top: 50px; }
-    .arsenal-title { font-size: 2rem; color: var(--color-primary); margin-bottom: 20px; text-align: center; }
-    .power-up-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-    .power-up-card { background: var(--color-light-dark); border-radius: 8px; padding: 25px; border: 1px solid #333; transition: all 0.3s ease; position: relative; overflow: hidden; }
-    .power-up-card:hover { transform: translateY(-5px); border-color: var(--color-primary); }
-    .power-up-card .icon { font-size: 2.5rem; color: var(--color-primary); margin-bottom: 15px; }
-    .power-up-card h3 { font-size: 1.3rem; margin-bottom: 10px; }
-    .power-up-card p { font-size: 0.9rem; opacity: 0.8; }
-    .power-up-card .btn-contratar { width: 100%; margin-top: 20px; background: var(--color-secondary); color: white; padding: 12px; border-radius: 5px; text-align: center; text-decoration: none; font-weight: bold; display: block; }
-    .tag-active { position: absolute; top: 15px; right: -40px; background: var(--color-primary); color: var(--color-dark); padding: 5px 40px; font-size: 0.8rem; font-weight: bold; transform: rotate(45deg); }
-    
-    /* Estilos para el Dashboard de KPIs */
-    #dashboard-kpis { margin-bottom: 40px; }
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-    .kpi-card { background-color: #1E1E1E; padding: 20px; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--color-primary); }
-    .kpi-card .value { font-size: 2.5rem; font-weight: bold; color: var(--color-primary); }
-    .kpi-card .label { font-size: 0.9rem; opacity: 0.8; margin-top: 5px; }
-
-    /* Estilos para Gestión de Departamentos */
-    .department-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-    .department-card { background-color: #1E1E1E; padding: 15px; border-radius: 8px; }
-    .department-card h3 { color: var(--color-primary); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
-    .department-members { min-height: 50px; list-style: none; }
-    .department-members li { background-color: #2c3e50; padding: 8px; margin-bottom: 5px; border-radius: 4px; cursor: grab; }
-    .new-department-card form { display: flex; flex-direction: column; gap: 10px; }
-    .new-department-card input { padding: 10px; /* ... etc */ }
-    
-    /* Estilos para La Armería */
-    .rewards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-    .reward-card { background-color: #1E1E1E; padding: 15px; border-radius: 8px; text-align: center; }
-    .reward-card h3 { color: var(--color-primary); }
-    .reward-card .cost { font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
-    .reward-card .cost i { font-size: 1rem; color: var(--color-primary); }
-    .new-reward-card form { display: flex; flex-direction: column; gap: 10px; }
-</style>
-
-<header>
-    <div class="container header-container">
-        <div class="logo">
-            <img src="imagenes/logo.png" alt="Makumoto Logo">
+    <header>
+        <div class="container">
             <span id="portal-sector-name">MAKUMOTO®</span>
+            <button id="btn-logout">Cerrar Sesión</button>
         </div>
-        <div class="header-actions">
-            <div id="notification-bell" class="notification-bell">
-                <i class="fas fa-bell"></i>
-                <span id="notification-count" class="notification-count" style="display: none;">0</span>
-                <div id="notification-panel" class="notification-panel">
-                    <!-- Las notificaciones se cargarán aquí -->
-                </div>
-            </div>
-            <button id="btn-logout" class="portal-logout-btn">Cerrar Sesión</button>
-        </div>
-    </div>
-</header>
+    </header>
 
-<main id="manager-portal" class="container">
-    <h1 id="portal-title">Cargando Centro de Mando...</h1>
-    
-    <section id="dashboard-kpis">
-        <div class="kpi-grid">
-            <!-- Las tarjetas de inteligencia se generarán aquí -->
-        </div>
-    </section>
-    
-    <!-- *** NUEVO: LEADERBOARD DE RENDIMIENTO *** -->
-    <section id="leaderboard">
-        <h2 class="section-title" style="color: var(--color-primary); text-align: left;">Clasificación de la Tribu</h2>
-        <div id="leaderboard-container">
-            <!-- El Leaderboard se generará dinámicamente aquí -->
-        </div>
-    </section>
-
-    <!-- La tabla de miembros del equipo -->
-    <section id="team-roster">
-        <h2 id="roster-title">Miembros</h2>
+    <main id="manager-portal" class="container">
+        <h1 id="portal-title">Cargando Centro de Mando...</h1>
         
-        <!-- *** CONSOLA DE IMPULSO PERSONALIZADO (CONDICIONAL) *** -->
-        <div id="impulse-console" class="power-up-console" style="display: none;">
-            <h3><i class="fas fa-bullseye"></i> Lanzar Impulso Personalizado</h3>
-            <form id="challenge-form">
-                <input type="text" id="challenge-title" placeholder="Título del Reto (ej: 5 min. de meditación)" required>
-                <textarea id="challenge-desc" placeholder="Descripción breve del reto." required></textarea>
-                <select id="challenge-target" required></select>
-                <button type="submit">Lanzar Reto</button>
-            </form>
-        </div>
-        
-        <div class="invite-container">
-            <h3><i class="fas fa-user-plus"></i> Invitar Nuevo Miembro</h3>
-            <form id="invite-form">
-                <input type="email" id="invite-email" placeholder="correo@ejemplo.com" required>
-                <button type="submit">Enviar Invitación</button>
-            </form>
-        </div>
-        <div id="roster-container">
-             <div class="loader"><i class="fas fa-spinner fa-spin"></i> Cargando datos...</div>
-        </div>
-    </section>
-
-    <!-- *** NUEVA CONSOLA DE TRANSMISIONES *** -->
-    <section id="broadcast-console">
-        <h2 class="section-title">Consola de Transmisiones</h2>
-        <div class="power-up-console" style="border-left-color: var(--color-primary);">
-            <h3><i class="fas fa-bullhorn"></i> Crear Nueva Transmisión para el Equipo</h3>
-            <form id="broadcast-form">
-                <select id="broadcast-type" required>
-                    <option value="mission">Misión (Tarea a realizar)</option>
-                    <option value="announcement">Aviso (Informativo)</option>
-                </select>
-                <input type="text" id="broadcast-title" placeholder="Título (ej: Pausa Activa de 5 min)" required>
-                <textarea id="broadcast-content" placeholder="Descripción breve de la misión o el aviso." required></textarea>
-                <button type="submit">Enviar a la Tribu</button>
-            </form>
-        </div>
-
-        <div id="broadcast-history-container" style="margin-top: 20px;">
-            <h3><i class="fas fa-history"></i> Historial Reciente</h3>
-            <div id="history-list" class="loader"><i class="fas fa-spinner fa-spin"></i> Cargando historial...</div>
-        </div>
-    </section>
-
-    <!-- Gestión de Departamentos -->
-    <section id="department-management">
-        <h2 class="section-title">Guerras de Departamentos</h2>
-        <div class="department-grid">
-
-            <div id="department-container">
-                <!-- Los departamentos se cargarán aquí -->
+        <section id="dashboard-kpis">
+            <div class="kpi-grid">
+                <!-- El JavaScript pintará el contenido aquí -->
             </div>
-            <div class="department-card new-department-card">
-                <h3><i class="fas fa-plus-circle"></i> Crear Nuevo Departamento</h3>
-                <form id="create-department-form">
-                    <input type="text" id="department-name-input" placeholder="Nombre del Departamento" required>
-                    <button type="submit">Crear</button>
-                </form>
-            </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- La Armería: Gestión de Recompensas -->
-    <section id="rewards-management">
-        <h2 class="section-title">La Armería: Recompensas del Equipo</h2>
-        <div class="rewards-grid">
-            <div id="rewards-container">
-                <!-- Las recompensas definidas se cargarán aquí -->
-            </div>
-            <div class="reward-card new-reward-card">
-                <h3><i class="fas fa-plus-circle"></i> Añadir Nueva Recompensa</h3>
-                <form id="create-reward-form">
-                    <input type="text" id="reward-name-input" placeholder="Nombre (ej: Media Jornada Libre)" required>
-                    <input type="number" id="reward-cost-input" placeholder="Costo en Puntos de Lealtad" required>
-                    <button type="submit">Añadir a la Armería</button>
-                </form>
-            </div>
-        </div>
-    </section>
+    <!-- SDKs de Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
-    <!-- El Pizarrón de Power-Ups -->
-    <section id="power-up-arsenal">
-        <h2 class="arsenal-title">Arsenal Estratégico</h2>
-        <div id="power-up-grid" class="power-up-grid">
-            <!-- El contenido se generará dinámicamente -->
-        </div>
-    </section>
-</main>
+    <!-- ===== CONFIGURACIÓN SEGURA DE FIREBASE (NO VERSIONADA) ===== -->
+    <script src="js/firebase-config.js"></script>
 
-<!-- SDKs de Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <!-- ===== NÚCLEO DEL PORTAL DE MANAGER ===== -->
+    <script src="js/portal.js"></script>
 
-<!-- ===== CONFIGURACIÓN SEGURA DE FIREBASE (NO VERSIONADA) ===== -->
-<script src="js/firebase-config.js"></script>
-
-<!-- ===== NÚCLEO DEL PORTAL DE MANAGER ===== -->
-<script src="js/portal.js"></script>
 </body>
 </html>
