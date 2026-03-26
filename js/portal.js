@@ -1,23 +1,20 @@
 // =======================================================================
 //  NÚCLEO DEL CENTRO DE MANDO MAKUMOTO®
-//  FASE 1: ESTRATEGIA DEL PIZARRÓN (VISUALIZACIÓN MÍNIMA)
+//  FASE 2: REINTEGRACIÓN FUNCIONAL (ROSTER)
 // =======================================================================
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- GUARDIÁN DE SESIÓN ---
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
-            console.log("Acceso autorizado. Iniciando carga del Pizarrón...");
+            console.log("Acceso autorizado. Iniciando carga del Portal...");
             document.getElementById('manager-portal').style.display = 'block';
             
-            // Asignar evento de logout
-            const btnLogout = document.getElementById('btn-logout');
-            if (btnLogout) {
-                btnLogout.onclick = () => firebase.auth().signOut();
-            }
+            // Asignar eventos de la página
+            setupEventListeners();
             
             // Iniciar la carga de datos
-            loadPizarronData();
+            loadPortalData();
 
         } else {
             console.warn("Acceso no autorizado. Redirigiendo a index.html");
@@ -28,43 +25,33 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Llama a la Cloud Function y pasa los datos a la función de renderizado.
      */
-    async function loadPizarronData() {
+    async function loadPortalData() {
         try {
             const getPortalData = firebase.functions().httpsCallable('getPortalData');
             const portalResult = await getPortalData();
             
-            console.log("Datos recibidos para el Pizarrón:", portalResult.data);
-            const { company, dashboardMetrics } = portalResult.data;
+            console.log("Datos completos recibidos:", portalResult.data);
+            const { company, dashboardMetrics, roster } = portalResult.data;
             
-            renderPizarron(company, dashboardMetrics);
+            // Orquestador principal de renderizado
+            renderPortalHeader(company, dashboardMetrics);
+            renderRoster(roster, company.sector);
 
         } catch (error) {
             document.getElementById('portal-title').textContent = "Error Crítico de Conexión";
-            const kpiGrid = document.querySelector('#dashboard-kpis .kpi-grid');
-            if (kpiGrid) {
-                kpiGrid.innerHTML = `<p style="color: var(--color-secondary);">No se pudo cargar el Pizarrón: ${error.message}</p>`;
-            }
-            console.error("Fallo catastrófico en loadPizarronData:", error);
+            console.error("Fallo catastrófico en loadPortalData:", error);
         }
     }
 
     /**
-     * Pinta únicamente el título y el dashboard de KPIs. Nada más.
+     * Pinta el Pizarrón (título y dashboard).
      */
-    function renderPizarron(company, metrics) {
-        if (!company || !metrics) {
-            console.error("Fallo al renderizar: Los datos de compañía o métricas están vacíos.");
-            return;
-        }
+    function renderPortalHeader(company, metrics) {
+        if (!company || !metrics) return;
 
-        // 1. Renderizar Títulos
-        const portalTitleEl = document.getElementById('portal-title');
-        const sectorNameEl = document.getElementById('portal-sector-name');
-        
-        portalTitleEl.textContent = `Centro de Mando: ${company.name}`;
-        sectorNameEl.textContent = `MAKUMOTO® // ${company.sector.toUpperCase()}`;
+        document.getElementById('portal-title').textContent = `Centro de Mando: ${company.name}`;
+        document.getElementById('portal-sector-name').textContent = `MAKUMOTO® // ${company.sector.toUpperCase()}`;
 
-        // 2. Renderizar Dashboard de KPIs
         const kpiGrid = document.querySelector('#dashboard-kpis .kpi-grid');
         if (kpiGrid) {
             kpiGrid.innerHTML = `
@@ -82,11 +69,135 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
+    }
+
+    /**
+     * Pinta la tabla de miembros en su contenedor.
+     */
+    function renderRoster(roster, sector) {
+        const container = document.getElementById('roster-container');
+        if (!container) return;
+
+        if (!roster || roster.length === 0) {
+            container.innerHTML = '<p>Aún no hay miembros en tu equipo. ¡Usa el formulario para reclutar!</p>';
+            return;
+        }
+
+        const kpiHeaderMap = {
+            fitness: 'Asistencia (7d)',
+            health: 'Adherencia (%)',
+            corporate: 'Engagement',
+        };
+        const kpiHeader = kpiHeaderMap[sector] || 'KPI';
         
-        // Limpiamos el loader de la sección de roster para que no confunda
+        const headers = ['Miembro', 'Email', 'Rol', kpiHeader, 'Acciones'];
+        const tableHeaders = headers.map(h => `<th>${h}</th>`).join('');
+
+        const tableRows = roster.map(member => {
+            const isSelf = firebase.auth().currentUser.uid === member.uid;
+            const roleSelector = generateRoleSelector(member, isSelf);
+            const kpiValue = member.kpi ? member.kpi.value : 'N/A';
+            const actionCell = isSelf 
+                ? `<td><button class="portal-logout-btn" style="background-color: #555; cursor: not-allowed;" disabled>Tú</button></td>`
+                : `<td><button class="portal-logout-btn" data-uid="${member.uid}" data-name="${member.name}">Revocar</button></td>`;
+            
+            return `<tr>
+                        <td>${member.name}</td>
+                        <td>${member.email}</td>
+                        <td>${roleSelector}</td>
+                        <td>${kpiValue}</td>
+                        ${actionCell}
+                    </tr>`;
+        }).join('');
+
+        // Reintroducimos los estilos de la tabla
+        const tableStyle = `<style>
+            #roster-container table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+            #roster-container th, #roster-container td { padding: 0.8rem; border: 1px solid #333; text-align: left; }
+            #roster-container th { background-color: #1E1E1E; color: var(--color-primary); }
+            #roster-container .role-selector { background-color: #333; color: var(--color-text); border: 1px solid #555; border-radius: 4px; padding: 5px; font-family: var(--font-family); }
+        </style>`;
+
+        container.innerHTML = `${tableStyle}<table><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}</tbody></table>`;
+    }
+
+    function generateRoleSelector(member, isSelf) {
+        if (isSelf || !member.role) return `<strong>${member.role || 'manager'}</strong>`;
+        const roles = ['member', 'leader'];
+        const options = roles.map(role => `<option value="${role}" ${member.role === role ? 'selected' : ''}>${role}</option>`).join('');
+        return `<select class="role-selector" data-uid="${member.uid}" data-current-role="${member.role}">${options}</select>`;
+    }
+
+    /**
+     * Centraliza todos los manejadores de eventos de la página.
+     */
+    function setupEventListeners() {
+        // Botón de Logout
+        const btnLogout = document.getElementById('btn-logout');
+        if (btnLogout) btnLogout.onclick = () => firebase.auth().signOut();
+
+        // Formulario de Invitación
+        const inviteForm = document.getElementById('invite-form');
+        if (inviteForm) {
+            inviteForm.onsubmit = async (e) => {
+                e.preventDefault();
+                const emailInput = document.getElementById('invite-email');
+                const button = e.target.querySelector('button');
+                button.textContent = 'Enviando...';
+                button.disabled = true;
+
+                try {
+                    const inviteTeamMember = firebase.functions().httpsCallable('inviteTeamMember');
+                    const result = await inviteTeamMember({ email: emailInput.value });
+                    alert(result.data.message || 'Invitación enviada.');
+                    emailInput.value = '';
+                    loadPortalData(); // Recargar datos para ver al nuevo miembro
+                } catch (error) {
+                    alert(`Error: ${error.message}`);
+                } finally {
+                    button.textContent = 'Enviar Invitación';
+                    button.disabled = false;
+                }
+            };
+        }
+
+        // Event Delegation para acciones en la tabla de miembros (Revocar y Cambiar Rol)
         const rosterContainer = document.getElementById('roster-container');
-        if(rosterContainer) rosterContainer.innerHTML = '';
-        
-        console.log("¡Pizarrón renderizado con éxito!");
+        if(rosterContainer) {
+            rosterContainer.addEventListener('click', async (e) => {
+                if (e.target.tagName === 'BUTTON' && e.target.dataset.uid) {
+                    const memberName = e.target.dataset.name;
+                    if (confirm(`¿Seguro que quieres revocar el acceso a ${memberName}?`)) {
+                        e.target.textContent = '...'; e.target.disabled = true;
+                        try {
+                            const removeTeamMember = firebase.functions().httpsCallable('removeTeamMember');
+                            await removeTeamMember({ uidToRemove: e.target.dataset.uid });
+                            loadPortalData(); // Recargar para ver el cambio
+                        } catch (error) {
+                            alert(`Error: ${error.message}`);
+                            e.target.textContent = 'Revocar'; e.target.disabled = false;
+                        }
+                    }
+                }
+            });
+
+            rosterContainer.addEventListener('change', async (e) => {
+                if (e.target.classList.contains('role-selector')) {
+                    const selector = e.target;
+                    const newRole = selector.value;
+                    selector.disabled = true;
+                    try {
+                        const updateTeamMemberRole = firebase.functions().httpsCallable('updateTeamMemberRole');
+                        await updateTeamMemberRole({ uidToUpdate: selector.dataset.uid, newRole: newRole });
+                        selector.dataset.currentRole = newRole; // Actualizar el estado actual
+                    } catch (error) {
+                        alert(`Error: ${error.message}`);
+                        selector.value = selector.dataset.currentRole; // Revertir al rol anterior
+                    } finally {
+                        selector.disabled = false;
+                    }
+                }
+            });
+        }
     }
 });
