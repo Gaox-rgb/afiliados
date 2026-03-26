@@ -11,50 +11,50 @@
             --color-primary: #FFD700; --color-secondary: #ff4d4d;
             --color-dark: #101010; --color-light-dark: #1E1E1E;
             --color-text: #E0E0E0; --color-text-dark: #333;
-            --font-family: 'Poppins', sans-serif;
+            --font-family: 'Poppins', sans-serif, system-ui;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: var(--color-dark);
             color: var(--color-text);
             font-family: var(--font-family);
-            line-height: 1.5; /* Ligeramente más compacto */
-            font-size: 16px; /* Establecemos una base consistente */
+            line-height: 1.5;
+            font-size: 15px; /* Base más pequeña */
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         
-        header { padding: 1rem 0; border-bottom: 2px solid var(--color-primary); }
-        .header-container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 10px; color: var(--color-primary); }
-        .logo img { height: 28px; }
-        .logo span { font-size: 1rem; font-weight: 600; }
+        header { padding: 0.8rem 0; border-bottom: 2px solid var(--color-primary); }
+        .header-container { display: flex; align-items: center; gap: 10px; }
+        .logo img { height: 26px; }
+        .logo span { font-size: 0.95rem; font-weight: 600; color: var(--color-primary); }
         
-        #manager-portal { padding: 2.5rem 0; } /* Padding reducido */
+        #manager-portal { padding: 2rem 0; }
 
-        .section-title, #portal-title {
-            font-size: 1.8rem; /* Tamaño de fuente reducido */
-            font-weight: 600;
-            margin-bottom: 1.5rem; /* Espaciado reducido */
-            padding-bottom: 0.8rem;
+        .portal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
             border-bottom: 1px solid #333;
         }
 
-        #dashboard-kpis { margin-bottom: 3rem; } /* Espaciado reducido */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-        .kpi-card { background-color: #1E1E1E; padding: 1.2rem; border-radius: 8px; text-align: center; border-bottom: 3px solid var(--color-primary); }
-        .kpi-card .value {
-            font-size: 2rem; /* Tamaño de fuente reducido */
-            font-weight: 700;
-            color: var(--color-primary);
-            line-height: 1.2;
-        }
-        .kpi-card .label {
-            font-size: 0.85rem; /* Tamaño de fuente reducido */
-            opacity: 0.8;
-            margin-top: 0.5rem;
+        .section-title, #portal-title {
+            font-size: 1.7rem;
+            font-weight: 600;
+            /* Se eliminan márgenes y bordes de aquí para controlar en .portal-header */
+            margin: 0; 
+            padding: 0;
+            border: none;
         }
 
-        .portal-logout-btn { background: var(--color-secondary); color: white; border: none; padding: 0.6rem 1rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+        #dashboard-kpis { margin-bottom: 2.5rem; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .kpi-card { background-color: #1E1E1E; padding: 1rem; border-radius: 6px; text-align: center; }
+        .kpi-card .value { font-size: 1.8rem; font-weight: 700; color: var(--color-primary); line-height: 1.1; }
+        .kpi-card .label { font-size: 0.8rem; opacity: 0.7; margin-top: 0.4rem; }
+
+        .portal-logout-btn { background: var(--color-secondary); color: white; border: none; padding: 0.5rem 0.9rem; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
         
         .placeholder {
             min-height: 80px;
@@ -73,12 +73,14 @@
                 <img src="imagenes/logo.png" alt="Makumoto Logo">
                 <span id="portal-sector-name">MAKUMOTO®</span>
             </div>
-            <button id="btn-logout" class="portal-logout-btn">Cerrar Sesión</button>
         </div>
     </header>
 
     <main id="manager-portal" class="container">
-        <h1 id="portal-title">Cargando...</h1>
+        <div class="portal-header">
+            <h1 id="portal-title">Cargando...</h1>
+            <button id="btn-logout" class="portal-logout-btn">Cerrar Sesión</button>
+        </div>
         
         <section id="dashboard-kpis">
             <div class="kpi-grid">
