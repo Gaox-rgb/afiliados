@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Pinta la tabla de miembros en su contenedor.
+     * Pinta las tarjetas de miembro en su contenedor.
      */
     function renderRoster(roster, sector) {
         const container = document.getElementById('roster-container');
@@ -83,34 +83,45 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const kpiHeaderMap = {
-            fitness: 'Asistencia (7d)',
-            health: 'Adherencia (%)',
+        const kpiLabelMap = {
+            fitness: 'Asistencia',
+            health: 'Adherencia',
             corporate: 'Engagement',
         };
-        const kpiHeader = kpiHeaderMap[sector] || 'KPI';
+        const kpiLabel = kpiLabelMap[sector] || 'KPI';
         
-        const headers = ['Miembro', 'Email', 'Rol', kpiHeader, 'Acciones'];
-        const tableHeaders = headers.map(h => `<th>${h}</th>`).join('');
-
-        const tableRows = roster.map(member => {
+        const memberCardsHTML = roster.map(member => {
             const isSelf = firebase.auth().currentUser.uid === member.uid;
             const roleSelector = generateRoleSelector(member, isSelf);
             const kpiValue = member.kpi ? member.kpi.value : 'N/A';
-            const actionCell = isSelf 
-                ? `<td><button class="portal-logout-btn" style="background-color: #555; cursor: not-allowed;" disabled>Tú</button></td>`
-                : `<td><button class="portal-logout-btn" data-uid="${member.uid}" data-name="${member.name}">Revocar</button></td>`;
-            
-            return `<tr>
-                        <td>${member.name}</td>
-                        <td>${member.email}</td>
-                        <td>${roleSelector}</td>
-                        <td>${kpiValue}</td>
-                        ${actionCell}
-                    </tr>`;
+            const actionButton = isSelf 
+                ? `<button disabled>Tú</button>`
+                : `<button data-uid="${member.uid}" data-name="${member.name}">Revocar</button>`;
+
+            return `
+            <div class="member-card">
+                <div class="member-main-info">
+                    <div class="member-details">
+                        <span class="member-name">${member.name}</span>
+                        <span class="member-email">${member.email}</span>
+                    </div>
+                    <div class="member-actions">${actionButton}</div>
+                </div>
+                <div class="member-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Rol</span>
+                        ${roleSelector}
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">${kpiLabel}</span>
+                        <span class="stat-value">${kpiValue}</span>
+                    </div>
+                </div>
+            </div>
+            `;
         }).join('');
 
-        container.innerHTML = `<table><thead><tr>${tableHeaders}</tr></thead><tbody>${tableRows}</tbody></table>`;
+        container.innerHTML = memberCardsHTML;
     }
 
     function generateRoleSelector(member, isSelf) {
