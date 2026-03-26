@@ -9,3 +9,7 @@ const firebaseConfig = {
   messagingSenderId: "398366272130",
   appId: "1:398366272130:web:073b05e75ed299534ce29b"
 };
+
+// ¡ESTA ES LA LÍNEA CRÍTICA QUE FALTA!
+// Inicializa la aplicación de Firebase con la configuración proporcionada.
+firebase.initializeApp(firebaseConfig);
