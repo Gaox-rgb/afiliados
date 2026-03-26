@@ -121,33 +121,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Pinta las tarjetas de Power-Ups en su contenedor.
+     * Pinta las filas de Power-Ups (Mobile-First) en su contenedor.
      */
     function renderPowerUps(powerUps) {
         const grid = document.getElementById('power-up-grid');
         if (!grid) return;
 
         if (!powerUps || powerUps.length === 0) {
-            grid.innerHTML = '<p style="text-align:center; color:#888;">No hay Power-Ups disponibles para tu sector en este momento.</p>';
+            grid.innerHTML = '<p style="text-align:center; color:#888;">No hay Power-Ups disponibles para tu sector.</p>';
             return;
         }
 
         const powerUpsHTML = powerUps.map(pu => {
-            const buttonHTML = !pu.isOwned 
-                ? `<a href="#" class="power-up-button" data-powerupid="${pu.id}">ADQUIRIR</a>` 
+            const actionHTML = !pu.isOwned 
+                ? `<div class="power-up-action"><a href="#" class="power-up-button" data-powerupid="${pu.id}">ADQUIRIR</a></div>` 
                 : '';
             
             return `
-            <div class="power-up-card">
+            <div class="power-up-row">
                 ${pu.isOwned ? '<span class="tag-active">ACTIVO</span>' : ''}
                 <div class="power-up-icon"><i class="fas ${pu.icon || 'fa-star'}"></i></div>
-                <h3>${pu.name}</h3>
-                <p>${pu.description}</p>
-                ${buttonHTML}
+                <div class="power-up-info">
+                    <h3>${pu.name}</h3>
+                    <p>${pu.description}</p>
+                </div>
+                ${actionHTML}
             </div>
             `;
         }).join('');
 
+        // Usamos una clase de lista en lugar de grid para el contenedor
+        grid.className = 'power-up-list';
         grid.innerHTML = powerUpsHTML;
     }
 

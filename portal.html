@@ -198,47 +198,43 @@
             color: #999;
         }
 
-        /* --- ESTILOS PARA EL ARSENAL ESTRATÉGICO --- */
-        .power-up-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-        .power-up-card {
-            background: var(--color-light-dark);
-            border-radius: 6px;
-            padding: 1.2rem;
-            text-align: center;
-            border: 1px solid #333;
-            position: relative;
-            overflow: hidden;
+        /* --- ESTILOS PARA EL ARSENAL ESTRATÉGICO (MOBILE-FIRST) --- */
+        .power-up-list {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .power-up-row {
+            background-color: var(--color-light-dark);
+            border-radius: 6px;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            border-left: 3px solid var(--color-primary);
+            position: relative;
         }
         .power-up-icon {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--color-primary);
-            margin-bottom: 0.8rem;
         }
-        .power-up-card h3 {
-            font-size: 1.1rem;
+        .power-up-info h3 {
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
         }
-        .power-up-card p {
-            font-size: 0.85rem;
+        .power-up-info p {
+            font-size: 0.8rem;
             color: #999;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-            flex-grow: 1;
+            line-height: 1.4;
         }
-        .power-up-button {
+        .power-up-action a {
             display: block;
             background: var(--color-secondary);
             color: white;
             text-decoration: none;
-            padding: 0.6rem;
+            padding: 0.6rem 1rem;
             border-radius: 4px;
             font-weight: bold;
             font-size: 0.9rem;
@@ -246,14 +242,14 @@
         }
         .tag-active {
             position: absolute;
-            top: 10px;
-            right: -30px;
+            top: 0;
+            left: 0;
             background: var(--color-primary);
             color: var(--color-dark);
-            padding: 4px 30px;
-            font-size: 0.7rem;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.6rem;
             font-weight: bold;
-            transform: rotate(45deg);
+            border-top-left-radius: 6px;
         }
 
     </style>
