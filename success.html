@@ -109,7 +109,6 @@
             ¡Felicidades y bienvenido a la Tribu Makumoto®! Hemos recibido tu pago y tu cuenta de Manager está siendo procesada.
         </p>
         <div class="summary-box">
-            <p><strong>Usuario:</strong> <span id="user-email">Cargando...</span></p>
             <p><strong>Plan Adquirido:</strong> <span id="plan-name">Cargando...</span></p>
             <p><strong>Importe Pagado:</strong> <span id="plan-cost">Cargando...</span></p>
         </div>
@@ -123,12 +122,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
 
-            const payerEmail = params.get('payerEmail') || 'No disponible';
             const planId = params.get('planId') || 'No especificado';
             const amount = params.get('amount') || '0.00';
             const currency = params.get('currency') || 'USD';
-
-            document.getElementById('user-email').textContent = payerEmail;
             document.getElementById('plan-name').textContent = planId;
             document.getElementById('plan-cost').textContent = `$${amount} ${currency}`;
         });
