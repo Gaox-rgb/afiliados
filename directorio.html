@@ -140,6 +140,20 @@ section { padding: 60px 0; text-align: center; }
     </div>
 </footer>
 
+<!-- MODAL DE LOGIN (Copiado de index.html para funcionalidad) -->
+<div id="login-modal" class="modal-overlay">
+    <div class="modal-content" style="background: #1E1E1E; padding: 40px; border-radius: 10px; text-align: center; position: relative; max-width: 500px; border-top: 5px solid #FFD700;">
+        <span class="modal-close-btn" id="close-login-modal" style="position: absolute; top: 10px; right: 15px; background: none; border: none; color: #E0E0E0; font-size: 2rem; cursor: pointer;">&times;</span>
+        <h3 style="font-size: 1.8rem; color: #FFD700; margin-bottom: 10px;">Acceso de Gerente</h3>
+        <p style="margin-bottom: 25px; font-size: 1.1rem;">Ingresa tus credenciales para acceder a tu dashboard.</p>
+        <form id="login-form" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+            <input type="email" id="login-email" placeholder="EMAIL" required style="padding: 12px; border-radius: 5px; border: 1px solid #444; background: #222; color: white; font-size: 1rem; text-transform: none;">
+            <input type="password" id="login-password" placeholder="CONTRASEÑA" required style="padding: 12px; border-radius: 5px; border: 1px solid #444; background: #222; color: white; font-size: 1rem;">
+            <button type="submit" style="background: #FFD700; color: #101010; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">Ingresar al Centro de Mando</button>
+        </form>
+    </div>
+</div>
+
 <!-- SDKs y Configuración de Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -147,6 +161,20 @@ section { padding: 60px 0; text-align: center; }
 
 <!-- Lógica del Directorio -->
 <script src="js/directorio.js"></script>
+
+<!-- Lógica de Autenticación Requerida para el Header -->
+<script>
+    window.app = window.app || {}; // Asegura que el objeto global exista
+    window.app.ui = window.app.ui || {}; // Asegura el espacio de nombres de UI
+
+    // Lógica mínima para el modal de login
+    const loginModal = document.getElementById('login-modal');
+    if (loginModal) {
+        document.getElementById('btn-show-login').onclick = () => loginModal.classList.add('visible');
+        document.getElementById('close-login-modal').onclick = () => loginModal.classList.remove('visible');
+        loginModal.onclick = (e) => { if (e.target === loginModal) loginModal.classList.remove('visible'); };
+    }
+</script>
 
 </body>
 </html>
