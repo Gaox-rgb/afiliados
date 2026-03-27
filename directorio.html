@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Directorio de Afiliados - Makumoto®</title>
+<link rel="icon" type="image/png" href="imagenes/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ===== ESTILOS COPIADOS DE INDEX.HTML PARA CONSISTENCIA ===== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap');
+:root {
+    --color-primary: #FFD700;
+    --color-secondary: #ff4d4d;
+    --color-dark: #101010;
+    --color-light-dark: #1E1E1E;
+    --color-text: #E0E0E0;
+    --color-text-dark: #333;
+    --font-family: 'Poppins', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-dark);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+section { padding: 60px 0; text-align: center; }
+.titulo-seccion {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    color: var(--color-primary);
+    text-transform: uppercase;
+}
+.subtitulo-seccion {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    opacity: 0.9;
+}
+#main-header { background: var(--color-dark); padding: 15px 0; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 1000; }
+.header-container { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.logo { display: flex; align-items: center; gap: 10px; color: var(--color-primary); font-weight: bold; }
+.logo img { height: 30px; }
+.header-actions { display: flex; align-items: center; gap: 15px; }
+.cta-button-header { background: var(--color-primary); color: var(--color-dark); padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+.login-button-header { background: transparent; color: var(--color-primary); border: 1px solid var(--color-primary); padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: bold; text-decoration: none; transition: all 0.2s ease; }
+.login-button-header:hover { background-color: var(--color-primary); color: var(--color-dark); }
+#main-footer { background-color: #0A0A0A; padding: 30px 0; text-align: center; border-top: 1px solid #2a2a2a; font-size: 0.9rem; color: #888; }
+
+/* ===== ESTILOS ESPECÍFICOS PARA EL DIRECTORIO ===== */
+#directory-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    text-align: left;
+}
+.company-card {
+    background-color: var(--color-light-dark);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #333;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    text-decoration: none;
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+}
+.company-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-primary);
+}
+.company-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+}
+.company-card p {
+    opacity: 0.8;
+    font-size: 0.95rem;
+    flex-grow: 1;
+}
+.company-card-footer {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: right;
+    color: var(--color-primary);
+}
+.loader-text {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+.error-text {
+    font-size: 1.2rem;
+    color: var(--color-secondary);
+}
+</style>
+</head>
+<body>
+
+<header id="main-header">
+    <div class="header-container">
+        <div class="logo">
+            <img src="imagenes/logo.png" alt="Makumoto Logo">
+            <span>MAKUMOTO® AFILIADOS</span>
+        </div>
+        <div class="header-actions">
+            <a href="index.html#seccion-precios-directa" class="cta-button-header">CONTRATAR</a>
+            <a href="directorio.html" class="login-button-header">Directorio</a>
+            <!-- El botón de login se ocultará con JS si ya hay sesión -->
+            <button id="btn-show-login" class="login-button-header">Login Empresas</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section id="directory-section">
+        <div class="container">
+            <h2 class="titulo-seccion">Directorio de Afiliados</h2>
+            <p class="subtitulo-seccion">Descubre las empresas, gimnasios y clínicas que forman parte del ecosistema Makumoto® y potencian a sus comunidades con nosotros.</p>
+            
+            <div id="directory-list">
+                <!-- INICIO ESTADO DE CARGA -->
+                <p class="loader-text"><i class="fas fa-spinner fa-spin"></i> Cargando directorio...</p>
+                <!-- FIN ESTADO DE CARGA -->
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer id="main-footer">
+    <div class="container">
+        <p>&copy; 2024 Makumoto®. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<!-- SDKs y Configuración de Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+
+<!-- Lógica del Directorio -->
+<script src="js/directorio.js"></script>
+
+</body>
+</html>
