@@ -39,6 +39,12 @@
             document.getElementById('user-email').textContent = email;
             document.getElementById('user-password').textContent = tempPassword;
             
+            const { email, tempPassword, convenioCode } = result.data;
+            
+            document.getElementById('user-email').textContent = email;
+            document.getElementById('user-password').textContent = tempPassword;
+            document.getElementById('user-convenio-code').textContent = convenioCode;
+            
             document.getElementById('processing-message').style.display = 'none';
             document.getElementById('credentials-container').style.display = 'block';
 
