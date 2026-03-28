@@ -56,7 +56,7 @@
         .cta-button:hover {
             transform: scale(1.05);
         }
-     @media (max-width: 600px) {
+        @media (max-width: 600px) {
             body {
                 padding: 15px;
                 height: auto;
@@ -76,7 +76,7 @@
                 padding: 12px 25px;
             }
         }
-    .back-link {
+        .back-link {
             display: inline-block;
             margin-top: 15px;
             color: #aaa;
@@ -87,7 +87,7 @@
             color: #fff;
             text-decoration: underline;
         }
-    .summary-box {
+        .summary-box {
             background: rgba(0,0,0,0.2);
             border: 1px solid #444;
             border-left: 3px solid var(--color-primary);
@@ -100,6 +100,11 @@
             font-size: 1rem;
             margin: 5px 0;
         }
+        .note {
+            font-style: italic;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -108,20 +113,23 @@
         <p>
             ¡Felicidades y bienvenido a la Tribu Makumoto®! Hemos recibido tu pago y tu cuenta de Manager está siendo procesada.
         </p>
+
         <div id="summary" class="summary-box">
             <p><strong>Plan Adquirido:</strong> <span id="plan-name">Cargando...</span></p>
             <p><strong>Importe Pagado:</strong> <span id="plan-cost">Cargando...</span></p>
         </div>
+        
         <div id="credentials-container" style="display: none;">
              <p><strong>¡Acceso Inmediato!</strong> Tus credenciales han sido generadas. Guárdalas en un lugar seguro.</p>
              <div class="summary-box" style="background: rgba(255,215,0,0.1); border-color: var(--color-primary);">
                  <p><strong>Usuario:</strong> <span id="user-email"></span></p>
                  <p><strong>Contraseña Temporal:</strong> <span id="user-password" style="font-weight:bold; color: var(--color-primary);"></span></p>
              </div>
-             <p class="note" style="font-size: 0.9rem;">Por seguridad, se te pedirá cambiar esta contraseña en tu primer inicio de sesión.</p>
+             <p class="note">Por seguridad, se te pedirá cambiar esta contraseña en tu primer inicio de sesión.</p>
         </div>
+
         <div id="processing-message">
-             <p><i class="fas fa-spinner fa-spin"></i> Estamos finalizando tu compra y generando tus credenciales. No cierres esta ventana...</p>
+             <p><i class="fas fa-spinner fa-spin"></i> Finalizando tu compra y generando tus credenciales. No cierres esta ventana...</p>
         </div>
 
         <a href="instructivo.html" class="cta-button">VER INSTRUCCIONES DE ACCESO</a>
@@ -132,47 +140,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
     <script src="js/firebase-config.js"></script>
-
-    <script>
-        async function finalizePurchase() {
-            const params = new URLSearchParams(window.location.search);
-            const planId = params.get('planId');
-            const amount = params.get('amount');
-            const currency = params.get('currency');
-            const orderID = params.get('token'); // PayPal devuelve el ID de la orden como 'token'
-
-            document.getElementById('plan-name').textContent = planId || 'No especificado';
-            document.getElementById('plan-cost').textContent = `$${amount || '0.00'} ${currency || 'USD'}`;
-
-            if (!orderID) {
-                document.getElementById('processing-message').innerHTML = '<p style="color:var(--color-secondary);">Error: No se encontró el ID de la orden. Contacta a soporte.</p>';
-                return;
-            }
-
-            try {
-                firebase.initializeApp(firebaseConfig);
-                const finalize = firebase.functions().httpsCallable('finalizeAffiliatePurchase');
-                const result = await finalize({ orderID: orderID });
-
-                const { email, tempPassword } = result.data;
-                
-                document.getElementById('user-email').textContent = email;
-                document.getElementById('user-password').textContent = tempPassword;
-                
-                document.getElementById('processing-message').style.display = 'none';
-                document.getElementById('credentials-container').style.display = 'block';
-
-            } catch (error) {
-                console.error("Error al finalizar la compra:", error);
-                let errorMessage = "Ocurrió un error inesperado. Por favor, contacta a soporte con tu ID de orden.";
-                if (error.message.includes('already-exists') || error.message.includes('aborted')) {
-                    errorMessage = "Esta compra ya ha sido procesada. Revisa tu correo electrónico (incluyendo spam) para encontrar tus credenciales.";
-                }
-                document.getElementById('processing-message').innerHTML = `<p style="color:var(--color-secondary);">${errorMessage}</p>`;
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', finalizePurchase);
-    </script>
+    
+    <!-- Lógica de finalización de compra, ahora en un archivo seguro y aislado -->
+    <script src="js/success.js"></script>
 </body>
 </html>
