@@ -34,11 +34,6 @@
             const finalize = firebase.functions().httpsCallable('finalizeAffiliatePurchase');
             const result = await finalize({ orderID: orderID });
 
-            const { email, tempPassword } = result.data;
-            
-            document.getElementById('user-email').textContent = email;
-            document.getElementById('user-password').textContent = tempPassword;
-            
             const { email, tempPassword, convenioCode } = result.data;
             
             document.getElementById('user-email').textContent = email;
