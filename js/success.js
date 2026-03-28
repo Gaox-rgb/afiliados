@@ -49,6 +49,10 @@
             if (error.message.includes('already-exists') || error.message.includes('aborted')) {
                 errorMessage = "Esta compra ya ha sido procesada. Revisa tu correo electrónico (incluyendo spam) o intenta iniciar sesión.";
             }
+            // Corrección: Los errores de Firebase Functions se identifican por 'code', no por 'message'.
+            if (error.code === 'functions/already-exists' || error.code === 'functions/aborted') {
+                errorMessage = "Esta compra ya ha sido procesada. Revisa tu correo electrónico (incluyendo spam) donde deben estar tus credenciales, o intenta iniciar sesión.";
+            }
             displayMessage(errorMessage, true);
         }
     }
