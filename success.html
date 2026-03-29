@@ -109,32 +109,43 @@
 </head>
 <body>
     <div class="container">
-        <h1><i class="fas fa-check-circle"></i> ¡Pago Completado con Éxito!</h1>
-        <p>
-            ¡Felicidades y bienvenido a la Tribu Makumoto®! Hemos recibido tu pago y tu cuenta de Manager está siendo procesada.
-        </p>
-
-        <div id="summary" class="summary-box">
-            <p><strong>Plan Adquirido:</strong> <span id="plan-name">Cargando...</span></p>
-            <p><strong>Importe Pagado:</strong> <span id="plan-cost">Cargando...</span></p>
+        <div id="welcome-message">
+            <h1><i class="fas fa-check-circle"></i> ¡Pago Completado con Éxito!</h1>
+            <p>¡Felicidades! Tu cuenta de Manager está lista. A continuación se muestran tus credenciales de acceso.</p>
         </div>
         
-        <div id="credentials-container" style="display: none;">
-             <p><strong>¡Acceso Inmediato!</strong> Tus credenciales han sido generadas. Guárdalas en un lugar seguro.</p>
-             <div class="summary-box" style="background: rgba(255,215,0,0.1); border-color: var(--color-primary);">
-                 <p><strong>Usuario:</strong> <span id="user-email"></span></p>
-                 <p><strong>Contraseña Temporal:</strong> <span id="user-password" style="font-weight:bold; color: var(--color-primary);"></span></p>
-             <p><strong>Código de Convenio:</strong> <span id="user-convenio-code" style="font-weight:bold; color: var(--color-primary);"></span></p>
-             </div>
-             <p class="note">El <b>Código de Convenio</b> es tu nueva llave de acceso. ¡No lo pierdas!</p>
+        <div id="final-message" style="display: none;">
+            <h1><i class="fas fa-shield-alt"></i> ¡Todo Listo!</h1>
+            <p>Has guardado tus credenciales. Ahora puedes seguir las instrucciones para acceder a tu Centro de Mando.</p>
+            <a href="instructivo.html" class="cta-button">VER INSTRUCCIONES DE ACCESO</a>
         </div>
 
-        <div id="processing-message">
-             <p><i class="fas fa-spinner fa-spin"></i> Finalizando tu compra y generando tus credenciales. No cierres esta ventana...</p>
+        <div id="main-content">
+            <div id="summary" class="summary-box">
+                <p><strong>Plan Adquirido:</strong> <span id="plan-name">Cargando...</span></p>
+                <p><strong>Importe Pagado:</strong> <span id="plan-cost">Cargando...</span></p>
+            </div>
+            
+            <div id="credentials-container" class="summary-box" style="display: none; background: rgba(255,215,0,0.1); border-color: var(--color-primary);">
+                <p><strong>Código de Convenio:</strong> <span id="user-convenio-code" style="font-weight:bold; color: var(--color-primary);"></span></p>
+                <p><strong>Contraseña Temporal:</strong> <span id="user-password" style="font-weight:bold; color: var(--color-primary);"></span></p>
+            </div>
+    
+            <div id="recovery-form-container" style="display: none;">
+                <p class="note">Por seguridad, envía una copia de estas credenciales a tu correo.</p>
+                <form id="recovery-form" style="display: flex; margin-top: 15px; gap: 10px;">
+                    <input type="email" id="recovery-email" placeholder="Tu mejor email" required style="flex-grow: 1; padding: 10px; border-radius: 5px; border: 1px solid #555; background: #333; color: #fff;">
+                    <button type="submit" id="send-recovery-btn" class="cta-button" style="margin: 0; padding: 10px 15px; font-size: 1rem;">Enviar Respaldo</button>
+                </form>
+            </div>
+    
+            <div id="processing-message">
+                 <p><i class="fas fa-spinner fa-spin"></i> Finalizando tu compra. No cierres esta ventana...</p>
+            </div>
+    
+            <button id="confirm-receipt-btn" class="cta-button" style="display: none; margin-top: 25px; background-color: #28a745;">Perfecto, he guardado mis datos</button>
         </div>
 
-        <a href="instructivo.html" class="cta-button">VER INSTRUCCIONES DE ACCESO</a>
-        <button id="resend-credentials-btn" class="cta-button" style="display: none; margin-top: 15px; background-color: #333; border: 1px solid var(--color-primary);">Mostrar Credenciales de Nuevo</button>
         <a href="index.html" class="back-link">Regresar al inicio</a>
     </div>
 
