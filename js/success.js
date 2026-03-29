@@ -62,28 +62,34 @@
     function setupResendButton() {
         const resendBtn = document.getElementById('resend-credentials-btn');
         if (!resendBtn) return;
+        resendBtn.textContent = "Mostrar Credenciales de Nuevo"; // Texto más preciso
 
         resendBtn.addEventListener('click', async () => {
             const params = new URLSearchParams(window.location.search);
             const orderID = params.get('token');
             if (!orderID) {
-                alert("No se pudo encontrar el ID de la orden para el reenvío.");
+                alert("No se pudo encontrar el ID de la orden para recuperar los datos.");
                 return;
             }
 
-            resendBtn.disabled = true;
-            resendBtn.textContent = 'Enviando...';
+            displayMessage('<i class="fas fa-spinner fa-spin"></i> Recuperando tus datos...', false);
+            resendBtn.style.display = 'none';
 
             try {
-                const resend = firebase.functions().httpsCallable('resendAffiliateCredentials');
-                await resend({ orderID: orderID });
-                resendBtn.textContent = '¡Correo Enviado!';
-                resendBtn.style.backgroundColor = '#2ecc71'; // Verde éxito
+                const getCredentials = firebase.functions().httpsCallable('getAffiliateCredentialsByOrder');
+                const result = await getCredentials({ orderID: orderID });
+                const { email, tempPassword, convenioCode } = result.data;
+
+                // REUTILIZAMOS LA LÓGICA DE VISUALIZACIÓN
+                document.getElementById('user-email').textContent = email;
+                document.getElementById('user-password').textContent = tempPassword;
+                document.getElementById('user-convenio-code').textContent = convenioCode;
+                document.getElementById('processing-message').style.display = 'none';
+                document.getElementById('credentials-container').style.display = 'block';
+
             } catch (error) {
-                console.error("Error al reenviar credenciales:", error);
-                alert("Hubo un error al reenviar el correo. Por favor, contacta a soporte.");
-                resendBtn.textContent = 'Reenviar Credenciales por Email';
-                resendBtn.disabled = false;
+                console.error("Error al recuperar credenciales:", error);
+                displayMessage("Hubo un error al recuperar los datos. Por favor, contacta a soporte.", true);
             }
         });
     }
