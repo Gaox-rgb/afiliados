@@ -55,7 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await getPortalData();
             const { company, roster, powerUps } = result.data;
 
-            if (!company.sector || company.sector === "") {
+            // VERIFICACIÓN ESTRICTA CONTRA LISTA BLANCA
+            const validSectors = ['corporate', 'fitness', 'health'];
+            const hasValidSector = validSectors.includes(company.sector);
+
+            if (!hasValidSector) {
                 renderWelcomeAndSectorChoice(company);
             } else {
                 renderDashboard(company, roster);
