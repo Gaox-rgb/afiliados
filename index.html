@@ -781,17 +781,15 @@
         <span class="modal-close-btn" id="close-login-modal">&times;</span>
         <h3>Acceso de Gerente</h3>
         <p>Ingresa tus credenciales para acceder a tu dashboard.</p>
-        <div class="bm-login-form">
+        <form id="login-form">
             <div class="bm-input-group">
                 <i class="fas fa-user-shield"></i>
-                <input type="email" id="login-email" placeholder="EMAIL" required style="text-transform: none;">
+                <input type="text" id="login-convenio" placeholder="CÓDIGO DE CONVENIO" required style="text-transform: uppercase;">
             </div>
             <div class="bm-input-group">
                 <i class="fas fa-lock"></i>
                 <input type="password" id="login-password" placeholder="CONTRASEÑA" required>
             </div>
-        </div>
-        <form id="login-form" class="bm-gatekeeper__actions">
             <button type="submit" class="bm-btn bm-btn--primary">Ingresar al Centro de Mando</button>
         </form>
     </div>
@@ -850,17 +848,30 @@ function initializeAuthHandlers() {
     if (loginForm) {
         loginForm.onsubmit = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value;
+            const convenioCode = document.getElementById('login-convenio').value;
             const password = document.getElementById('login-password').value;
-            window.app.ui.showLoader('Autenticando...');
+            window.app.ui.showLoader('Verificando acceso...');
+
             try {
+                // Paso 1: Obtener el email usando el código de convenio
+                const getManagerEmail = window.app.functions.httpsCallable('getManagerEmailByCode');
+                const result = await getManagerEmail({ convenioCode: convenioCode });
+                const email = result.data.email;
+
+                if (!email) {
+                    throw new Error("No se pudo obtener el email para el código proporcionado.");
+                }
+
+                // Paso 2: Iniciar sesión con el email obtenido y la contraseña
                 await auth.signInWithEmailAndPassword(email, password);
-                // ¡ÉXITO! Redirigir al nuevo centro de mando.
+                
+                // ¡ÉXITO! Redirigir al centro de mando.
                 window.location.href = 'portal.html';
+
             } catch (error) {
                 window.app.ui.hideLoader();
-                alert("Credenciales incorrectas o error de conexión.");
-                console.error("Fallo de autenticación:", error.message);
+                alert("Código de Convenio o contraseña incorrectos. Por favor, verifica tus credenciales.");
+                console.error("Fallo de autenticación en dos pasos:", error);
             }
         };
     }
