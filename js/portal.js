@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await getPortalData();
             const { company, roster, powerUps } = result.data;
 
-            if (!company.sector) {
+            if (!company.sector || company.sector === "") {
                 renderWelcomeAndSectorChoice(company);
             } else {
                 renderDashboard(company, roster);
