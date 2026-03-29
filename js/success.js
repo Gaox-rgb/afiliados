@@ -52,13 +52,52 @@
             // Corrección: Los errores de Firebase Functions se identifican por 'code', no por 'message'.
             if (error.code === 'functions/already-exists' || error.code === 'functions/aborted') {
                 errorMessage = "Esta compra ya ha sido procesada. Revisa tu correo electrónico (incluyendo spam) donde deben estar tus credenciales, o intenta iniciar sesión.";
+                // ¡AQUÍ LA MAGIA! Mostramos el botón de reenvío
+                document.getElementById('resend-credentials-btn').style.display = 'inline-block';
             }
             displayMessage(errorMessage, true);
         }
     }
 
+    function setupResendButton() {
+        const resendBtn = document.getElementById('resend-credentials-btn');
+        if (!resendBtn) return;
+
+        resendBtn.addEventListener('click', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const orderID = params.get('token');
+            if (!orderID) {
+                alert("No se pudo encontrar el ID de la orden para el reenvío.");
+                return;
+            }
+
+            resendBtn.disabled = true;
+            resendBtn.textContent = 'Enviando...';
+
+            try {
+                const resend = firebase.functions().httpsCallable('resendAffiliateCredentials');
+                await resend({ orderID: orderID });
+                resendBtn.textContent = '¡Correo Enviado!';
+                resendBtn.style.backgroundColor = '#2ecc71'; // Verde éxito
+            } catch (error) {
+                console.error("Error al reenviar credenciales:", error);
+                alert("Hubo un error al reenviar el correo. Por favor, contacta a soporte.");
+                resendBtn.textContent = 'Reenviar Credenciales por Email';
+                resendBtn.disabled = false;
+            }
+        });
+    }
+
     // Esperar a que el DOM esté completamente cargado antes de ejecutar
     if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            finalizePurchase();
+            setupResendButton();
+        });
+    } else {
+        finalizePurchase();
+        setupResendButton();
+    }
         document.addEventListener('DOMContentLoaded', finalizePurchase);
     } else {
         finalizePurchase();
