@@ -104,9 +104,5 @@
         finalizePurchase();
         setupResendButton();
     }
-        document.addEventListener('DOMContentLoaded', finalizePurchase);
-    } else {
-        finalizePurchase();
-    }
 
 })();
