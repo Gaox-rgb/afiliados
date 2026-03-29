@@ -42,7 +42,9 @@ section { padding: 60px 0; text-align: center; }
     opacity: 0.9;
 }
 #main-header { background: var(--color-dark); padding: 15px 0; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 1000; }
-.header-container { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.header-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
+.header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.header-bottom { display: flex; justify-content: center; align-items: center; gap: 15px; }
 .logo { display: flex; align-items: center; gap: 10px; color: var(--color-primary); font-weight: bold; }
 .logo img { height: 30px; }
 .header-actions { display: flex; align-items: center; gap: 15px; }
@@ -106,12 +108,14 @@ section { padding: 60px 0; text-align: center; }
 
 <header id="main-header">
     <div class="header-container">
-        <div class="logo">
-            <img src="imagenes/logo.png" alt="Makumoto Logo">
-            <span>MAKUMOTO® AFILIADOS</span>
-        </div>
-        <div class="header-actions">
+        <div class="header-top">
+            <div class="logo">
+                <img src="imagenes/logo.png" alt="Makumoto Logo">
+                <span>MAKUMOTO® AFILIADOS</span>
+            </div>
             <a href="index.html#seccion-precios-directa" class="cta-button-header">CONTRATAR</a>
+        </div>
+        <div class="header-bottom">
             <a href="directorio.html" class="login-button-header">Directorio</a>
             <!-- El botón de login se ocultará con JS si ya hay sesión -->
             <button id="btn-show-login" class="login-button-header">Login Empresas</button>
