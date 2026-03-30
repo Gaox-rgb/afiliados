@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             document.getElementById('btn-show-password-modal').onclick = renderPasswordChangeModal;
         }
-    }
+    },
     function startCountdown(elementId, endDateStr) {
         const targetElement = document.getElementById(elementId);
         if (!targetElement || !endDateStr) {
