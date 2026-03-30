@@ -78,8 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // [FUNCIONES DE RENDERIZADO DEL FLUJO DE BIENVENIDA OMITIDAS POR BREVEDAD, SIN CAMBIOS]
     function renderWelcomeAndSectorChoice(company) {
-        const testHTML = `<h1 style="text-align: center; color: yellow; font-size: 2rem; padding: 40px;">PRUEBA DE RENDERIZADO - SI VES ESTO, LA TEORÍA ES CORRECTA.</h1>`;
-        ui.portalContainer.innerHTML = testHTML;
+        const welcomeHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <h1 style="font-size: 1.8rem; margin-bottom: 1rem;">¡Bienvenido a Makumoto, ${company.name}!</h1>
+                <p style="margin-bottom: 2rem;">Para optimizar tu Centro de Mando, primero debemos definir el sector de tu negocio.</p>
+                <p style="margin-bottom: 2rem; font-size: 0.9rem; opacity: 0.8;">Este paso es crucial y no podrá cambiarse más adelante.</p>
+                <button id="btn-start-setup" class="cta-button" style="padding: 15px 30px; font-size: 1.2rem;">Comenzar Configuración</button>
+            </div>
+        `;
+        ui.portalContainer.innerHTML = welcomeHTML;
+        
+        // Asignamos el evento al nuevo botón
+        document.getElementById('btn-start-setup').onclick = renderSectorSelection;
     }
     function renderSectorSelection() { /* ... sin cambios ... */ }
     async function handleSectorSelection(event) { /* ... sin cambios ... */ }
