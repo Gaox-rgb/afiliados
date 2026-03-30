@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-show-broadcast').onclick = () => renderBroadcastConsole(company);
         document.getElementById('btn-show-direct-messages').onclick = () => renderDirectMessagesConsole(roster);
         document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
-        document.getElementById('btn-show-security-settings').onclick = renderPasswordChangeModal; // Nuevo listener
+        document.getElementById('btn-show-security-settings').onclick = renderPasswordChangeModal;
         startCountdown('plan-countdown', company.planEndDate);
     }
 
