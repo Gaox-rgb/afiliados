@@ -315,5 +315,190 @@
     <!-- ===== NÚCLEO DEL PORTAL DE MANAGER (SIGUE SIENDO LA VERSIÓN MÍNIMA) ===== -->
     <script src="/js/portal.js"></script>
 
-</body>
-</html>
+<!-- =================================================================== -->
+<!--     INICIO DEL CHATBOT DE ASISTENCIA PARA GERENTES MAKUMOTO®     -->
+<!-- =================================================================== -->
+<div id="manager-chatbot-container">
+    <div id="manager-chatbot-bubble">
+        <i class="fas fa-book-open"></i>
+    </div>
+    <div id="manager-chatbot-window">
+        <div id="manager-chatbot-header">
+            <h3>Asistente Táctico</h3>
+            <button id="manager-chatbot-close-btn">&times;</button>
+        </div>
+        <div id="manager-chatbot-messages">
+            <!-- Los mensajes se insertarán aquí -->
+        </div>
+        <div id="manager-chatbot-options">
+            <!-- Las opciones de botones se insertarán aquí -->
+        </div>
+    </div>
+</div>
+
+<style>
+    #manager-chatbot-container {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        z-index: 1001;
+    }
+    #manager-chatbot-bubble {
+        width: 60px;
+        height: 60px;
+        background: var(--color-primary);
+        color: var(--color-dark);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease;
+    }
+    #manager-chatbot-bubble:hover {
+        transform: scale(1.1);
+    }
+    #manager-chatbot-window {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 350px;
+        height: 500px;
+        background: var(--color-light-dark);
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #333;
+        transform: scale(0);
+        transform-origin: bottom right;
+        transition: transform 0.3s ease;
+    }
+    #manager-chatbot-container.open #manager-chatbot-window {
+        transform: scale(1);
+    }
+    #manager-chatbot-header {
+        background: var(--color-dark);
+        padding: 15px;
+        color: var(--color-primary);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    #manager-chatbot-header h3 { margin: 0; font-size: 1.1rem; }
+    #manager-chatbot-close-btn {
+        background: none; border: none; color: var(--color-text);
+        font-size: 1.8rem; cursor: pointer;
+    }
+    #manager-chatbot-messages {
+        flex-grow: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .manager-chat-message {
+        padding: 10px 15px;
+        border-radius: 20px;
+        max-width: 85%;
+        line-height: 1.4;
+    }
+    .manager-bot-message {
+        background: #333;
+        color: var(--color-text);
+        align-self: flex-start;
+        border-bottom-left-radius: 5px;
+    }
+    .manager-user-message {
+        background: var(--color-primary);
+        color: var(--color-dark);
+        align-self: flex-end;
+        border-bottom-right-radius: 5px;
+    }
+    #manager-chatbot-options {
+        padding: 15px;
+        border-top: 1px solid #333;
+        background: var(--color-dark);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .manager-chatbot-option-btn {
+        width: 100%;
+        padding: 12px;
+        background: #333;
+        border: 1px solid #555;
+        color: var(--color-text);
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: left;
+        font-family: var(--font-family);
+        font-size: 0.9rem;
+        transition: background-color 0.2s;
+    }
+    .manager-chatbot-option-btn:hover { background-color: #444; }
+    .manager-chatbot-action-btn {
+        background: var(--color-primary);
+        color: var(--color-dark);
+        font-weight: bold;
+        text-align: center;
+    }
+    @media (max-width: 480px) {
+        #manager-chatbot-window {
+            width: calc(100vw - 40px);
+            height: 70vh;
+            bottom: 80px;
+            right: -15px;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const chatbotContainer = document.getElementById('manager-chatbot-container');
+    const bubble = document.getElementById('manager-chatbot-bubble');
+    const closeBtn = document.getElementById('manager-chatbot-close-btn');
+    const messagesContainer = document.getElementById('manager-chatbot-messages');
+    const optionsContainer = document.getElementById('manager-chatbot-options');
+
+    const chatbotData = {
+        welcome: {
+            text: "¡Saludos, Gerente! Soy tu asistente táctico. Mi misión es asegurar que domines cada herramienta de este Centro de Mando. ¿Qué necesitas optimizar hoy?"
+        },
+        q1: {
+            question: "¿Cómo afilio a un nuevo miembro a mi Tribu?",
+            answer: "Es un proceso en dos pasos: <br>1. Ve a <strong>'Gestión de Altas'</strong> y añade a la persona con un ID único (ej. su ID de empleado). <br>2. El miembro usa la app Makumoto®, su ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Es todo! Ya tienes control.",
+            cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() }
+        },
+        q2: {
+            question: "¿Comunicado masivo o Mensaje Directo?",
+            answer: "Usa la <strong>'Consola de Comunicados'</strong> para enviar mensajes a TODA tu tribu. Ideal para anuncios o retos. <br><br>Usa la <strong>'Bandeja de Mensajes'</strong> para una conversación privada y uno a uno con un miembro específico. Perfecto para feedback o seguimiento."
+        },
+        q3: {
+            question: "¿Para qué sirve el 'Mapa de Misión'?",
+            answer: "Es tu vista de satélite. Te muestra en un mapa <strong>dónde tus miembros realizan sus 'check-ins'</strong> de misiones. Es la prueba visual de que tu tribu está activa y comprometida en el mundo real, no solo en la app."
+        },
+        q4: {
+            question: "¿Por qué debería considerar las 'Mejoras Premium'?",
+            answer: "El Centro de Mando base es poderoso, pero las Mejoras Premium te dan una <strong>ventaja táctica decisiva</strong>. Son 'Power-Ups' de pago único que desbloquean funciones avanzadas, como crear retos personalizados, analíticas de comportamiento o herramientas de comunicación avanzadas para llevar tu liderazgo al siguiente nivel."
+        },
+        q5: {
+            question: "¿Qué son los 'Power-Ups'?",
+            answer: "Son módulos de funcionalidad que puedes añadir a tu arsenal. Por ejemplo, el Power-Up 'Impulso Personalizado' te permite crear micro-retos específicos para un individuo o para toda la tribu, dándote un control granular sobre la motivación del equipo. ¡Cada Power-Up es una nueva arma en tu arsenal!"
+        }
+    };
+
+    const showMainMenu = () => {
+        optionsContainer.innerHTML = '';
+        Object.keys(chatbotData).forEach(key => {
+            if (key.startsWith('q')) {
+                const btn = document.createElement('button');
+                btn.className = 'manager-chatbot-option-btn';
+                btn.textContent = chatbotData[key].question;
+                btn.onclick = () => handleQuestionClick(key);
+                optionsContainer.appendChild(btn);
+            }

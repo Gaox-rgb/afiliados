@@ -1223,5 +1223,256 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- Elemento para las burbujas de compra (FOMO). El JS lo poblará. -->
 <div id="fomo-container"></div>
 
+<!-- =================================================================== -->
+<!--         INICIO DEL CÓDIGO DEL CHATBOT ESTÁTICO MAKUMOTO®         -->
+<!-- =================================================================== -->
+<div id="makumoto-chatbot-container">
+    <div id="chatbot-bubble">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+    <div id="chatbot-window">
+        <div id="chatbot-header">
+            <h3>Guía de Tribus Makumoto®</h3>
+            <button id="chatbot-close-btn">&times;</button>
+        </div>
+        <div id="chatbot-messages">
+            <!-- Los mensajes se insertarán aquí -->
+        </div>
+        <div id="chatbot-options">
+            <!-- Las opciones de botones se insertarán aquí -->
+        </div>
+    </div>
+</div>
+
+<style>
+    #makumoto-chatbot-container {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        z-index: 1001;
+    }
+    #chatbot-bubble {
+        width: 60px;
+        height: 60px;
+        background: var(--color-primary);
+        color: var(--color-dark);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease;
+    }
+    #chatbot-bubble:hover {
+        transform: scale(1.1);
+    }
+    #chatbot-window {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 350px;
+        height: 500px;
+        background: var(--color-light-dark);
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #333;
+        transform: scale(0);
+        transform-origin: bottom right;
+        transition: transform 0.3s ease;
+    }
+    #makumoto-chatbot-container.open #chatbot-window {
+        transform: scale(1);
+    }
+    #chatbot-header {
+        background: var(--color-dark);
+        padding: 15px;
+        color: var(--color-primary);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    #chatbot-header h3 { margin: 0; font-size: 1.1rem; }
+    #chatbot-close-btn {
+        background: none; border: none; color: var(--color-text);
+        font-size: 1.8rem; cursor: pointer;
+    }
+    #chatbot-messages {
+        flex-grow: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .chat-message {
+        padding: 10px 15px;
+        border-radius: 20px;
+        max-width: 80%;
+        line-height: 1.4;
+    }
+    .bot-message {
+        background: #333;
+        color: var(--color-text);
+        align-self: flex-start;
+        border-bottom-left-radius: 5px;
+    }
+    .user-message {
+        background: var(--color-primary);
+        color: var(--color-dark);
+        align-self: flex-end;
+        border-bottom-right-radius: 5px;
+    }
+    #chatbot-options {
+        padding: 15px;
+        border-top: 1px solid #333;
+        background: var(--color-dark);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .chatbot-option-btn {
+        width: 100%;
+        padding: 12px;
+        background: #333;
+        border: 1px solid #555;
+        color: var(--color-text);
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: left;
+        font-family: var(--font-family);
+        font-size: 0.9rem;
+        transition: background-color 0.2s;
+    }
+    .chatbot-option-btn:hover { background-color: #444; }
+    .chatbot-action-btn {
+        background: var(--color-primary);
+        color: var(--color-dark);
+        font-weight: bold;
+        text-align: center;
+    }
+    @media (max-width: 480px) {
+        #chatbot-window {
+            width: calc(100vw - 40px);
+            height: 70vh;
+            bottom: 80px;
+            right: -15px;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const chatbotContainer = document.getElementById('makumoto-chatbot-container');
+    const bubble = document.getElementById('chatbot-bubble');
+    const closeBtn = document.getElementById('chatbot-close-btn');
+    const messagesContainer = document.getElementById('chatbot-messages');
+    const optionsContainer = document.getElementById('chatbot-options');
+
+    const chatbotData = {
+        welcome: {
+            text: "¡Hola! Soy tu guía para convertir a tu equipo en una Tribu. Estoy aquí para resolver tus dudas y que puedas empezar a liderar hoy mismo. ¿Qué te gustaría saber?"
+        },
+        q1: {
+            question: "¿Qué es exactamente Makumoto® para Afiliados?",
+            answer: "Es tu oportunidad de crear una <strong>red social privada y exclusiva para tu gente</strong> (empleados, clientes, pacientes). Les das una app divertida que fortalece su lealtad a TU marca, mientras tú obtienes una herramienta de retención y gestión poderosa."
+        },
+        q2: {
+            question: "No sé qué 'Sector' elegir (Empresa, Gym, Clínica)...",
+            answer: "¡No te preocupes! Eliges tu sector en tu primer inicio de sesión, <strong>después de comprar</strong>. Esta elección simplemente adapta las herramientas de tu panel para que sean perfectas para ti: engagement para <strong>Empresas</strong>, asistencia para <strong>Gimnasios</strong> o adherencia para <strong>Clínicas</strong>."
+        },
+        q3: {
+            question: "¿Cómo funcionan los planes?",
+            answer: "Es muy simple: cada plan define el <strong>tamaño máximo de tu Tribu</strong>. El plan 'business_200', por ejemplo, te permite gestionar hasta 200 miembros. ¡Puedes empezar con uno y crecer cuando lo necesites! Todos los planes tienen acceso a todas las funciones básicas."
+        },
+        q4: {
+            question: "Ok, ¿qué pasa justo después de que pago?",
+            answer: "El sistema es <strong>100% automático</strong>. Al instante, recibirás un correo con tus credenciales de acceso: tu <strong>Código de Convenio</strong> y una <strong>contraseña temporal</strong>. Con eso, podrás ingresar a tu Centro de Mando y empezar a construir tu Tribu de inmediato."
+        },
+        q5: {
+            question: "¿Qué beneficios reales obtengo?",
+            answer: "Obtienes <strong>lealtad y retención</strong>. En lugar de ser uno más, te vuelves indispensable. Para una <strong>empresa</strong>, mejoras el clima laboral. Para un <strong>gimnasio</strong>, combates la deserción. Para una <strong>clínica</strong>, aumentas la adherencia al tratamiento. El beneficio es una comunidad más fuerte y comprometida."
+        }
+    };
+
+    const showMainMenu = () => {
+        optionsContainer.innerHTML = ''; // Limpiar opciones
+        Object.keys(chatbotData).forEach(key => {
+            if (key.startsWith('q')) {
+                const btn = document.createElement('button');
+                btn.className = 'chatbot-option-btn';
+                btn.textContent = chatbotData[key].question;
+                btn.onclick = () => handleQuestionClick(key);
+                optionsContainer.appendChild(btn);
+            }
+        });
+    };
+
+    const addMessage = (text, type) => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${type}-message`;
+        messageDiv.innerHTML = text;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    };
+
+    const handleQuestionClick = (key) => {
+        const data = chatbotData[key];
+        addMessage(data.question, 'user');
+        
+        optionsContainer.innerHTML = '<p style="text-align:center; opacity: 0.7;">Escribiendo...</p>';
+        
+        setTimeout(() => {
+            addMessage(data.answer, 'bot');
+            optionsContainer.innerHTML = '';
+
+            const btnBack = document.createElement('button');
+            btnBack.className = 'chatbot-option-btn';
+            btnBack.innerHTML = '<i class="fas fa-arrow-left"></i> Regresar al menú';
+            btnBack.onclick = () => {
+                messagesContainer.innerHTML = '';
+                addMessage(chatbotData.welcome.text, 'bot');
+                showMainMenu();
+            };
+
+            const btnBuy = document.createElement('button');
+            btnBuy.className = 'chatbot-option-btn chatbot-action-btn';
+            btnBuy.innerHTML = '<i class="fas fa-rocket"></i> ¡Estoy listo, llévame a COMPRAR!';
+            btnBuy.onclick = () => {
+                document.getElementById('seccion-precios-directa').scrollIntoView({ behavior: 'smooth' });
+                chatbotContainer.classList.remove('open');
+            };
+
+            optionsContainer.appendChild(btnBack);
+            optionsContainer.appendChild(btnBuy);
+
+        }, 800);
+    };
+
+    const toggleChat = (forceOpen = null) => {
+        if (forceOpen === true) {
+            chatbotContainer.classList.add('open');
+        } else if (forceOpen === false) {
+            chatbotContainer.classList.remove('open');
+        } else {
+            chatbotContainer.classList.toggle('open');
+        }
+    };
+
+    // Inicialización
+    bubble.onclick = () => toggleChat();
+    closeBtn.onclick = () => toggleChat(false);
+    addMessage(chatbotData.welcome.text, 'bot');
+    showMainMenu();
+});
+</script>
+<!-- =================================================================== -->
+<!--          FIN DEL CÓDIGO DEL CHATBOT ESTÁTICO MAKUMOTO®           -->
+<!-- =================================================================== -->
+
 </body>
 </html>
