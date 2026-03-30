@@ -300,8 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div>${hours}<span style="font-size: 0.7rem; display: block; opacity: 0.7;">Hrs</span></div>
                     <div>${minutes}<span style="font-size: 0.7rem; display: block; opacity: 0.7;">Min</span></div>
                     <div>${seconds}<span style="font-size: 0.7rem; display: block; opacity: 0.7;">Seg</span></div>
-                </div>
-            `;
+                </div>`;
 
             // Lógica para el botón de renovación (10 días = 864,000,000 ms)
             if (distance < 864000000) {
