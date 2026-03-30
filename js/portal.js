@@ -601,15 +601,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="modal-content" style="max-width: 500px;">
                     <span id="close-password-modal" class="modal-close-btn">&times;</span>
                     <h3>Cambio de Contraseña Segura</h3>
-                    <p style="opacity: 0.7; margin-top: 0.5rem;">Por seguridad, solo puedes realizar esta acción una vez cada 30 días.</p>
+                    <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Tu contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo (@$!%*?&).</p>
+                    <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Por seguridad, solo puedes realizar esta acción una vez cada 30 días.</p>
                     <form id="password-change-form" style="margin-top: 1.5rem;">
-                        <input type="password" id="new-password" placeholder="Nueva Contraseña (mín. 6 caracteres)" required style="width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
-                        <input type="password" id="confirm-password" placeholder="Confirmar Nueva Contraseña" required style="width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
-                        <div style="margin-bottom: 1.5rem;">
-                            <input type="checkbox" id="email-copy-check" style="margin-right: 10px;">
-                            <label for="email-copy-check">Enviarme un correo de confirmación (no incluye la contraseña).</label>
+                        <input type="password" id="new-password" placeholder="Nueva Contraseña" required style="width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                        <input type="password" id="confirm-password" placeholder="Confirmar Nueva Contraseña" required style="width: 100%; padding: 12px; margin-bottom: 1.5rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                        <div style="margin-bottom: 1.5rem; background-color: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 5px; border-left: 3px solid var(--color-primary);">
+                            <label style="font-size: 0.9rem; opacity: 0.8;">Se enviará una notificación de este cambio a tu correo electrónico registrado.</label>
                         </div>
-                        <button type="submit" class="cta-button" style="width: 100%;">Actualizar Contraseña</button>
+                        <button type="submit" class="cta-button" style="width: 100%;">Actualizar Contraseña y Notificar</button>
                     </form>
                 </div>
             </div>`;
@@ -628,29 +628,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const newPass = document.getElementById('new-password').value;
         const confirmPass = document.getElementById('confirm-password').value;
 
-        if (newPass.length < 6) {
-            return alert('La contraseña debe tener al menos 6 caracteres.');
-        }
         if (newPass !== confirmPass) {
             return alert('Las contraseñas no coinciden.');
         }
 
+        // Validación de complejidad en el frontend para feedback inmediato
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(newPass)) {
+            return alert("La contraseña no cumple los requisitos: Mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (@$!%*?&).");
+        }
+        
         const button = event.target.querySelector('button[type="submit"]');
         button.disabled = true;
         button.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Actualizando...';
 
         try {
             const changeManagerPassword = firebase.functions().httpsCallable('changeManagerPassword');
-            await changeManagerPassword({ newPassword: newPass });
+            await changeManagerPassword({ newPassword: newPass }); // Se envía solo la nueva contraseña
 
-            alert('¡Contraseña actualizada con éxito!');
+            alert('¡Contraseña actualizada con éxito! Se ha enviado una notificación a tu correo.');
             document.getElementById('password-change-modal').remove();
 
         } catch (error) {
             console.error("Error al cambiar la contraseña:", error);
             alert(`Error: ${error.message}`);
             button.disabled = false;
-            button.innerText = 'Actualizar Contraseña';
+            button.innerText = 'Actualizar Contraseña y Notificar';
         }
     }
 });
