@@ -1243,7 +1243,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- Las opciones de botones se insertarán aquí -->
             </div>
             <div id="chatbot-footer">
-                <button id="chatbot-back-btn"><i class="fas fa-arrow-left"></i> Volver al Menú Principal</button>
+                <button id="chatbot-back-btn"><i class="fas fa-arrow-left"></i> Volver al Menú</button>
+                <button id="chatbot-exit-btn"><i class="fas fa-times-circle"></i> Cerrar Guía</button>
             </div>
         </div>
     </div>
@@ -1298,17 +1299,18 @@ document.addEventListener('DOMContentLoaded', () => {
     .chatbot-option-btn:hover { background-color: var(--color-primary); color: var(--color-dark); }
     .chatbot-action-btn { background: var(--color-primary); color: var(--color-dark); font-weight: bold; text-align: center; }
     #chatbot-footer {
-        padding: 15px 20px;
-        border-top: 1px solid #555;
-        background: var(--color-dark);
+        padding: 15px 20px; border-top: 1px solid #555; background: var(--color-dark);
+        display: flex; gap: 15px;
     }
-    #chatbot-back-btn {
-        width: 100%;
-        display: none; /* Oculto por defecto */
-        padding: 15px; background: #333; border: 1px solid #555;
-        color: var(--color-text); border-radius: 8px; cursor: pointer;
+    #chatbot-back-btn, #chatbot-exit-btn {
+        flex-grow: 1; padding: 15px; border-radius: 8px; cursor: pointer;
         font-family: var(--font-family); font-size: 1rem; font-weight: bold;
+        transition: all 0.2s ease;
     }
+    #chatbot-back-btn { display: none; background: #333; border: 1px solid #555; color: var(--color-text); }
+    #chatbot-back-btn:hover { background: #444; }
+    #chatbot-exit-btn { background: var(--color-secondary); border: 1px solid var(--color-secondary); color: white; }
+    #chatbot-exit-btn:hover { filter: brightness(1.2); }
 </style>
 
 <script>
@@ -1320,6 +1322,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const messagesContainer = document.getElementById('chatbot-messages');
         const optionsContainer = document.getElementById('chatbot-options');
         const backBtn = document.getElementById('chatbot-back-btn');
+        const exitBtn = document.getElementById('chatbot-exit-btn');
 
         const chatbotData = {
             welcome: { text: "¡Hola! Soy tu guía para convertir a tu equipo en una Tribu. Estoy aquí para resolver tus dudas y que puedas empezar a liderar hoy mismo. ¿Qué te gustaría saber?" },
@@ -1337,7 +1340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const showMainMenu = () => {
             optionsContainer.innerHTML = '';
-            backBtn.style.display = 'none'; // Ocultar el botón de regreso
+            backBtn.style.display = 'none';
             const keys = Object.keys(chatbotData).filter(k => k.startsWith('q'));
             keys.forEach(key => {
                 const btn = document.createElement('button');
@@ -1364,8 +1367,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 addMessage(data.answer, 'bot');
                 optionsContainer.innerHTML = '';
-                backBtn.style.display = 'block'; // Mostrar el botón de regreso
-
+                backBtn.style.display = 'block';
                 const btnBuy = document.createElement('button');
                 btnBuy.className = 'chatbot-option-btn chatbot-action-btn';
                 btnBuy.innerHTML = '<i class="fas fa-rocket"></i> ¡Estoy listo, llévame a COMPRAR!';
@@ -1391,9 +1393,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         bubble.onclick = () => toggleChat();
         closeBtn.onclick = () => toggleChat(false);
+        exitBtn.onclick = () => toggleChat(false);
         backBtn.onclick = resetChat;
         
-        // Inicialización
         resetChat();
     })();
 </script>

@@ -335,7 +335,8 @@
                 <!-- Las opciones de botones se insertarán aquí -->
             </div>
             <div id="manager-chatbot-footer">
-                <button id="manager-chatbot-back-btn"><i class="fas fa-arrow-left"></i> Volver al Menú Principal</button>
+                <button id="manager-chatbot-back-btn"><i class="fas fa-arrow-left"></i> Volver al Menú</button>
+                <button id="manager-chatbot-exit-btn"><i class="fas fa-times-circle"></i> Cerrar Asistente</button>
             </div>
         </div>
     </div>
@@ -391,17 +392,18 @@
     .manager-chatbot-action-btn { background: var(--color-secondary); color: white; border-color: var(--color-secondary); }
     .manager-chatbot-action-btn:hover { background-color: var(--color-secondary); color: white; filter: brightness(1.2); }
     #manager-chatbot-footer {
-        padding: 15px 20px;
-        border-top: 1px solid #555;
-        background: var(--color-dark);
+        padding: 15px 20px; border-top: 1px solid #555; background: var(--color-dark);
+        display: flex; gap: 15px;
     }
-    #manager-chatbot-back-btn {
-        width: 100%;
-        display: none; /* Oculto por defecto */
-        padding: 15px; background: #333; border: 1px solid #555;
-        color: var(--color-text); border-radius: 8px; cursor: pointer;
+    #manager-chatbot-back-btn, #manager-chatbot-exit-btn {
+        flex-grow: 1; padding: 15px; border-radius: 8px; cursor: pointer;
         font-family: var(--font-family); font-size: 1rem; font-weight: bold;
+        transition: all 0.2s ease;
     }
+    #manager-chatbot-back-btn { display: none; background: #333; border: 1px solid #555; color: var(--color-text); }
+    #manager-chatbot-back-btn:hover { background: #444; }
+    #manager-chatbot-exit-btn { background: var(--color-secondary); border: 1px solid var(--color-secondary); color: white; }
+    #manager-chatbot-exit-btn:hover { filter: brightness(1.2); }
 </style>
 
 <script>
@@ -414,7 +416,8 @@
             const messagesContainer = document.getElementById('manager-chatbot-messages');
             const optionsContainer = document.getElementById('manager-chatbot-options');
             const backBtn = document.getElementById('manager-chatbot-back-btn');
-
+            const exitBtn = document.getElementById('manager-chatbot-exit-btn');
+            
             const chatbotData = {
                 welcome: { text: "¡Saludos, Gerente! Soy tu asistente táctico. Mi misión es asegurar que domines cada herramienta de este Centro de Mando. ¿Qué necesitas optimizar hoy?" },
                 q1: { question: "¿Cómo afilio a un nuevo miembro?", answer: "Ve a <strong>'Gestión de Altas'</strong>, añade a la persona con un ID único (ej. su ID de empleado). Luego, el miembro usa la app Makumoto®, ese ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Así de fácil!", cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() } },
@@ -431,7 +434,7 @@
 
             const showMainMenu = () => {
                 optionsContainer.innerHTML = '';
-                backBtn.style.display = 'none'; // Ocultar el botón de regreso
+                backBtn.style.display = 'none';
                 const keys = Object.keys(chatbotData).filter(k => k.startsWith('q'));
                 keys.forEach(key => {
                     const btn = document.createElement('button');
@@ -457,8 +460,7 @@
                 setTimeout(() => {
                     addMessage(data.answer, 'manager-bot');
                     optionsContainer.innerHTML = '';
-                    backBtn.style.display = 'block'; // Mostrar el botón de regreso
-                    
+                    backBtn.style.display = 'block';
                     if (data.cta) {
                         const btnAction = document.createElement('button');
                         btnAction.className = 'manager-chatbot-option-btn manager-chatbot-action-btn';
@@ -486,9 +488,9 @@
 
             if (bubble) bubble.onclick = () => toggleChat();
             if (closeBtn) closeBtn.onclick = () => toggleChat(false);
+            if (exitBtn) exitBtn.onclick = () => toggleChat(false);
             if (backBtn) backBtn.onclick = resetChat;
             
-            // Inicialización
             resetChat();
         };
 
