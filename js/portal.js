@@ -67,8 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderWelcomeAndSectorChoice(company);
                 } else {
                     console.log('[DEBUG] Sector válido. Renderizando dashboard.');
-                    renderDashboard(company, roster);
-                }
+                   renderArsenalHome(company, roster);
+            }
             })
             .catch(error => {
                 console.error('[DEBUG] LA LLAMADA FALLÓ. Este es el error:', error);
@@ -172,35 +172,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /**
-     * Renderiza el dashboard principal una vez que el sector ha sido elegido.
+     * Renderiza el Arsenal Home, la nueva pantalla principal para gerentes configurados.
      */
-    function renderDashboard(company, roster) {
-        const dashboardHTML = `
+    function renderArsenalHome(company, roster) {
+        const sectorNames = {
+            corporate: 'Corporativo',
+            fitness: 'Fitness',
+            health: 'Salud y Bienestar'
+        };
+        const sectorName = sectorNames[company.sector] || 'General';
+        const templates = broadcastTemplates[company.sector] || [];
+        const arsenalItemsHTML = templates.map(t => `
+            <div class="kpi-card">
+                <div class="value"><i class="fas ${t.icon}"></i></div>
+                <div class="label">${t.label}</div>
+            </div>
+        `).join('');
+
+        const arsenalHomeHTML = `
             <h1 id="portal-title">Centro de Mando: ${company.name}</h1>
-            <div class="kpi-card" style="margin-bottom: 2rem; text-align: center; padding: 15px; background: #222;">
+            <h2 style="text-align:center; font-weight: 500; color: var(--color-primary); margin-bottom: 2rem;">Sector: ${sectorName}</h2>
+            
+            <div class="kpi-card" style="margin-bottom: 2.5rem; text-align: center; padding: 15px; background: #222;">
                 <div class="label" style="font-size: 0.9rem;">TU CÓDIGO DE CONVENIO (para tus miembros)</div>
                 <div class="value" style="font-size: 2rem; letter-spacing: 3px;">${company.convenioCode}</div>
             </div>
-            
+
+            <h3 style="margin-bottom: 1rem; border-bottom: 1px solid #444; padding-bottom: 0.5rem;">Tu Arsenal de Comunicación</h3>
+            <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 2.5rem;">
+                ${arsenalItemsHTML}
+                <div class="kpi-card">
+                    <div class="value"><i class="fas fa-envelope"></i></div>
+                    <div class="label">Mensajes Directos</div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 1rem; border-bottom: 1px solid #444; padding-bottom: 0.5rem;">Herramientas de Gestión</h3>
             <div id="dashboard-actions" class="kpi-grid">
                 <div class="kpi-card action-card" id="btn-show-broadcast">
                     <div class="value"><i class="fas fa-bullhorn"></i></div>
-                    <div class="label">Comunicados a la Tribu</div>
+                    <div class="label">Consola de Comunicados</div>
                 </div>
                 <div class="kpi-card action-card" id="btn-show-direct-messages">
                     <div class="value"><i class="fas fa-envelope"></i></div>
-                    <div class="label">Mensajes Directos</div>
+                    <div class="label">Bandeja de Mensajes</div>
                 </div>
                 <div class="kpi-card action-card" id="btn-show-roster-management">
                     <div class="value"><i class="fas fa-users-cog"></i></div>
                     <div class="label">Gestión de Altas</div>
                 </div>
             </div>
-            <div id="dashboard-content" style="margin-top: 2rem; border-top: 1px solid #444; padding-top: 2rem;">
-                 <p class="placeholder">Selecciona una acción para comenzar.</p>
+            <div id="dashboard-content" style="margin-top: 2rem;">
+                 <!-- Este espacio se usará para renderizar las consolas al hacer clic -->
             </div>
         `;
-        ui.portalContainer.innerHTML = dashboardHTML;
+        ui.portalContainer.innerHTML = arsenalHomeHTML;
         
         document.getElementById('btn-show-broadcast').onclick = () => renderBroadcastConsole(company);
         document.getElementById('btn-show-direct-messages').onclick = () => renderDirectMessagesConsole(roster);
