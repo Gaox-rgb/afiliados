@@ -233,20 +233,30 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-show-broadcast').onclick = () => renderBroadcastConsole(company);
         document.getElementById('btn-show-direct-messages').onclick = () => renderDirectMessagesConsole(roster);
         document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
-    startCountdown('plan-countdown', company.planEndDate);
-    }
-            // Lógica para el banner de cambio de contraseña.
+        startCountdown('plan-countdown', company.planEndDate);
+    
+        // Lógica para el banner de cambio de contraseña.
         if (company.requiresPasswordChange) {
             const passwordChangeBanner = `
                 <div id="password-change-banner" style="background-color: #2c3e50; padding: 15px; border-radius: 6px; margin-bottom: 2rem; border-left: 4px solid var(--color-primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                    <p style="margin: 0; font-weight: 500;"><strong>Actualización de Seguridad:</strong> Se recomienda cambiar tu contraseña temporal.</p>
                    <button id="btn-show-password-modal" class="cta-button" style="margin: 0;">Cambiar Contraseña</button>
                 </div>`;
-            ui.portalContainer.insertAdjacentHTML('afterbegin', passwordChangeBanner);
+            const portalTitle = document.getElementById('portal-title');
+            if (portalTitle) {
+                portalTitle.insertAdjacentHTML('afterend', passwordChangeBanner);
+            } else {
+                ui.portalContainer.insertAdjacentHTML('afterbegin', passwordChangeBanner);
+            }
             
             document.getElementById('btn-show-password-modal').onclick = renderPasswordChangeModal;
         }
-    },
+    }
+
+    /**
+     * Inicia un contador regresivo y lo renderiza en un elemento del DOM.
+     * Muestra un botón de renovación si el tiempo restante es menor a 10 días.
+     */
     function startCountdown(elementId, endDateStr) {
         const targetElement = document.getElementById(elementId);
         if (!targetElement || !endDateStr) {
@@ -303,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }, 1000);
     }
+
     /**
      * Renderiza la consola para la Gestión de Altas.
      */
@@ -363,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             document.getElementById('master-list-content').innerHTML = `<p class="error-text">Error al cargar la lista: ${error.message}</p>`;
         }
-    },
+    }
 
     /**
      * Maneja el envío del formulario para añadir un nuevo miembro.
@@ -594,10 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function getMemberLimitFromPlan(planId) { /* ... sin cambios ... */ }
-});
-
-/**
+    /**
      * Renderiza el modal para el cambio de contraseña.
      */
     function renderPasswordChangeModal() {
@@ -657,3 +665,4 @@ document.addEventListener('DOMContentLoaded', () => {
             button.innerText = 'Actualizar Contraseña';
         }
     }
+});
