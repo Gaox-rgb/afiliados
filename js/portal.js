@@ -223,6 +223,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="value"><i class="fas fa-users-cog"></i></div>
                     <div class="label">Gestión de Altas</div>
                 </div>
+                <div class="kpi-card action-card" id="btn-show-security-settings">
+                    <div class="value"><i class="fas fa-shield-alt"></i></div>
+                    <div class="label">Cambiar Contraseña</div>
+                </div>
             </div>
             <div id="dashboard-content" style="margin-top: 2rem;">
                  <!-- Este espacio se usará para renderizar las consolas al hacer clic -->
@@ -233,24 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-show-broadcast').onclick = () => renderBroadcastConsole(company);
         document.getElementById('btn-show-direct-messages').onclick = () => renderDirectMessagesConsole(roster);
         document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
+        document.getElementById('btn-show-security-settings').onclick = renderPasswordChangeModal; // Nuevo listener
         startCountdown('plan-countdown', company.planEndDate);
-    
-        // Lógica para el banner de cambio de contraseña.
-        if (company.requiresPasswordChange) {
-            const passwordChangeBanner = `
-                <div id="password-change-banner" style="background-color: #2c3e50; padding: 15px; border-radius: 6px; margin-bottom: 2rem; border-left: 4px solid var(--color-primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                   <p style="margin: 0; font-weight: 500;"><strong>Actualización de Seguridad:</strong> Se recomienda cambiar tu contraseña temporal.</p>
-                   <button id="btn-show-password-modal" class="cta-button" style="margin: 0;">Cambiar Contraseña</button>
-                </div>`;
-            const portalTitle = document.getElementById('portal-title');
-            if (portalTitle) {
-                portalTitle.insertAdjacentHTML('afterend', passwordChangeBanner);
-            } else {
-                ui.portalContainer.insertAdjacentHTML('afterbegin', passwordChangeBanner);
-            }
-            
-            document.getElementById('btn-show-password-modal').onclick = renderPasswordChangeModal;
-        }
     }
 
     /**
@@ -613,9 +601,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="modal-content" style="max-width: 500px;">
                     <span id="close-password-modal" class="modal-close-btn">&times;</span>
                     <h3>Cambio de Contraseña Segura</h3>
+                    <p style="opacity: 0.7; margin-top: 0.5rem;">Por seguridad, solo puedes realizar esta acción una vez cada 30 días.</p>
                     <form id="password-change-form" style="margin-top: 1.5rem;">
                         <input type="password" id="new-password" placeholder="Nueva Contraseña (mín. 6 caracteres)" required style="width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
-                        <input type="password" id="confirm-password" placeholder="Confirmar Nueva Contraseña" required style="width: 100%; padding: 12px; margin-bottom: 1.5rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                        <input type="password" id="confirm-password" placeholder="Confirmar Nueva Contraseña" required style="width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                        <div style="margin-bottom: 1.5rem;">
+                            <input type="checkbox" id="email-copy-check" style="margin-right: 10px;">
+                            <label for="email-copy-check">Enviarme un correo de confirmación (no incluye la contraseña).</label>
+                        </div>
                         <button type="submit" class="cta-button" style="width: 100%;">Actualizar Contraseña</button>
                     </form>
                 </div>
@@ -652,10 +645,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             alert('¡Contraseña actualizada con éxito!');
             document.getElementById('password-change-modal').remove();
-            
-            // Eliminar el banner de notificación para feedback instantáneo
-            const banner = document.getElementById('password-change-banner');
-            if (banner) banner.remove();
 
         } catch (error) {
             console.error("Error al cambiar la contraseña:", error);
