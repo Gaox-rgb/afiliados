@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         }, 1000);
-    }
+    },
     /**
      * Renderiza la consola para la Gestión de Altas.
      */
