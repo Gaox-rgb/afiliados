@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="text-align: center; padding: 20px;">
                 <h1 style="font-size: 1.8rem; margin-bottom: 1rem;">¡Bienvenido a Makumoto, ${company.name}!</h1>
                 <p style="margin-bottom: 2rem;">Para optimizar tu Centro de Mando, primero debemos definir el sector de tu negocio.</p>
-                <p style="margin-bottom: 2rem; font-size: 0.9rem; opacity: 0.8;">Este paso es crucial y no podrá cambiarse más adelante.</p>
+                <p style="margin-bottom: 2rem; font-size: 1rem; color: var(--color-primary); font-weight: bold;">Atención: Esta decisión es permanente y no podrá cambiarse.</p>
                 <button id="btn-start-setup" class="cta-button" style="padding: 15px 30px; font-size: 1.2rem;">Comenzar Configuración</button>
             </div>
         `;
@@ -117,27 +117,57 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         ui.portalContainer.innerHTML = selectionHTML;
         
-        document.getElementById('sector-options-container').onclick = handleSectorSelection;
+       document.getElementById('sector-options-container').onclick = handleSectorSelection;
     }
+
     async function handleSectorSelection(event) {
         const selectedCard = event.target.closest('.sector-card');
-        if (!selectedCard) return; // Si el clic no fue en una tarjeta, no hacer nada
+        if (!selectedCard) return;
 
         const sector = selectedCard.dataset.sector;
         
-        // Feedback visual inmediato
         ui.portalContainer.innerHTML = `<p class="loader-text" style="text-align: center; padding: 40px 0;"><i class="fas fa-save"></i> Guardando tu elección como punto de no retorno...</p>`;
 
         try {
             const setCompanySector = firebase.functions().httpsCallable('setCompanySector');
             await setCompanySector({ sector: sector });
 
-            // Éxito: Recargamos todo el portal para que se renderice el dashboard correcto
-            loadPortalData();
+            // ¡Éxito! En lugar de recargar, llamamos a la nueva pantalla.
+            renderInitialArsenalSetup(sector);
         } catch (error) {
             console.error("Error al guardar el sector:", error);
             ui.portalContainer.innerHTML = `<p class="error-text" style="text-align: center; padding: 40px 0;">Error Crítico: ${error.message}. Por favor, recarga la página e intenta de nuevo.</p>`;
         }
+    }
+
+    function renderInitialArsenalSetup(sector) {
+        const sectorNames = {
+            corporate: 'Corporativo',
+            fitness: 'Fitness',
+            health: 'Salud y Bienestar'
+        };
+        const templates = broadcastTemplates[sector] || [];
+        const arsenalItemsHTML = templates.map(t => `
+            <div class="kpi-card" style="text-align: left; padding: 15px;">
+                <div class="value" style="font-size: 1.5rem;"><i class="fas ${t.icon}"></i> ${t.label}</div>
+            </div>
+        `).join('');
+
+        const arsenalHTML = `
+            <div style="text-align: center;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">¡Arsenal para ${sectorNames[sector]} Desbloqueado!</h2>
+                <p style="margin-bottom: 2.5rem; opacity: 0.8;">Estas son tus 5 herramientas de comunicación iniciales para conectar con tu tribu.</p>
+                <div class="kpi-grid">
+                    ${arsenalItemsHTML}
+                    <div class="kpi-card" style="text-align: left; padding: 15px;">
+                         <div class="value" style="font-size: 1.5rem;"><i class="fas fa-envelope"></i> Mensajes Directos</div>
+                    </div>
+                </div>
+                <button id="btn-goto-dashboard" class="cta-button" style="margin-top: 2.5rem; padding: 15px 30px; font-size: 1.2rem;">Entendido, llévame a mi Centro de Mando</button>
+            </div>
+        `;
+        ui.portalContainer.innerHTML = arsenalHTML;
+        document.getElementById('btn-goto-dashboard').onclick = loadPortalData;
     }
 
 
