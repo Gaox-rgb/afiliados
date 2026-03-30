@@ -91,8 +91,54 @@ document.addEventListener('DOMContentLoaded', () => {
         // Asignamos el evento al nuevo botón
         document.getElementById('btn-start-setup').onclick = renderSectorSelection;
     }
-    function renderSectorSelection() { /* ... sin cambios ... */ }
-    async function handleSectorSelection(event) { /* ... sin cambios ... */ }
+    function renderSectorSelection() {
+        const selectionHTML = `
+            <div style="text-align: center;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Paso 2: Selecciona tu Arena</h2>
+                <p style="margin-bottom: 2.5rem; opacity: 0.8;">Esta elección definirá las métricas y herramientas disponibles en tu portal.</p>
+                <div id="sector-options-container" class="kpi-grid">
+                    <div class="kpi-card action-card sector-card" data-sector="corporate">
+                        <div class="value" style="font-size: 2.5rem;"><i class="fas fa-briefcase"></i></div>
+                        <div class="label" style="font-size: 1rem; margin-top: 1rem;">Corporativo</div>
+                        <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Enfoque en engagement, productividad y cultura organizacional.</p>
+                    </div>
+                    <div class="kpi-card action-card sector-card" data-sector="fitness">
+                        <div class="value" style="font-size: 2.5rem;"><i class="fas fa-dumbbell"></i></div>
+                        <div class="label" style="font-size: 1rem; margin-top: 1rem;">Fitness</div>
+                        <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Métricas de asistencia, rendimiento físico y retención de miembros.</p>
+                    </div>
+                    <div class="kpi-card action-card sector-card" data-sector="health">
+                        <div class="value" style="font-size: 2.5rem;"><i class="fas fa-heartbeat"></i></div>
+                        <div class="label" style="font-size: 1rem; margin-top: 1rem;">Salud y Bienestar</div>
+                        <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">Seguimiento a la adherencia de planes, citas y bienestar general.</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        ui.portalContainer.innerHTML = selectionHTML;
+        
+        document.getElementById('sector-options-container').onclick = handleSectorSelection;
+    }
+    async function handleSectorSelection(event) {
+        const selectedCard = event.target.closest('.sector-card');
+        if (!selectedCard) return; // Si el clic no fue en una tarjeta, no hacer nada
+
+        const sector = selectedCard.dataset.sector;
+        
+        // Feedback visual inmediato
+        ui.portalContainer.innerHTML = `<p class="loader-text" style="text-align: center; padding: 40px 0;"><i class="fas fa-save"></i> Guardando tu elección como punto de no retorno...</p>`;
+
+        try {
+            const setCompanySector = firebase.functions().httpsCallable('setCompanySector');
+            await setCompanySector({ sector: sector });
+
+            // Éxito: Recargamos todo el portal para que se renderice el dashboard correcto
+            loadPortalData();
+        } catch (error) {
+            console.error("Error al guardar el sector:", error);
+            ui.portalContainer.innerHTML = `<p class="error-text" style="text-align: center; padding: 40px 0;">Error Crítico: ${error.message}. Por favor, recarga la página e intenta de nuevo.</p>`;
+        }
+    }
 
 
     /**
