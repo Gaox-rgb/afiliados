@@ -196,8 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <strong style="font-size: 0.9rem; display: block; color: var(--color-primary);">${company.planDetails.name}</strong>
                 </div>
                 <div class="plan-info-item" style="text-align: center;">
-                    <span style="font-size: 0.75rem; opacity: 0.7; text-transform: uppercase;">Límite de Afiliados:</span>
-                    <strong style="font-size: 0.9rem; display: block;">${company.planDetails.memberLimit}</strong>
+                    <span style="font-size: 0.75rem; opacity: 0.7; text-transform: uppercase;">DEBUG: DATOS DEL PLAN RECIBIDOS</span>
+                    <strong style="font-size: 0.9rem; display: block; word-break: break-all;">${JSON.stringify(company.planDetails)}</strong>
                 </div>
                 <div class="plan-info-item" style="text-align: center;">
                     <span style="font-size: 0.75rem; opacity: 0.7; text-transform: uppercase;">Costo:</span>
