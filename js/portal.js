@@ -593,23 +593,58 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Renderiza el modal para el cambio de contraseña.
+     * Muestra una alerta estilizada dentro del modal de cambio de contraseña.
+     */
+    function showModalAlert(message, type = 'error') {
+        const container = document.getElementById('modal-alert-container');
+        if (!container) return;
+
+        const alertTypeClass = type === 'success' ? 'alert-success' : 'alert-error';
+        container.innerHTML = `<div class="modal-alert ${alertTypeClass}">${message}</div>`;
+        container.style.display = 'block';
+
+        setTimeout(() => {
+            if (container) {
+                container.style.display = 'none';
+                container.innerHTML = '';
+            }
+        }, 5000); // La alerta desaparece después de 5 segundos
+    }
+    
+    /**
+     * Renderiza el modal para el cambio de contraseña con todas las mejoras.
      */
     function renderPasswordChangeModal() {
         const modalHTML = `
+            <style>
+                .password-input-wrapper { position: relative; display: flex; align-items: center; }
+                .password-input-wrapper input { padding-right: 40px !important; }
+                .toggle-password-btn { position: absolute; right: 10px; background: none; border: none; color: #888; cursor: pointer; font-size: 1.2rem; }
+                .modal-alert { padding: 12px; margin-bottom: 1rem; border-radius: 5px; font-weight: 500; }
+                .alert-error { background-color: #4d1a1a; color: #ffcccc; border-left: 4px solid var(--color-secondary); }
+                .alert-success { background-color: #1a4d2e; color: #ccffdd; border-left: 4px solid #28a745; }
+            </style>
             <div id="password-change-modal" class="modal-overlay visible">
                 <div class="modal-content" style="max-width: 500px;">
                     <span id="close-password-modal" class="modal-close-btn">&times;</span>
                     <h3>Cambio de Contraseña Segura</h3>
-                    <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Tu contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo (@$!%*?&).</p>
-                    <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Por seguridad, solo puedes realizar esta acción una vez cada 30 días.</p>
-                    <form id="password-change-form" style="margin-top: 1.5rem;">
-                        <input type="password" id="new-password" placeholder="Nueva Contraseña" required style="width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
-                        <input type="password" id="confirm-password" placeholder="Confirmar Nueva Contraseña" required style="width: 100%; padding: 12px; margin-bottom: 1.5rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
-                        <div style="margin-bottom: 1.5rem; background-color: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 5px; border-left: 3px solid var(--color-primary);">
-                            <label style="font-size: 0.9rem; opacity: 0.8;">Se enviará una notificación de este cambio a tu correo electrónico registrado.</label>
+                    <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Tu contraseña debe tener: Mínimo 8 caracteres, mayúsculas, minúsculas, números y un símbolo (@$!%*?&).</p>
+                    <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Solo puedes realizar esta acción una vez cada 30 días.</p>
+                    <div id="modal-alert-container" style="display: none; margin-top: 1rem;"></div>
+                    <form id="password-change-form" style="margin-top: 1rem;">
+                        <div class="password-input-wrapper" style="margin-bottom: 1rem;">
+                            <input type="password" id="new-password" placeholder="Nueva Contraseña" required style="width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                            <button type="button" class="toggle-password-btn" data-target="new-password"><i class="fas fa-eye"></i></button>
                         </div>
-                        <button type="submit" class="cta-button" style="width: 100%;">Actualizar Contraseña y Notificar</button>
+                        <div class="password-input-wrapper" style="margin-bottom: 1rem;">
+                            <input type="password" id="confirm-password" placeholder="Confirmar Nueva Contraseña" required style="width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                            <button type="button" class="toggle-password-btn" data-target="confirm-password"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <input type="email" id="target-email" placeholder="Correo para enviar la notificación" required style="width: 100%; padding: 12px; margin-bottom: 1.5rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                        
+                        <button type="submit" class="cta-button" style="width: 100%; background: linear-gradient(145deg, var(--color-primary), #ffc107); color: var(--color-dark); font-weight: bold; border: none; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">
+                            <i class="fas fa-shield-alt"></i> Actualizar Contraseña y Notificar
+                        </button>
                     </form>
                 </div>
             </div>`;
@@ -618,6 +653,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const modal = document.getElementById('password-change-modal');
         document.getElementById('close-password-modal').onclick = () => modal.remove();
         document.getElementById('password-change-form').onsubmit = handlePasswordChangeSubmit;
+
+        // Listeners para los visores de contraseña
+        modal.querySelectorAll('.toggle-password-btn').forEach(btn => {
+            btn.onclick = () => {
+                const targetInput = document.getElementById(btn.dataset.target);
+                const icon = btn.querySelector('i');
+                if (targetInput.type === 'password') {
+                    targetInput.type = 'text';
+                    icon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    targetInput.type = 'password';
+                    icon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            };
+        });
     }
 
     /**
@@ -627,15 +677,18 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const newPass = document.getElementById('new-password').value;
         const confirmPass = document.getElementById('confirm-password').value;
+        const targetEmail = document.getElementById('target-email').value;
 
+        if (!targetEmail) {
+            return showModalAlert('Por favor, ingresa un correo para la notificación.');
+        }
         if (newPass !== confirmPass) {
-            return alert('Las contraseñas no coinciden.');
+            return showModalAlert('Las contraseñas no coinciden.');
         }
 
-        // Validación de complejidad en el frontend para feedback inmediato
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         if (!passwordRegex.test(newPass)) {
-            return alert("La contraseña no cumple los requisitos: Mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (@$!%*?&).");
+            return showModalAlert("La contraseña no cumple con los requisitos de seguridad.");
         }
         
         const button = event.target.querySelector('button[type="submit"]');
@@ -644,16 +697,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const changeManagerPassword = firebase.functions().httpsCallable('changeManagerPassword');
-            await changeManagerPassword({ newPassword: newPass }); // Se envía solo la nueva contraseña
+            await changeManagerPassword({ newPassword: newPass, targetEmail: targetEmail });
 
-            alert('¡Contraseña actualizada con éxito! Se ha enviado una notificación a tu correo.');
-            document.getElementById('password-change-modal').remove();
+            showModalAlert('¡Contraseña actualizada con éxito! Se ha enviado una notificación.', 'success');
+            setTimeout(() => {
+                const modal = document.getElementById('password-change-modal');
+                if(modal) modal.remove();
+            }, 3000); // Cerrar modal automáticamente después del éxito
 
         } catch (error) {
             console.error("Error al cambiar la contraseña:", error);
-            alert(`Error: ${error.message}`);
+            showModalAlert(error.message); // Mostrar el error del backend
             button.disabled = false;
-            button.innerText = 'Actualizar Contraseña y Notificar';
+            button.innerHTML = '<i class="fas fa-shield-alt"></i> Actualizar Contraseña y Notificar';
         }
     }
 });
