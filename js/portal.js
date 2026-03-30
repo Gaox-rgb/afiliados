@@ -188,6 +188,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const arsenalHomeHTML = `
             <h1 id="portal-title">Centro de Mando: ${company.name}</h1>
             <h2 style="text-align:center; font-weight: 500; color: var(--color-primary); margin-bottom: 2rem;">Sector: ${sectorName}</h2>
+
+            <!-- NUEVO BLOQUE DE INFORMACIÓN DEL PLAN -->
+            <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2.5rem;">
+                <div class="kpi-card" style="background: #222;">
+                    <div class="label" style="font-size: 0.9rem;">PLAN ACTUAL</div>
+                    <div class="value" style="font-size: 1.5rem; margin-top: 0.5rem;">${company.planDetails.name}</div>
+                </div>
+                <div class="kpi-card" style="background: #222;">
+                    <div class="label" style="font-size: 0.9rem;">AFILIADOS PERMITIDOS</div>
+                    <div class="value" style="font-size: 1.5rem; margin-top: 0.5rem;">${company.planDetails.memberLimit}</div>
+                </div>
+                <div class="kpi-card" style="background: #222;">
+                    <div class="label" style="font-size: 0.9rem;">COSTO DEL PLAN</div>
+                    <div class="value" style="font-size: 1.5rem; margin-top: 0.5rem;">$${company.planDetails.price} <span style="font-size: 0.9rem; opacity: 0.7;">USD</span></div>
+                </div>
+            </div>
             
             <div class="kpi-card" style="margin-bottom: 2.5rem; text-align: center; padding: 15px; background: #222;">
                 <div class="label" style="font-size: 0.9rem;">VIGENCIA DEL PLAN</div>
