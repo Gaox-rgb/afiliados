@@ -223,6 +223,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="value"><i class="fas fa-users-cog"></i></div>
                     <div class="label">Gestión de Altas</div>
                 </div>
+                <div class="kpi-card action-card" id="btn-show-mission-map">
+                    <div class="value"><i class="fas fa-map-marked-alt"></i></div>
+                    <div class="label">Mapa de Misión</div>
+                </div>
+                 <div class="kpi-card action-card" id="btn-show-premium-upgrades">
+                    <div class="value" style="color: #FFD700;"><i class="fas fa-rocket"></i></div>
+                    <div class="label">Mejoras Premium</div>
+                </div>
                 <div class="kpi-card action-card" id="btn-show-security-settings">
                     <div class="value"><i class="fas fa-shield-alt"></i></div>
                     <div class="label">Cambiar Contraseña</div>
@@ -237,6 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-show-broadcast').onclick = () => renderBroadcastConsole(company);
         document.getElementById('btn-show-direct-messages').onclick = () => renderDirectMessagesConsole(roster);
         document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
+        document.getElementById('btn-show-mission-map').onclick = renderMissionMapConsole;
+        document.getElementById('btn-show-premium-upgrades').onclick = () => renderPremiumUpgradesConsole(powerUps);
         document.getElementById('btn-show-security-settings').onclick = renderPasswordChangeModal;
         startCountdown('plan-countdown', company.planEndDate);
     }
@@ -731,3 +741,188 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+/**
+     * [NUEVO] Renderiza la consola de "Mejoras Premium" (Power-Ups).
+     */
+    function renderPremiumUpgradesConsole(powerUps) {
+        const contentContainer = document.querySelector('#dashboard-content');
+        contentContainer.innerHTML = `
+            <style>
+                .powerup-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 1.5rem;
+                }
+                .powerup-card {
+                    background-color: var(--color-light-dark);
+                    border-radius: 8px;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    border-left: 4px solid #444;
+                }
+                .powerup-card.owned {
+                    border-left-color: #28a745; /* Verde para los adquiridos */
+                }
+                .powerup-card h4 {
+                    font-size: 1.2rem;
+                    color: var(--color-primary);
+                    margin-bottom: 0.5rem;
+                }
+                .powerup-card p {
+                    opacity: 0.8;
+                    flex-grow: 1; /* Empuja el botón hacia abajo */
+                    margin-bottom: 1.5rem;
+                }
+                .powerup-card .price {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    margin-bottom: 1rem;
+                }
+                .powerup-card .cta-button {
+                    width: 100%;
+                }
+                .powerup-card .cta-button:disabled {
+                    background-color: #28a745;
+                    cursor: default;
+                    opacity: 1;
+                }
+            </style>
+            <h3><i class="fas fa-rocket"></i> Mejoras Premium</h3>
+            <p style="margin-bottom: 2rem; opacity: 0.8;">Desbloquea nuevas capacidades para tu Centro de Mando y potencia a tu tribu.</p>
+            <div id="powerup-grid" class="powerup-grid">
+                <!-- Las tarjetas de mejoras se renderizarán aquí -->
+            </div>
+        `;
+
+        const grid = document.getElementById('powerup-grid');
+        if (!powerUps || powerUps.length === 0) {
+            grid.innerHTML = '<p>No hay mejoras disponibles para tu sector en este momento.</p>';
+            return;
+        }
+
+        const powerUpsHTML = powerUps.map(p => `
+            <div class="powerup-card ${p.isOwned ? 'owned' : ''}">
+                <h4>${p.name}</h4>
+                <p>${p.description}</p>
+                <div class="price">$${p.price} <span style="font-size: 0.9rem; opacity: 0.7;">USD (Pago único)</span></div>
+                <button 
+                    class="cta-button btn-purchase-powerup" 
+                    data-powerup-id="${p.id}"
+                    ${p.isOwned ? 'disabled' : ''}
+                >
+                    ${p.isOwned ? '<i class="fas fa-check"></i> Activado' : 'Desbloquear Ahora'}
+                </button>
+            </div>
+        `).join('');
+
+        grid.innerHTML = powerUpsHTML;
+
+        // Asignar listeners a los botones de compra
+        grid.querySelectorAll('.btn-purchase-powerup:not([disabled])').forEach(button => {
+            button.onclick = handlePowerUpPurchase;
+        });
+    }
+
+    /**
+     * [NUEVO] Maneja el clic en el botón de compra de un Power-Up.
+     */
+    async function handlePowerUpPurchase(event) {
+        const button = event.target;
+        const powerUpId = button.dataset.powerupId;
+        
+        if (!confirm('Serás redirigido a PayPal para completar la compra de esta mejora. ¿Deseas continuar?')) {
+            return;
+        }
+
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+
+        try {
+            const createPowerUpPurchaseOrder = firebase.functions().httpsCallable('createPowerUpPurchaseOrder');
+            const result = await createPowerUpPurchaseOrder({ powerUpId });
+            
+            const approveUrl = result.data.approveUrl;
+            if (approveUrl) {
+                // Redirigir al usuario a PayPal para el pago
+                window.location.href = approveUrl;
+            } else {
+                throw new Error('No se recibió la URL de aprobación de PayPal.');
+            }
+        } catch (error) {
+            console.error('Error al iniciar la compra del Power-Up:', error);
+            alert(`Error: ${error.message}`);
+            button.disabled = false;
+            button.innerText = 'Desbloquear Ahora';
+        }
+    }
+
+    /**
+     * [NUEVO] Renderiza la consola del "Mapa de Misión" y carga los datos.
+     */
+    async function renderMissionMapConsole() {
+        const contentContainer = document.querySelector('#dashboard-content');
+        contentContainer.innerHTML = `
+            <style>
+                #mission-map { height: 60vh; width: 100%; border-radius: 8px; background-color: #333; }
+                .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--color-light-dark); color: var(--color-text); }
+                .leaflet-popup-content h5 { color: var(--color-primary); margin-bottom: 5px; }
+                .leaflet-container a { color: var(--color-primary); }
+            </style>
+            <h3><i class="fas fa-map-marked-alt"></i> Mapa de Misión</h3>
+            <p style="margin-bottom: 1.5rem; opacity: 0.8;">Visualiza los últimos check-ins de tu tribu en el campo.</p>
+            <div id="mission-map-container" style="position: relative;">
+                <div id="mission-map"></div>
+                <div id="map-loader" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; border-radius: 8px;">
+                    <p class="loader-text"><i class="fas fa-spinner fa-spin"></i> Cargando datos geoespaciales...</p>
+                </div>
+            </div>
+        `;
+
+        const mapLoader = document.getElementById('map-loader');
+        
+        try {
+            // Inicializar el mapa
+            const map = L.map('mission-map').setView([20.5, -100.5], 5); // Vista inicial centrada en México
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+
+            // Llamar al backend para obtener los check-ins
+            const getMissionCheckIns = firebase.functions().httpsCallable('getMissionCheckIns');
+            const result = await getMissionCheckIns();
+            const checkIns = result.data;
+
+            if (checkIns.length === 0) {
+                mapLoader.innerHTML = `<p class="loader-text"><i class="fas fa-info-circle"></i> No hay check-ins registrados todavía.</p>`;
+                return;
+            }
+
+            // Añadir marcadores al mapa
+            const markers = [];
+            checkIns.forEach(checkIn => {
+                const marker = L.marker([checkIn.latitude, checkIn.longitude]).addTo(map);
+                marker.bindPopup(`
+                    <h5>${checkIn.userName}</h5>
+                    <b>Misión:</b> ${checkIn.description}<br>
+                    <b>Fecha:</b> ${new Date(checkIn.timestamp).toLocaleString()}
+                `);
+                markers.push(marker);
+            });
+
+            // Ajustar el zoom del mapa para que todos los marcadores sean visibles
+            if (markers.length > 0) {
+                const group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.2)); // pad(0.2) añade un pequeño margen
+            }
+
+            mapLoader.style.display = 'none'; // Ocultar el loader al finalizar
+
+        } catch (error) {
+            console.error("Error al renderizar el Mapa de Misión:", error);
+            mapLoader.innerHTML = `<p class="error-text">Error Crítico: ${error.message}</p>`;
+        }
+    }
