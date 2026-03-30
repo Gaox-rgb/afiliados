@@ -258,6 +258,22 @@
             border-top-left-radius: 6px;
         }
 
+        /* --- ESTILOS PARA EL FOOTER FIJO --- */
+        #portal-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--color-dark);
+            padding: 1rem;
+            text-align: center;
+            border-top: 1px solid #333;
+            z-index: 1000;
+        }
+        /* Añadir un padding-bottom al body para evitar que el footer cubra el contenido */
+        body {
+            padding-bottom: 80px; /* Ajustar este valor según el alto del footer */
+        }
     </style>
 </head>
 <body>
@@ -272,9 +288,7 @@
     </header>
 
     <main id="manager-portal" class="container">
-        <div class="portal-actions-bar">
-            <button id="btn-logout" class="portal-logout-btn">Cerrar Sesión</button>
-        </div>
+        <!-- Este contenedor se elimina por completo -->
         
         <!-- Contenedor Dinámico para el Flujo de Iniciación y Dashboard -->
         <div id="portal-container">
@@ -282,6 +296,10 @@
         </div>
 
     </main>
+
+    <footer id="portal-footer">
+        <button id="btn-logout-footer" class="portal-logout-btn">Cerrar Sesión</button>
+    </footer>
 
     <!-- SDKs de Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>

@@ -5,7 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const ui = {
         portalContainer: document.getElementById('portal-container'),
-        logoutButton: document.getElementById('btn-logout'),
+        logoutButton: document.getElementById('btn-logout-footer'),
     };
 
     const broadcastTemplates = {
