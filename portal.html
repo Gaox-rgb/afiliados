@@ -430,22 +430,30 @@
     .manager-chatbot-option-btn {
         width: 100%;
         padding: 12px;
-        background: #333;
-        border: 1px solid #555;
-        color: var(--color-text);
+        background: transparent;
+        border: 2px solid var(--color-primary);
+        color: var(--color-primary);
         border-radius: 8px;
         cursor: pointer;
         text-align: left;
         font-family: var(--font-family);
         font-size: 0.9rem;
-        transition: background-color 0.2s;
-    }
-    .manager-chatbot-option-btn:hover { background-color: #444; }
-    .manager-chatbot-action-btn {
-        background: var(--color-primary);
-        color: var(--color-dark);
         font-weight: bold;
-        text-align: center;
+        transition: all 0.2s ease;
+    }
+    .manager-chatbot-option-btn:hover {
+        background-color: var(--color-primary);
+        color: var(--color-dark);
+    }
+    .manager-chatbot-action-btn {
+        background: var(--color-secondary);
+        color: white;
+        border-color: var(--color-secondary);
+    }
+    .manager-chatbot-action-btn:hover {
+        background-color: var(--color-secondary);
+        color: white;
+        filter: brightness(1.2);
     }
     @media (max-width: 480px) {
         #manager-chatbot-window {
@@ -458,47 +466,99 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const chatbotContainer = document.getElementById('manager-chatbot-container');
-    const bubble = document.getElementById('manager-chatbot-bubble');
-    const closeBtn = document.getElementById('manager-chatbot-close-btn');
-    const messagesContainer = document.getElementById('manager-chatbot-messages');
-    const optionsContainer = document.getElementById('manager-chatbot-options');
+    // Se envuelve en una función IIFE para evitar conflictos con el script principal del portal
+    (function() {
+        const initManagerChatbot = () => {
+            const chatbotContainer = document.getElementById('manager-chatbot-container');
+            const bubble = document.getElementById('manager-chatbot-bubble');
+            const closeBtn = document.getElementById('manager-chatbot-close-btn');
+            const messagesContainer = document.getElementById('manager-chatbot-messages');
+            const optionsContainer = document.getElementById('manager-chatbot-options');
+            
+            // Verificación para evitar errores si los elementos no existen
+            if (!chatbotContainer || !bubble || !closeBtn) return;
 
-    const chatbotData = {
-        welcome: {
-            text: "¡Saludos, Gerente! Soy tu asistente táctico. Mi misión es asegurar que domines cada herramienta de este Centro de Mando. ¿Qué necesitas optimizar hoy?"
-        },
-        q1: {
-            question: "¿Cómo afilio a un nuevo miembro a mi Tribu?",
-            answer: "Es un proceso en dos pasos: <br>1. Ve a <strong>'Gestión de Altas'</strong> y añade a la persona con un ID único (ej. su ID de empleado). <br>2. El miembro usa la app Makumoto®, su ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Es todo! Ya tienes control.",
-            cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() }
-        },
-        q2: {
-            question: "¿Comunicado masivo o Mensaje Directo?",
-            answer: "Usa la <strong>'Consola de Comunicados'</strong> para enviar mensajes a TODA tu tribu. Ideal para anuncios o retos. <br><br>Usa la <strong>'Bandeja de Mensajes'</strong> para una conversación privada y uno a uno con un miembro específico. Perfecto para feedback o seguimiento."
-        },
-        q3: {
-            question: "¿Para qué sirve el 'Mapa de Misión'?",
-            answer: "Es tu vista de satélite. Te muestra en un mapa <strong>dónde tus miembros realizan sus 'check-ins'</strong> de misiones. Es la prueba visual de que tu tribu está activa y comprometida en el mundo real, no solo en la app."
-        },
-        q4: {
-            question: "¿Por qué debería considerar las 'Mejoras Premium'?",
-            answer: "El Centro de Mando base es poderoso, pero las Mejoras Premium te dan una <strong>ventaja táctica decisiva</strong>. Son 'Power-Ups' de pago único que desbloquean funciones avanzadas, como crear retos personalizados, analíticas de comportamiento o herramientas de comunicación avanzadas para llevar tu liderazgo al siguiente nivel."
-        },
-        q5: {
-            question: "¿Qué son los 'Power-Ups'?",
-            answer: "Son módulos de funcionalidad que puedes añadir a tu arsenal. Por ejemplo, el Power-Up 'Impulso Personalizado' te permite crear micro-retos específicos para un individuo o para toda la tribu, dándote un control granular sobre la motivación del equipo. ¡Cada Power-Up es una nueva arma en tu arsenal!"
+            const chatbotData = {
+                welcome: { text: "¡Saludos, Gerente! Soy tu asistente táctico. Mi misión es asegurar que domines cada herramienta de este Centro de Mando. ¿Qué necesitas optimizar hoy?" },
+                q1: { question: "¿Cómo afilio a un nuevo miembro a mi Tribu?", answer: "Es un proceso en dos pasos: <br>1. Ve a <strong>'Gestión de Altas'</strong> y añade a la persona con un ID único. <br>2. El miembro usa la app Makumoto®, su ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Es todo!", cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() } },
+                q2: { question: "¿Comunicado masivo o Mensaje Directo?", answer: "Usa la <strong>'Consola de Comunicados'</strong> para mensajes a TODA tu tribu. Ideal para anuncios. <br><br>Usa la <strong>'Bandeja de Mensajes'</strong> para una conversación privada y uno a uno. Perfecto para feedback." },
+                q3: { question: "¿Para qué sirve el 'Mapa de Misión'?", answer: "Es tu vista de satélite. Te muestra en un mapa <strong>dónde tus miembros realizan sus 'check-ins'</strong>. Es la prueba visual del engagement de tu tribu en el mundo real." },
+                q4: { question: "¿Por qué debería considerar las 'Mejoras Premium'?", answer: "Te dan una <strong>ventaja táctica decisiva</strong>. Son 'Power-Ups' de pago único que desbloquean funciones avanzadas como retos personalizados o analíticas de comportamiento para llevar tu liderazgo al siguiente nivel.", cta: { text: "Explorar Mejoras", action: () => document.getElementById('btn-show-premium-upgrades').click() } },
+                q5: { question: "¿Qué son los 'Power-Ups'?", answer: "Son módulos de funcionalidad que puedes añadir a tu arsenal. Por ejemplo, el Power-Up 'Impulso Personalizado' te permite crear micro-retos específicos para un individuo o para toda la tribu, dándote un control granular sobre la motivación del equipo." }
+            };
+
+            const showMainMenu = () => {
+                optionsContainer.innerHTML = '';
+                Object.keys(chatbotData).forEach(key => {
+                    if (key.startsWith('q')) {
+                        const btn = document.createElement('button');
+                        btn.className = 'manager-chatbot-option-btn';
+                        btn.textContent = chatbotData[key].question;
+                        btn.onclick = () => handleQuestionClick(key);
+                        optionsContainer.appendChild(btn);
+                    }
+                });
+            };
+
+            const addMessage = (text, type) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `manager-chat-message ${type}-message`;
+                messageDiv.innerHTML = text;
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            };
+
+            const handleQuestionClick = (key) => {
+                const data = chatbotData[key];
+                addMessage(data.question, 'manager-user');
+                optionsContainer.innerHTML = '<p style="text-align:center; opacity: 0.7;">Procesando...</p>';
+                setTimeout(() => {
+                    addMessage(data.answer, 'manager-bot');
+                    optionsContainer.innerHTML = '';
+                    const btnBack = document.createElement('button');
+                    btnBack.className = 'manager-chatbot-option-btn';
+                    btnBack.innerHTML = '<i class="fas fa-arrow-left"></i> Volver al Menú';
+                    btnBack.onclick = () => {
+                        messagesContainer.innerHTML = '';
+                        addMessage(chatbotData.welcome.text, 'manager-bot');
+                        showMainMenu();
+                    };
+                    optionsContainer.appendChild(btnBack);
+                    if (data.cta) {
+                        const btnAction = document.createElement('button');
+                        btnAction.className = 'manager-chatbot-option-btn manager-chatbot-action-btn';
+                        btnAction.innerHTML = `<i class="fas fa-crosshairs"></i> ${data.cta.text}`;
+                        btnAction.onclick = () => {
+                            data.cta.action();
+                            toggleChat(false);
+                        };
+                        optionsContainer.appendChild(btnAction);
+                    }
+                }, 800);
+            };
+
+            const toggleChat = (forceOpen = null) => {
+                if (forceOpen === true) chatbotContainer.classList.add('open');
+                else if (forceOpen === false) chatbotContainer.classList.remove('open');
+                else chatbotContainer.classList.toggle('open');
+            };
+
+            bubble.onclick = () => toggleChat();
+            closeBtn.onclick = () => toggleChat(false);
+            addMessage(chatbotData.welcome.text, 'manager-bot');
+            showMainMenu();
+        };
+
+        // Espera a que el DOM esté completamente cargado para inicializar.
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initManagerChatbot);
+        } else {
+            initManagerChatbot();
         }
-    };
-
-    const showMainMenu = () => {
-        optionsContainer.innerHTML = '';
-        Object.keys(chatbotData).forEach(key => {
-            if (key.startsWith('q')) {
-                const btn = document.createElement('button');
-                btn.className = 'manager-chatbot-option-btn';
-                btn.textContent = chatbotData[key].question;
-                btn.onclick = () => handleQuestionClick(key);
-                optionsContainer.appendChild(btn);
-            }
+    })();
+</script>
+<!-- =================================================================== -->
+<!--            FIN DEL CHATBOT DE ASISTENCIA PARA GERENTES           -->
+<!-- =================================================================== -->
+</body>
+</html>
