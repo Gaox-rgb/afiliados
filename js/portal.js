@@ -1,9 +1,5 @@
 // =======================================================================
 //  NÚCLEO DEL CENTRO DE MANDO MAKUMOTO®
-//  FASE 2: REINTEGRACIÓN FUNCIONAL (ROSTER)
-// =======================================================================
-// =======================================================================
-//  NÚCLEO DEL CENTRO DE MANDO MAKUMOTO®
 //  "OPERACIÓN GÉNESIS": FLUJO DE INICIACIÓN Y DASHBOARD DINÁMICO
 // =======================================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -194,6 +190,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2 style="text-align:center; font-weight: 500; color: var(--color-primary); margin-bottom: 2rem;">Sector: ${sectorName}</h2>
             
             <div class="kpi-card" style="margin-bottom: 2.5rem; text-align: center; padding: 15px; background: #222;">
+                <div class="label" style="font-size: 0.9rem;">VIGENCIA DEL PLAN</div>
+                <div id="plan-countdown" style="font-size: 1.5rem; letter-spacing: 1px; margin-top: 0.5rem;">Cargando...</div>
+                <div id="renewal-btn-container"></div>
+            </div>
+
+            <div class="kpi-card" style="margin-bottom: 2.5rem; text-align: center; padding: 15px; background: #222;">
                 <div class="label" style="font-size: 0.9rem;">TU CÓDIGO DE CONVENIO (para tus miembros)</div>
                 <div class="value" style="font-size: 2rem; letter-spacing: 3px;">${company.convenioCode}</div>
             </div>
@@ -231,8 +233,55 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-show-broadcast').onclick = () => renderBroadcastConsole(company);
         document.getElementById('btn-show-direct-messages').onclick = () => renderDirectMessagesConsole(roster);
         document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
+    startCountdown('plan-countdown', company.planEndDate);
     }
-    
+    /**
+     * Inicia un contador regresivo y lo renderiza en un elemento del DOM.
+     * Muestra un botón de renovación si el tiempo restante es menor a 10 días.
+     */
+    function startCountdown(elementId, endDateStr) {
+        const targetElement = document.getElementById(elementId);
+        if (!targetElement || !endDateStr) {
+            if(targetElement) targetElement.innerHTML = `<span style="opacity: 0.7;">No definido</span>`;
+            return;
+        }
+
+        const endDate = new Date(endDateStr.seconds ? endDateStr.seconds * 1000 : endDateStr).getTime();
+
+        const interval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = endDate - now;
+
+            if (distance < 0) {
+                targetElement.innerHTML = `<span style="color: var(--color-secondary);">PLAN EXPIRADO</span>`;
+                clearInterval(interval);
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            targetElement.innerHTML = `
+                <div style="display: flex; justify-content: center; gap: 1rem; font-weight: bold;">
+                    <div>${days}<span style="font-size: 0.7rem; display: block; opacity: 0.7;">Días</span></div>
+                    <div>${hours}<span style="font-size: 0.7rem; display: block; opacity: 0.7;">Hrs</span></div>
+                    <div>${minutes}<span style="font-size: 0.7rem; display: block; opacity: 0.7;">Min</span></div>
+                    <div>${seconds}<span style="font-size: 0.7rem; display: block; opacity: 0.7;">Seg</span></div>
+                </div>
+            `;
+
+            // Lógica para el botón de renovación (10 días = 864,000,000 ms)
+            if (distance < 864000000) {
+                const renewalBtn = document.getElementById('renewal-btn-container');
+                if (renewalBtn && !renewalBtn.innerHTML) { // Evita re-renderizar
+                    renewalBtn.innerHTML = `<button class="cta-button" style="background: var(--color-primary); color: var(--color-dark); margin-top: 1rem;">Actualizar Plan</button>`;
+                }
+            }
+
+        }, 1000);
+    }
     /**
      * Renderiza la consola para la Gestión de Altas.
      */

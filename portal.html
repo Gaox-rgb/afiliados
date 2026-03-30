@@ -12,7 +12,12 @@
             --color-dark: #101010; --color-light-dark: #1E1E1E;
             --color-text: #E0E0E0; --color-text-dark: #333;
             --font-family: 'Poppins', sans-serif, system-ui;
-        }
+          }
+        @keyframes vibrant-glow {
+            0% { text-shadow: 0 0 3px #FFD700, 0 0 5px #FFD700, 0 0 8px #ffae00; }
+            50% { text-shadow: 0 0 5px #FFD700, 0 0 10px #ffae00, 0 0 15px #ffae00; }
+            100% { text-shadow: 0 0 3px #FFD700, 0 0 5px #FFD700, 0 0 8px #ffae00; }  
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: var(--color-dark);
@@ -260,7 +265,7 @@
         <div class="container header-container">
             <div class="logo">
                 <img src="imagenes/logo.png" alt="Makumoto Logo">
-                <span id="portal-sector-name">MAKUMOTO®</span>
+                <span id="portal-sector-name" style="animation: vibrant-glow 2s ease-in-out infinite;">MAKUMOTO® AFILIADOS</span>
             </div>
         </div>
     </header>
