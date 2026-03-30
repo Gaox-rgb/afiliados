@@ -316,7 +316,7 @@
     <script src="/js/portal.js"></script>
 
 <!-- =================================================================== -->
-<!--     INICIO DEL CHATBOT DE ASISTENCIA PARA GERENTES MAKUMOTO®     -->
+<!--     INICIO DEL CHATBOT INMERSIVO PARA GERENTES MAKUMOTO®        -->
 <!-- =================================================================== -->
 <div id="manager-chatbot-container">
     <div id="manager-chatbot-bubble">
@@ -327,176 +327,101 @@
             <h3>Asistente Táctico</h3>
             <button id="manager-chatbot-close-btn">&times;</button>
         </div>
-        <div id="manager-chatbot-messages">
-            <!-- Los mensajes se insertarán aquí -->
-        </div>
-        <div id="manager-chatbot-options">
-            <!-- Las opciones de botones se insertarán aquí -->
+        <div class="manager-chatbot-content-wrapper">
+            <div id="manager-chatbot-messages">
+                <!-- Los mensajes se insertarán aquí -->
+            </div>
+            <div id="manager-chatbot-options">
+                <!-- Las opciones de botones se insertarán aquí -->
+            </div>
         </div>
     </div>
 </div>
 
 <style>
-    #manager-chatbot-container {
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        z-index: 1001;
-    }
+    #manager-chatbot-container { position: fixed; bottom: 25px; right: 25px; z-index: 1001; }
     #manager-chatbot-bubble {
-        width: 60px;
-        height: 60px;
-        background: var(--color-primary);
-        color: var(--color-dark);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        width: 60px; height: 60px; background: var(--color-primary); color: var(--color-dark);
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 1.8rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         transition: transform 0.3s ease;
     }
-    #manager-chatbot-bubble:hover {
-        transform: scale(1.1);
-    }
+    #manager-chatbot-bubble:hover { transform: scale(1.1); }
     #manager-chatbot-window {
-        position: absolute;
-        bottom: 80px;
-        right: 0;
-        width: 350px;
-        height: 500px;
-        background: var(--color-light-dark);
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        border: 1px solid #333;
-        transform: scale(0);
-        transform-origin: bottom right;
-        transition: transform 0.3s ease;
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(16, 16, 16, 0.98);
+        display: flex; flex-direction: column; overflow: hidden;
+        visibility: hidden; opacity: 0;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    #manager-chatbot-container.open #manager-chatbot-window {
-        transform: scale(1);
-    }
+    #manager-chatbot-container.open #manager-chatbot-window { visibility: visible; opacity: 1; }
     #manager-chatbot-header {
-        background: var(--color-dark);
-        padding: 15px;
-        color: var(--color-primary);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        padding: 15px 25px; color: var(--color-primary); display: flex;
+        justify-content: space-between; align-items: center; background: var(--color-dark);
+        border-bottom: 1px solid #333;
     }
-    #manager-chatbot-header h3 { margin: 0; font-size: 1.1rem; }
-    #manager-chatbot-close-btn {
-        background: none; border: none; color: var(--color-text);
-        font-size: 1.8rem; cursor: pointer;
+    #manager-chatbot-header h3 { margin: 0; font-size: 1.2rem; }
+    #manager-chatbot-close-btn { background: none; border: none; color: var(--color-text); font-size: 2.2rem; cursor: pointer; }
+    .manager-chatbot-content-wrapper {
+        width: 100%; max-width: 800px; margin: auto;
+        display: flex; flex-direction: column; height: 80%;
     }
     #manager-chatbot-messages {
-        flex-grow: 1;
-        padding: 15px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        flex-grow: 1; padding: 20px; overflow-y: auto;
+        display: flex; flex-direction: column; gap: 12px;
     }
-    .manager-chat-message {
-        padding: 10px 15px;
-        border-radius: 20px;
-        max-width: 85%;
-        line-height: 1.4;
-    }
-    .manager-bot-message {
-        background: #333;
-        color: var(--color-text);
-        align-self: flex-start;
-        border-bottom-left-radius: 5px;
-    }
-    .manager-user-message {
-        background: var(--color-primary);
-        color: var(--color-dark);
-        align-self: flex-end;
-        border-bottom-right-radius: 5px;
-    }
+    .manager-chat-message { padding: 12px 18px; border-radius: 20px; max-width: 85%; line-height: 1.5; }
+    .manager-bot-message { background: #333; color: var(--color-text); align-self: flex-start; border-bottom-left-radius: 5px; }
+    .manager-user-message { background: var(--color-primary); color: var(--color-dark); align-self: flex-end; border-bottom-right-radius: 5px; font-weight: 500;}
     #manager-chatbot-options {
-        padding: 15px;
-        border-top: 1px solid #333;
-        background: var(--color-dark);
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+        padding: 20px; border-top: 1px solid #333;
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 10px; overflow-y: auto;
     }
     .manager-chatbot-option-btn {
-        width: 100%;
-        padding: 12px;
-        background: transparent;
-        border: 2px solid var(--color-primary);
-        color: var(--color-primary);
-        border-radius: 8px;
-        cursor: pointer;
-        text-align: left;
-        font-family: var(--font-family);
-        font-size: 0.9rem;
-        font-weight: bold;
+        padding: 15px; background: transparent; border: 2px solid var(--color-primary);
+        color: var(--color-primary); border-radius: 8px; cursor: pointer; text-align: left;
+        font-family: var(--font-family); font-size: 0.95rem; font-weight: bold;
         transition: all 0.2s ease;
     }
-    .manager-chatbot-option-btn:hover {
-        background-color: var(--color-primary);
-        color: var(--color-dark);
-    }
-    .manager-chatbot-action-btn {
-        background: var(--color-secondary);
-        color: white;
-        border-color: var(--color-secondary);
-    }
-    .manager-chatbot-action-btn:hover {
-        background-color: var(--color-secondary);
-        color: white;
-        filter: brightness(1.2);
-    }
-    @media (max-width: 480px) {
-        #manager-chatbot-window {
-            width: calc(100vw - 40px);
-            height: 70vh;
-            bottom: 80px;
-            right: -15px;
-        }
-    }
+    .manager-chatbot-option-btn:hover { background-color: var(--color-primary); color: var(--color-dark); }
+    .manager-chatbot-action-btn { background: var(--color-secondary); color: white; border-color: var(--color-secondary); }
+    .manager-chatbot-action-btn:hover { background-color: var(--color-secondary); color: white; filter: brightness(1.2); }
 </style>
 
 <script>
-    // Se envuelve en una función IIFE para evitar conflictos con el script principal del portal
     (function() {
         const initManagerChatbot = () => {
             const chatbotContainer = document.getElementById('manager-chatbot-container');
+            if (!chatbotContainer) return;
             const bubble = document.getElementById('manager-chatbot-bubble');
             const closeBtn = document.getElementById('manager-chatbot-close-btn');
             const messagesContainer = document.getElementById('manager-chatbot-messages');
             const optionsContainer = document.getElementById('manager-chatbot-options');
             
-            // Verificación para evitar errores si los elementos no existen
-            if (!chatbotContainer || !bubble || !closeBtn) return;
-
             const chatbotData = {
                 welcome: { text: "¡Saludos, Gerente! Soy tu asistente táctico. Mi misión es asegurar que domines cada herramienta de este Centro de Mando. ¿Qué necesitas optimizar hoy?" },
-                q1: { question: "¿Cómo afilio a un nuevo miembro a mi Tribu?", answer: "Es un proceso en dos pasos: <br>1. Ve a <strong>'Gestión de Altas'</strong> y añade a la persona con un ID único. <br>2. El miembro usa la app Makumoto®, su ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Es todo!", cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() } },
-                q2: { question: "¿Comunicado masivo o Mensaje Directo?", answer: "Usa la <strong>'Consola de Comunicados'</strong> para mensajes a TODA tu tribu. Ideal para anuncios. <br><br>Usa la <strong>'Bandeja de Mensajes'</strong> para una conversación privada y uno a uno. Perfecto para feedback." },
-                q3: { question: "¿Para qué sirve el 'Mapa de Misión'?", answer: "Es tu vista de satélite. Te muestra en un mapa <strong>dónde tus miembros realizan sus 'check-ins'</strong>. Es la prueba visual del engagement de tu tribu en el mundo real." },
-                q4: { question: "¿Por qué debería considerar las 'Mejoras Premium'?", answer: "Te dan una <strong>ventaja táctica decisiva</strong>. Son 'Power-Ups' de pago único que desbloquean funciones avanzadas como retos personalizados o analíticas de comportamiento para llevar tu liderazgo al siguiente nivel.", cta: { text: "Explorar Mejoras", action: () => document.getElementById('btn-show-premium-upgrades').click() } },
-                q5: { question: "¿Qué son los 'Power-Ups'?", answer: "Son módulos de funcionalidad que puedes añadir a tu arsenal. Por ejemplo, el Power-Up 'Impulso Personalizado' te permite crear micro-retos específicos para un individuo o para toda la tribu, dándote un control granular sobre la motivación del equipo." }
+                q1: { question: "¿Cómo afilio a un nuevo miembro?", answer: "Ve a <strong>'Gestión de Altas'</strong>, añade a la persona con un ID único (ej. su ID de empleado). Luego, el miembro usa la app Makumoto®, ese ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Así de fácil!", cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() } },
+                q2: { question: "¿Comunicado masivo o Mensaje Directo?", answer: "Usa la <strong>'Consola de Comunicados'</strong> para enviar mensajes a TODA tu tribu. Ideal para anuncios. <br><br>Usa la <strong>'Bandeja de Mensajes'</strong> para una conversación privada con un miembro específico." },
+                q3: { question: "¿Para qué sirve el 'Mapa de Misión'?", answer: "Es tu vista de satélite. Te muestra en un mapa <strong>dónde tus miembros realizan sus 'check-ins'</strong>. Es la prueba visual de que tu tribu está activa en el mundo real." },
+                q4: { question: "¿Por qué considerar las 'Mejoras Premium'?", answer: "Te dan una <strong>ventaja táctica decisiva</strong>. Son 'Power-Ups' de pago único que desbloquean funciones avanzadas como retos personalizados o analíticas de comportamiento para llevar tu liderazgo al siguiente nivel.", cta: { text: "Explorar Mejoras", action: () => document.getElementById('btn-show-premium-upgrades').click() } },
+                q5: { question: "¿Qué son los 'Power-Ups'?", answer: "Son módulos que puedes añadir a tu arsenal. Por ejemplo, el Power-Up 'Impulso Personalizado' te permite crear micro-retos específicos, dándote un control granular sobre la motivación del equipo." },
+                q6: { question: "¿Cómo uso el 'Código de Convenio'?", answer: "Es la llave de acceso a tu tribu. Dáselo a todos tus miembros junto con el ID que les asignaste en la 'Gestión de Altas'. Es el método seguro para que solo tu gente pueda entrar." },
+                q7: { question: "Necesito eliminar a un miembro, ¿cómo lo hago?", answer: "Actualmente, la funcionalidad para dar de baja a un miembro se gestiona desde el sistema central. Si necesitas revocar el acceso a alguien, contacta a soporte y lo haremos de inmediato por ti." },
+                q8: { question: "¿Qué pasa si mi plan está por expirar?", answer: "Verás un botón de 'Actualizar Plan' aparecer junto al contador de vigencia cuando queden menos de 10 días. El proceso de renovación es simple y rápido para que tu tribu nunca pierda el acceso." },
+                q9: { question: "¿Puedo cambiar de Sector más adelante?", answer: "No. La elección de Sector (Empresa, Gimnasio, Clínica) que haces en tu primer login es <strong>permanente</strong>, ya que calibra todo tu Centro de Mando. Elige sabiamente para alinear las herramientas con tus objetivos." },
+                q10: { question: "¿Cómo mido el rendimiento de mi tribu?", answer: "Tu primer vistazo es el 'Mapa de Misión' para ver actividad. Para métricas más profundas sobre engagement y comportamiento, explora las 'Mejoras Premium'. Hay Power-Ups de analítica diseñados para darte esa inteligencia de negocio." }
             };
 
             const showMainMenu = () => {
                 optionsContainer.innerHTML = '';
-                Object.keys(chatbotData).forEach(key => {
-                    if (key.startsWith('q')) {
-                        const btn = document.createElement('button');
-                        btn.className = 'manager-chatbot-option-btn';
-                        btn.textContent = chatbotData[key].question;
-                        btn.onclick = () => handleQuestionClick(key);
-                        optionsContainer.appendChild(btn);
-                    }
+                const keys = Object.keys(chatbotData).filter(k => k.startsWith('q'));
+                keys.forEach(key => {
+                    const btn = document.createElement('button');
+                    btn.className = 'manager-chatbot-option-btn';
+                    btn.textContent = chatbotData[key].question;
+                    btn.onclick = () => handleQuestionClick(key);
+                    optionsContainer.appendChild(btn);
                 });
             };
 
@@ -543,13 +468,12 @@
                 else chatbotContainer.classList.toggle('open');
             };
 
-            bubble.onclick = () => toggleChat();
-            closeBtn.onclick = () => toggleChat(false);
+            if (bubble) bubble.onclick = () => toggleChat();
+            if (closeBtn) closeBtn.onclick = () => toggleChat(false);
             addMessage(chatbotData.welcome.text, 'manager-bot');
             showMainMenu();
         };
 
-        // Espera a que el DOM esté completamente cargado para inicializar.
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initManagerChatbot);
         } else {
@@ -558,7 +482,7 @@
     })();
 </script>
 <!-- =================================================================== -->
-<!--            FIN DEL CHATBOT DE ASISTENCIA PARA GERENTES           -->
+<!--            FIN DEL CHATBOT INMERSIVO PARA GERENTES             -->
 <!-- =================================================================== -->
 </body>
 </html>
