@@ -615,6 +615,13 @@ document.addEventListener('DOMContentLoaded', () => {
      * Renderiza el modal para el cambio de contraseña con todas las mejoras.
      */
     function renderPasswordChangeModal() {
+        // 1. GUARDIA DE UNICIDAD: Si el modal ya existe, no hagas nada.
+        if (document.getElementById('password-change-modal')) {
+            // Opcional: enfocar el modal existente si ya está abierto
+            document.getElementById('password-change-modal').scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
+
         const modalHTML = `
             <style>
                 .password-input-wrapper { position: relative; display: flex; align-items: center; }
@@ -648,7 +655,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     </form>
                 </div>
             </div>`;
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        // ANTES se usaba document.body.insertAdjacentHTML. Ahora lo adjuntamos al contenido del dashboard.
+        const dashboardContent = document.getElementById('dashboard-content');
+        if (dashboardContent) {
+            dashboardContent.innerHTML = ''; // Limpiar cualquier consola abierta
+            dashboardContent.insertAdjacentHTML('beforeend', modalHTML);
+        } else {
+            // Fallback si #dashboard-content no existe, aunque no debería pasar en este flujo.
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
 
         const modal = document.getElementById('password-change-modal');
         document.getElementById('close-password-modal').onclick = () => modal.remove();
@@ -668,6 +683,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
         });
+
+        // 2. SCROLL INTELIGENTE: Desplazar la vista hacia el modal recién creado.
+        modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     /**
