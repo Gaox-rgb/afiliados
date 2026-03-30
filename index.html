@@ -458,12 +458,11 @@
 
     #fomo-container {
         position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 100px; /* Posicionado debajo del header fijo */
+        left: 20px;
         z-index: 2147483647; /* Valor máximo para garantizar la capa superior absoluta */
         width: auto;
-        max-width: 90vw;
+        max-width: 350px; /* Se limita el ancho para estética en la esquina */
     }
     .fomo-burbuja {
         display: flex;
