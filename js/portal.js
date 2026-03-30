@@ -235,9 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
     startCountdown('plan-countdown', company.planEndDate);
     }
-    startCountdown('plan-countdown', company.planEndDate);
-    
-        // Lógica para el banner de cambio de contraseña.
+            // Lógica para el banner de cambio de contraseña.
         if (company.requiresPasswordChange) {
             const passwordChangeBanner = `
                 <div id="password-change-banner" style="background-color: #2c3e50; padding: 15px; border-radius: 6px; margin-bottom: 2rem; border-left: 4px solid var(--color-primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
