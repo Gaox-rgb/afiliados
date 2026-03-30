@@ -77,7 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // [FUNCIONES DE RENDERIZADO DEL FLUJO DE BIENVENIDA OMITIDAS POR BREVEDAD, SIN CAMBIOS]
-    function renderWelcomeAndSectorChoice(company) { /* ... sin cambios ... */ }
+    function renderWelcomeAndSectorChoice(company) {
+        const testHTML = `<h1 style="text-align: center; color: yellow; font-size: 2rem; padding: 40px;">PRUEBA DE RENDERIZADO - SI VES ESTO, LA TEORÍA ES CORRECTA.</h1>`;
+        ui.portalContainer.innerHTML = testHTML;
+    }
     function renderSectorSelection() { /* ... sin cambios ... */ }
     async function handleSectorSelection(event) { /* ... sin cambios ... */ }
 
