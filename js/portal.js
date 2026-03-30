@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         }, 1000);
-    },
+    }
     /**
      * Renderiza la consola para la Gestión de Altas.
      */
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             document.getElementById('master-list-content').innerHTML = `<p class="error-text">Error al cargar la lista: ${error.message}</p>`;
         }
-    }
+    },
 
     /**
      * Maneja el envío del formulario para añadir un nuevo miembro.
