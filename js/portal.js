@@ -246,7 +246,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const endDate = new Date(endDateStr.seconds ? endDateStr.seconds * 1000 : endDateStr).getTime();
+        let dateObject;
+        if (endDateStr && typeof endDateStr.seconds === 'number') {
+            dateObject = new Date(endDateStr.seconds * 1000);
+        } else if (endDateStr && typeof endDateStr._seconds === 'number') {
+            dateObject = new Date(endDateStr._seconds * 1000);
+        } else {
+            dateObject = new Date(endDateStr);
+        }
+        const endDate = dateObject.getTime();
+
+        if (isNaN(endDate)) {
+            targetElement.innerHTML = `<span style="color: var(--color-secondary);">Fecha Inválida</span>`;
+            return;
+        }
 
         const interval = setInterval(() => {
             const now = new Date().getTime();
