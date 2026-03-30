@@ -334,6 +334,9 @@
             <div id="manager-chatbot-options">
                 <!-- Las opciones de botones se insertarán aquí -->
             </div>
+            <div id="manager-chatbot-footer">
+                <button id="manager-chatbot-back-btn"><i class="fas fa-arrow-left"></i> Volver al Menú Principal</button>
+            </div>
         </div>
     </div>
 </div>
@@ -364,7 +367,7 @@
     #manager-chatbot-close-btn { background: none; border: none; color: var(--color-text); font-size: 2.2rem; cursor: pointer; }
     .manager-chatbot-content-wrapper {
         width: 100%; max-width: 800px; margin: auto;
-        display: flex; flex-direction: column; height: 80%;
+        display: flex; flex-direction: column; height: 90%;
     }
     #manager-chatbot-messages {
         flex-grow: 1; padding: 20px; overflow-y: auto;
@@ -376,7 +379,7 @@
     #manager-chatbot-options {
         padding: 20px; border-top: 1px solid #333;
         display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 10px; overflow-y: auto;
+        gap: 10px; overflow-y: auto; max-height: 50%;
     }
     .manager-chatbot-option-btn {
         padding: 15px; background: transparent; border: 2px solid var(--color-primary);
@@ -387,6 +390,18 @@
     .manager-chatbot-option-btn:hover { background-color: var(--color-primary); color: var(--color-dark); }
     .manager-chatbot-action-btn { background: var(--color-secondary); color: white; border-color: var(--color-secondary); }
     .manager-chatbot-action-btn:hover { background-color: var(--color-secondary); color: white; filter: brightness(1.2); }
+    #manager-chatbot-footer {
+        padding: 15px 20px;
+        border-top: 1px solid #555;
+        background: var(--color-dark);
+    }
+    #manager-chatbot-back-btn {
+        width: 100%;
+        display: none; /* Oculto por defecto */
+        padding: 15px; background: #333; border: 1px solid #555;
+        color: var(--color-text); border-radius: 8px; cursor: pointer;
+        font-family: var(--font-family); font-size: 1rem; font-weight: bold;
+    }
 </style>
 
 <script>
@@ -398,7 +413,8 @@
             const closeBtn = document.getElementById('manager-chatbot-close-btn');
             const messagesContainer = document.getElementById('manager-chatbot-messages');
             const optionsContainer = document.getElementById('manager-chatbot-options');
-            
+            const backBtn = document.getElementById('manager-chatbot-back-btn');
+
             const chatbotData = {
                 welcome: { text: "¡Saludos, Gerente! Soy tu asistente táctico. Mi misión es asegurar que domines cada herramienta de este Centro de Mando. ¿Qué necesitas optimizar hoy?" },
                 q1: { question: "¿Cómo afilio a un nuevo miembro?", answer: "Ve a <strong>'Gestión de Altas'</strong>, añade a la persona con un ID único (ej. su ID de empleado). Luego, el miembro usa la app Makumoto®, ese ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Así de fácil!", cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() } },
@@ -415,6 +431,7 @@
 
             const showMainMenu = () => {
                 optionsContainer.innerHTML = '';
+                backBtn.style.display = 'none'; // Ocultar el botón de regreso
                 const keys = Object.keys(chatbotData).filter(k => k.startsWith('q'));
                 keys.forEach(key => {
                     const btn = document.createElement('button');
@@ -440,15 +457,8 @@
                 setTimeout(() => {
                     addMessage(data.answer, 'manager-bot');
                     optionsContainer.innerHTML = '';
-                    const btnBack = document.createElement('button');
-                    btnBack.className = 'manager-chatbot-option-btn';
-                    btnBack.innerHTML = '<i class="fas fa-arrow-left"></i> Volver al Menú';
-                    btnBack.onclick = () => {
-                        messagesContainer.innerHTML = '';
-                        addMessage(chatbotData.welcome.text, 'manager-bot');
-                        showMainMenu();
-                    };
-                    optionsContainer.appendChild(btnBack);
+                    backBtn.style.display = 'block'; // Mostrar el botón de regreso
+                    
                     if (data.cta) {
                         const btnAction = document.createElement('button');
                         btnAction.className = 'manager-chatbot-option-btn manager-chatbot-action-btn';
@@ -462,6 +472,12 @@
                 }, 800);
             };
 
+            const resetChat = () => {
+                messagesContainer.innerHTML = '';
+                addMessage(chatbotData.welcome.text, 'manager-bot');
+                showMainMenu();
+            };
+
             const toggleChat = (forceOpen = null) => {
                 if (forceOpen === true) chatbotContainer.classList.add('open');
                 else if (forceOpen === false) chatbotContainer.classList.remove('open');
@@ -470,8 +486,10 @@
 
             if (bubble) bubble.onclick = () => toggleChat();
             if (closeBtn) closeBtn.onclick = () => toggleChat(false);
-            addMessage(chatbotData.welcome.text, 'manager-bot');
-            showMainMenu();
+            if (backBtn) backBtn.onclick = resetChat;
+            
+            // Inicialización
+            resetChat();
         };
 
         if (document.readyState === 'loading') {
