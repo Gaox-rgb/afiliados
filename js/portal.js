@@ -48,26 +48,32 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Controlador principal: Llama al backend y decide qué vista renderizar.
      */
-    async function loadPortalData() {
+    function loadPortalData() {
         ui.portalContainer.innerHTML = `<p class="loader-text" style="text-align: center; padding: 40px 0;"><i class="fas fa-spinner fa-spin"></i> Cargando Centro de Mando...</p>`;
-        try {
-            const getPortalData = firebase.functions().httpsCallable('getPortalData');
-            const result = await getPortalData();
-            const { company, roster, powerUps } = result.data;
+        
+        console.log('[DEBUG] Preparando la llamada a getPortalData...');
+        const getPortalData = firebase.functions().httpsCallable('getPortalData');
 
-            // VERIFICACIÓN ESTRICTA CONTRA LISTA BLANCA
-            const validSectors = ['corporate', 'fitness', 'health'];
-            const hasValidSector = validSectors.includes(company.sector);
+        getPortalData()
+            .then(result => {
+                console.log('[DEBUG] ¡Llamada completada! Resultado recibido:', result);
+                const { company, roster, powerUps } = result.data;
 
-            if (!hasValidSector) {
-                renderWelcomeAndSectorChoice(company);
-            } else {
-                renderDashboard(company, roster);
-            }
-        } catch (error) {
-            console.error("Fallo catastrófico en loadPortalData:", error);
-            ui.portalContainer.innerHTML = `<p class="error-text" style="text-align: center; padding: 40px 0;">Error Crítico: ${error.message}</p>`;
-        }
+                const validSectors = ['corporate', 'fitness', 'health'];
+                const hasValidSector = validSectors.includes(company.sector);
+
+                if (!hasValidSector) {
+                    console.log('[DEBUG] Sector no válido o ausente. Renderizando flujo de bienvenida.');
+                    renderWelcomeAndSectorChoice(company);
+                } else {
+                    console.log('[DEBUG] Sector válido. Renderizando dashboard.');
+                    renderDashboard(company, roster);
+                }
+            })
+            .catch(error => {
+                console.error('[DEBUG] LA LLAMADA FALLÓ. Este es el error:', error);
+                ui.portalContainer.innerHTML = `<p class="error-text" style="text-align: center; padding: 40px 0;">Error Crítico: ${error.message}</p>`;
+            });
     }
 
     // [FUNCIONES DE RENDERIZADO DEL FLUJO DE BIENVENIDA OMITIDAS POR BREVEDAD, SIN CAMBIOS]
