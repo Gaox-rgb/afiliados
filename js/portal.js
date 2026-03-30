@@ -189,19 +189,19 @@ document.addEventListener('DOMContentLoaded', () => {
             <h1 id="portal-title">Centro de Mando: ${company.name}</h1>
             <h2 style="text-align:center; font-weight: 500; color: var(--color-primary); margin-bottom: 2rem;">Sector: ${sectorName}</h2>
 
-            <!-- NUEVO BLOQUE DE INFORMACIÓN DEL PLAN -->
-            <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2.5rem;">
-                <div class="kpi-card" style="background: #222;">
-                    <div class="label" style="font-size: 0.9rem;">PLAN ACTUAL</div>
-                    <div class="value" style="font-size: 1.5rem; margin-top: 0.5rem;">${company.planDetails.name}</div>
+            <!-- NUEVO BLOQUE DE INFORMACIÓN DE PLAN HORIZONTAL -->
+            <div class="plan-info-bar" style="background: #222; padding: 12px 20px; border-radius: 6px; margin-bottom: 2.5rem; display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <div class="plan-info-item" style="text-align: center;">
+                    <span style="font-size: 0.75rem; opacity: 0.7; text-transform: uppercase;">Plan Actual:</span>
+                    <strong style="font-size: 0.9rem; display: block; color: var(--color-primary);">${company.planDetails.name}</strong>
                 </div>
-                <div class="kpi-card" style="background: #222;">
-                    <div class="label" style="font-size: 0.9rem;">AFILIADOS PERMITIDOS</div>
-                    <div class="value" style="font-size: 1.5rem; margin-top: 0.5rem;">${company.planDetails.memberLimit}</div>
+                <div class="plan-info-item" style="text-align: center;">
+                    <span style="font-size: 0.75rem; opacity: 0.7; text-transform: uppercase;">Límite de Afiliados:</span>
+                    <strong style="font-size: 0.9rem; display: block;">${company.planDetails.memberLimit}</strong>
                 </div>
-                <div class="kpi-card" style="background: #222;">
-                    <div class="label" style="font-size: 0.9rem;">COSTO DEL PLAN</div>
-                    <div class="value" style="font-size: 1.5rem; margin-top: 0.5rem;">$${company.planDetails.price} <span style="font-size: 0.9rem; opacity: 0.7;">USD</span></div>
+                <div class="plan-info-item" style="text-align: center;">
+                    <span style="font-size: 0.75rem; opacity: 0.7; text-transform: uppercase;">Costo:</span>
+                    <strong style="font-size: 0.9rem; display: block;">$${company.planDetails.price} USD</strong>
                 </div>
             </div>
             
