@@ -235,10 +235,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
     startCountdown('plan-countdown', company.planEndDate);
     }
-    /**
-     * Inicia un contador regresivo y lo renderiza en un elemento del DOM.
-     * Muestra un botón de renovación si el tiempo restante es menor a 10 días.
-     */
+    startCountdown('plan-countdown', company.planEndDate);
+    
+        // Lógica para el banner de cambio de contraseña.
+        if (company.requiresPasswordChange) {
+            const passwordChangeBanner = `
+                <div id="password-change-banner" style="background-color: #2c3e50; padding: 15px; border-radius: 6px; margin-bottom: 2rem; border-left: 4px solid var(--color-primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                   <p style="margin: 0; font-weight: 500;"><strong>Actualización de Seguridad:</strong> Se recomienda cambiar tu contraseña temporal.</p>
+                   <button id="btn-show-password-modal" class="cta-button" style="margin: 0;">Cambiar Contraseña</button>
+                </div>`;
+            ui.portalContainer.insertAdjacentHTML('afterbegin', passwordChangeBanner);
+            
+            document.getElementById('btn-show-password-modal').onclick = renderPasswordChangeModal;
+        }
+    }
     function startCountdown(elementId, endDateStr) {
         const targetElement = document.getElementById(elementId);
         if (!targetElement || !endDateStr) {
@@ -588,3 +598,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getMemberLimitFromPlan(planId) { /* ... sin cambios ... */ }
 });
+
+/**
+     * Renderiza el modal para el cambio de contraseña.
+     */
+    function renderPasswordChangeModal() {
+        const modalHTML = `
+            <div id="password-change-modal" class="modal-overlay visible">
+                <div class="modal-content" style="max-width: 500px;">
+                    <span id="close-password-modal" class="modal-close-btn">&times;</span>
+                    <h3>Cambio de Contraseña Segura</h3>
+                    <form id="password-change-form" style="margin-top: 1.5rem;">
+                        <input type="password" id="new-password" placeholder="Nueva Contraseña (mín. 6 caracteres)" required style="width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                        <input type="password" id="confirm-password" placeholder="Confirmar Nueva Contraseña" required style="width: 100%; padding: 12px; margin-bottom: 1.5rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                        <button type="submit" class="cta-button" style="width: 100%;">Actualizar Contraseña</button>
+                    </form>
+                </div>
+            </div>`;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        const modal = document.getElementById('password-change-modal');
+        document.getElementById('close-password-modal').onclick = () => modal.remove();
+        document.getElementById('password-change-form').onsubmit = handlePasswordChangeSubmit;
+    }
+
+    /**
+     * Maneja el envío del formulario de cambio de contraseña.
+     */
+    async function handlePasswordChangeSubmit(event) {
+        event.preventDefault();
+        const newPass = document.getElementById('new-password').value;
+        const confirmPass = document.getElementById('confirm-password').value;
+
+        if (newPass.length < 6) {
+            return alert('La contraseña debe tener al menos 6 caracteres.');
+        }
+        if (newPass !== confirmPass) {
+            return alert('Las contraseñas no coinciden.');
+        }
+
+        const button = event.target.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Actualizando...';
+
+        try {
+            const changeManagerPassword = firebase.functions().httpsCallable('changeManagerPassword');
+            await changeManagerPassword({ newPassword: newPass });
+
+            alert('¡Contraseña actualizada con éxito!');
+            document.getElementById('password-change-modal').remove();
+            
+            // Eliminar el banner de notificación para feedback instantáneo
+            const banner = document.getElementById('password-change-banner');
+            if (banner) banner.remove();
+
+        } catch (error) {
+            console.error("Error al cambiar la contraseña:", error);
+            alert(`Error: ${error.message}`);
+            button.disabled = false;
+            button.innerText = 'Actualizar Contraseña';
+        }
+    }
