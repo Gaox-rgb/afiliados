@@ -247,6 +247,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="value" style="color: #FFD700;"><i class="fas fa-rocket"></i></div>
                     <div class="label">Mejoras Premium</div>
                 </div>
+                <div class="kpi-card action-card" id="btn-show-content-manager">
+                    <div class="value"><i class="fas fa-feather-alt"></i></div>
+                    <div class="label">Gestor de Contenido</div>
+                </div>
                 <div class="kpi-card action-card" id="btn-show-security-settings">
                     <div class="value"><i class="fas fa-shield-alt"></i></div>
                     <div class="label">Cambiar Contraseña</div>
@@ -263,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
         document.getElementById('btn-show-mission-map').onclick = renderMissionMapConsole;
         document.getElementById('btn-show-premium-upgrades').onclick = () => renderPremiumUpgradesConsole(powerUps);
+        document.getElementById('btn-show-content-manager').onclick = renderContentManagerConsole;
         document.getElementById('btn-show-security-settings').onclick = renderPasswordChangeModal;
         startCountdown('plan-countdown', company.planEndDate);
     }
@@ -942,3 +947,180 @@ document.addEventListener('DOMContentLoaded', () => {
             mapLoader.innerHTML = `<p class="error-text">Error Crítico: ${error.message}</p>`;
         }
     }
+
+    /**
+     * [NUEVO] Renderiza la consola para gestionar el contenido premium.
+     */
+    async function renderContentManagerConsole() {
+        const contentContainer = document.querySelector('#dashboard-content');
+        contentContainer.innerHTML = `
+            <style>
+                .content-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+                .content-table th, .content-table td { padding: 12px; border: 1px solid #333; text-align: left; }
+                .content-table th { background-color: #2c3e50; }
+                .content-table .actions { text-align: right; }
+                .content-table .actions button { margin-left: 5px; }
+            </style>
+            <div style="background-color: var(--color-light-dark); padding: 20px; border-radius: 8px;">
+                <h3><i class="fas fa-feather-alt"></i> Gestor de Contenido Premium</h3>
+                <p>Aquí puedes crear, editar y eliminar los consejos y mensajes que se entregarán a tu tribu.</p>
+                <button id="btn-create-content" class="cta-button" style="margin-top: 1rem;"><i class="fas fa-plus"></i> Crear Nuevo Contenido</button>
+            </div>
+            <div id="content-list-container" style="margin-top: 2rem;">
+                <h4>Base de Datos de Contenido</h4>
+                <div id="content-list-content" class="placeholder"><i class="fas fa-spinner fa-spin"></i> Cargando contenido...</div>
+            </div>
+        `;
+
+        document.getElementById('btn-create-content').onclick = () => renderContentFormModal();
+
+        try {
+            const getPremiumContent = firebase.functions().httpsCallable('getPremiumContent');
+            const result = await getPremiumContent();
+            const contentList = result.data;
+            const listContainer = document.getElementById('content-list-content');
+
+            if (contentList.length === 0) {
+                listContainer.innerHTML = '<p>No has creado ningún contenido todavía. ¡Haz clic en "Crear Nuevo Contenido" para empezar!</p>';
+                return;
+            }
+
+            const tableRows = contentList.map(item => `
+                <tr>
+                    <td>${item.title}</td>
+                    <td>${item.type}</td>
+                    <td>${item.segment}</td>
+                    <td class="actions">
+                        <button class="cta-button-small" onclick="window.app.portal.editContent('${item.id}')">Editar</button>
+                        <button class="cta-button-small-danger" onclick="window.app.portal.deleteContent('${item.id}')">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            listContainer.innerHTML = `
+                <table class="content-table">
+                    <thead><tr><th>Título</th><th>Tipo</th><th>Segmento</th><th>Acciones</th></tr></thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+            `;
+            
+            // Exponer funciones en un namespace global para los onclick
+            window.app = window.app || {};
+            window.app.portal = {
+                editContent: (id) => {
+                    const itemData = contentList.find(item => item.id === id);
+                    renderContentFormModal(itemData);
+                },
+                deleteContent: async (id) => {
+                    if (!confirm('¿Estás seguro de que quieres eliminar este contenido de forma permanente?')) return;
+                    try {
+                        const managePremiumContent = firebase.functions().httpsCallable('managePremiumContent');
+                        await managePremiumContent({ mode: 'delete', payload: { id } });
+                        alert('Contenido eliminado.');
+                        renderContentManagerConsole(); // Recargar la lista
+                    } catch (error) {
+                        alert(`Error al eliminar: ${error.message}`);
+                    }
+                }
+            };
+
+        } catch (error) {
+            document.getElementById('content-list-content').innerHTML = `<p class="error-text">Error al cargar el contenido: ${error.message}</p>`;
+        }
+    }
+
+    /**
+     * [NUEVO] Renderiza el modal para crear o editar contenido premium.
+     */
+    function renderContentFormModal(contentData = null) {
+        const isEditing = contentData !== null;
+        const title = isEditing ? 'Editar Contenido' : 'Crear Nuevo Contenido';
+
+        const modalHTML = `
+            <div id="content-modal" class="modal-overlay visible">
+                <div class="modal-content" style="max-width: 600px;">
+                    <span id="close-content-modal" class="modal-close-btn">&times;</span>
+                    <h3>${title}</h3>
+                    <form id="content-form" style="text-align: left; margin-top: 1.5rem;">
+                        <label for="content-title">Título</label>
+                        <input type="text" id="content-title" required value="${isEditing ? contentData.title : ''}" style="width: 100%; margin-bottom: 1rem;">
+                        
+                        <label for="content-text">Contenido del Mensaje</label>
+                        <textarea id="content-text" required rows="4" style="width: 100%; margin-bottom: 1rem;">${isEditing ? contentData.content : ''}</textarea>
+                        
+                        <label for="content-type">Tipo de Contenido</label>
+                        <select id="content-type" required style="width: 100%; margin-bottom: 1rem;">
+                            <option value="beauty">Belleza</option>
+                            <option value="exercise">Ejercicio</option>
+                            <option value="nutrition">Nutrición</option>
+                            <option value="news">Flash Informativo</option>
+                            <option value="entertainment">Cine/Música</option>
+                            <option value="health_alert">Alerta de Salud/Clima</option>
+                            <option value="motivation">Frase/Chiste</option>
+                        </select>
+                        
+                        <label for="content-segment">Segmento</label>
+                        <select id="content-segment" required style="width: 100%; margin-bottom: 1.5rem;">
+                            <option value="general">General</option>
+                            <option value="male">Hombre</option>
+                            <option value="female">Mujer</option>
+                            <option value="diverse">Diverso</option>
+                            <option value="home">Ejercicio en Casa</option>
+                            <option value="gym">Ejercicio en Gym</option>
+                        </select>
+                        
+                        <button type="submit" class="cta-button" style="width: 100%;">${isEditing ? 'Guardar Cambios' : 'Crear Contenido'}</button>
+                    </form>
+                </div>
+            </div>
+        `;
+        if (document.getElementById('content-modal')) document.getElementById('content-modal').remove();
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        if (isEditing) {
+            document.getElementById('content-type').value = contentData.type;
+            document.getElementById('content-segment').value = contentData.segment;
+        }
+
+        const modal = document.getElementById('content-modal');
+        document.getElementById('close-content-modal').onclick = () => modal.remove();
+        document.getElementById('content-form').onsubmit = (e) => handleContentFormSubmit(e, contentData ? contentData.id : null);
+    }
+    
+    /**
+     * [NUEVO] Maneja el envío del formulario de creación/edición de contenido.
+     */
+    async function handleContentFormSubmit(event, contentId) {
+        event.preventDefault();
+        const isEditing = contentId !== null;
+        const button = event.target.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+        const payload = {
+            title: document.getElementById('content-title').value,
+            content: document.getElementById('content-text').value,
+            type: document.getElementById('content-type').value,
+            segment: document.getElementById('content-segment').value,
+        };
+
+        if (isEditing) {
+            payload.id = contentId;
+        }
+
+        try {
+            const managePremiumContent = firebase.functions().httpsCallable('managePremiumContent');
+            const result = await managePremiumContent({
+                mode: isEditing ? 'update' : 'create',
+                payload: payload
+            });
+            alert(result.data.message);
+            document.getElementById('content-modal').remove();
+            renderContentManagerConsole(); // Recargar la lista de contenido
+        } catch (error) {
+            alert(`Error al guardar: ${error.message}`);
+            button.disabled = false;
+            button.innerHTML = isEditing ? 'Guardar Cambios' : 'Crear Contenido';
+        }
+    }
+    
