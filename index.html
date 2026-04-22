@@ -619,8 +619,16 @@
     }
     .header-actions { display: flex; align-items: center; gap: 15px; }
     .cta-button-header { background: var(--color-primary); color: var(--color-dark); padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: bold; }
-    .login-button-header { background: transparent; color: var(--color-primary); border: 1px solid var(--color-primary); padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.2s ease; }
+    .header-bottom { display: flex; justify-content: center; align-items: center; gap: 6px !important; margin-top: 5px; }
+    .login-button-header { 
+        background: transparent; color: var(--color-primary); border: 1px solid var(--color-primary); 
+        padding: 3px 6px !important; border-radius: 3px; cursor: pointer; font-weight: 800; 
+        text-decoration: none; transition: all 0.2s ease; font-size: 9px !important; 
+        text-transform: uppercase; white-space: nowrap; display: inline-block; line-height: 1;
+    }
     .login-button-header:hover { background-color: var(--color-primary); color: var(--color-dark); }
+    .btn-plus { border-color: #00ecff !important; color: #00ecff !important; }
+    .btn-plus:hover { background-color: #00ecff !important; color: var(--color-dark) !important; }
 
     #manager-portal { padding: 40px 0; background: var(--color-light-dark); min-height: 80vh; }
     .portal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; max-width: 1100px; margin: 0 auto 20px; padding: 0 20px 15px; }
@@ -635,23 +643,7 @@
 </style>
 
 <header id="main-header">
-    <div class="header-container">
-        <div class="header-top">
-            <a href="index.html" class="logo">
-                <img src="imagenes/logo.png" alt="Makumoto Logo">
-                <div class="logo-text-group">
-                    <span class="shine-effect" style="color: var(--color-primary); font-weight: bold;">MAKUMOTO®</span>
-                    <span class="afiliados-tag">AFILIADOS</span>
-                </div>
-            </a>
-            <a href="#seccion-precios-directa" class="cta-button-header">CONTRATAR</a>
-        </div>
-        <div class="header-bottom">
-            <a href="directorio.html" class="login-button-header">Directorio</a>
-            <button id="btn-show-login" class="login-button-header">Login Empresas</button>
-        </div>
-    </div>
-</header>
+    </header>
 
 <main id="fortaleza-makumoto®">
 
@@ -842,6 +834,7 @@
 <!-- ===== CONFIGURACIÓN SEGURA DE FIREBASE (NO VERSIONADA) ===== -->
 <script src="js/firebase-config.js"></script>
 
+<script src="js/app.header.js"></script>
 <!-- ===== NÚCLEO DEL MONOLITO MAKUMOTO® (JS FUSIONADO) ===== -->
 <script>
 // ===== START: NÚCLEO DE INICIALIZACIÓN UNIFICADO =====
@@ -866,15 +859,7 @@ function initializeAuthHandlers() {
     console.log("MAKUMOTO® DEBUG: Inicializando Handlers de Autenticación en Landing...");
     
     // Referencias al DOM
-    const btnShowLogin = document.getElementById('btn-show-login');
-    const loginModal = document.getElementById('login-modal');
-    const closeLoginModal = document.getElementById('close-login-modal');
     const loginForm = document.getElementById('login-form');
-
-    // UI Logic para el modal de login - USANDO EL SISTEMA DE CLASES CORRECTO
-    if (btnShowLogin) btnShowLogin.onclick = () => loginModal.classList.add('visible');
-    if (closeLoginModal) closeLoginModal.onclick = () => loginModal.classList.remove('visible');
-    if (loginModal) loginModal.onclick = (e) => { if (e.target === loginModal) loginModal.classList.remove('visible'); };
 
     // Auth Logic - REDIRECCIÓN ESTRATÉGICA
     if (loginForm) {
@@ -908,13 +893,10 @@ function initializeAuthHandlers() {
         };
     }
     
-    // VERIFICACIÓN DE SESIÓN EXISTENTE: Si un gerente ya logueado visita la landing, lo mandamos directo al portal.
+    // VERIFICACIÓN DE SESIÓN DESACTIVADA TEMPORALMENTE PARA DESARROLLO
     auth.onAuthStateChanged(user => {
         if (user) {
-            // Un gerente con sesión activa está aquí. No debería. ¡Al portal!
-            // Se usa un pequeño delay para evitar loops de redirección en algunos navegadores.
-            console.log("Gerente con sesión activa detectado. Redirigiendo a portal.html");
-            setTimeout(() => { window.location.href = 'portal.html'; }, 500);
+            console.log("Sesión activa detectada, pero la redirección automática está desactivada para edición.");
         }
     });
 }
