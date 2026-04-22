@@ -47,7 +47,9 @@ section { padding: 60px 0; text-align: center; }
 .header-bottom { display: flex; justify-content: center; align-items: center; gap: 15px; }
 .logo { display: flex; align-items: center; gap: 10px; color: var(--color-primary); font-weight: bold; }
 .logo img { height: 30px; }
-.logo { text-decoration: none; } /* Asegura que el enlace no tenga subrayado */
+.logo { text-decoration: none; display: flex; align-items: center; gap: 12px; }
+.logo-text-group { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+.afiliados-tag { font-size: 0.55rem; letter-spacing: 3px; margin-top: 3px; color: var(--color-text); font-weight: 900; }
 .shine-effect {
     position: relative;
     overflow: hidden;
@@ -67,7 +69,9 @@ section { padding: 60px 0; text-align: center; }
     0% { transform: translateX(0); }
     100% { transform: translateX(200%); }
 }
-.logo { text-decoration: none; } /* Asegura que el enlace no tenga subrayado */
+.logo { text-decoration: none; display: flex; align-items: center; gap: 12px; }
+.logo-text-group { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+.afiliados-tag { font-size: 0.55rem; letter-spacing: 3px; margin-top: 3px; color: var(--color-text); font-weight: 900; }
 .shine-effect {
     position: relative;
     overflow: hidden;
@@ -169,7 +173,10 @@ section { padding: 60px 0; text-align: center; }
         <div class="header-top">
             <a href="index.html" class="logo">
                 <img src="imagenes/logo.png" alt="Makumoto Logo">
-                <span><span class="shine-effect">MAKUMOTO®</span> AFILIADOS</span>
+                <div class="logo-text-group">
+                    <span class="shine-effect" style="color: var(--color-primary); font-weight: bold;">MAKUMOTO®</span>
+                    <span class="afiliados-tag">AFILIADOS</span>
+                </div>
             </a>
             <a href="index.html#seccion-precios-directa" class="cta-button-header">CONTRATAR</a>
         </div>
