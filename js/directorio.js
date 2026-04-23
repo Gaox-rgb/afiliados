@@ -33,10 +33,9 @@ window.app.directory = {
         const db = firebase.firestore();
         
         try {
-            // Consulta para obtener solo las empresas habilitadas para el directorio
+            // Consulta simplificada para evitar errores de permisos por índice inexistente
             const querySnapshot = await db.collection('companies')
                 .where('landingPageData.isEnabledForDirectory', '==', true)
-                .orderBy('companyName')
                 .get();
             
             this.renderCompanies(querySnapshot.docs);

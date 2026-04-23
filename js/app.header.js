@@ -7,97 +7,63 @@ window.app.ui.injectHeader = function() {
 
     const isPortal = window.location.pathname.includes('portal.html');
     
-    // INYECCIÓN DE ESTILOS DE CONTROL ABSOLUTO
-    const style = document.createElement('style');
-    style.innerHTML = `
-        .header-bottom { 
-            display: flex !important; 
-            justify-content: center !important; 
-            align-items: center !important;
-            gap: 15px !important; 
-            margin-top: 10px !important; 
-        }
-        .login-button-header { 
-            font-size: 11px !important; 
-            padding: 6px 12px !important; 
-            border: 1px solid var(--color-primary) !important; 
-            border-radius: 4px !important; 
-            font-weight: 800 !important; 
-            text-transform: uppercase !important; 
-            white-space: nowrap !important; 
-            text-decoration: none !important; 
-            color: var(--color-primary) !important; 
-            background: transparent !important;
-            display: inline-block !important; 
-            cursor: pointer !important;
-            line-height: 1 !important;
-            transition: all 0.2s ease !important;
-        }
-        .login-button-header:hover {
-            background-color: var(--color-primary) !important;
-            color: var(--color-dark) !important;
-        }
-        .btn-plus { 
-            border-color: #00ecff !important; 
-            color: #00ecff !important; 
-        }
-        .btn-plus:hover {
-            background-color: #00ecff !important;
-            color: var(--color-dark) !important;
-        }
-    `;
-    document.head.appendChild(style);
+    if (!document.getElementById('header-styles')) {
+        const style = document.createElement('style');
+        style.id = 'header-styles';
+        style.innerHTML = `
+            #main-header { width: 100%; background: #101010; border-bottom: 1px solid #2a2a2a; }
+            .header-container { max-width: 1200px; margin: 0 auto; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+            .header-top { width: 100%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+            .header-bottom { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
+            .login-button-header { 
+                font-size: 11px !important; padding: 6px 12px !important; border: 1px solid #FFD700 !important; 
+                border-radius: 4px !important; font-weight: 800 !important; text-transform: uppercase !important; 
+                text-decoration: none !important; color: #FFD700 !important; background: transparent !important;
+                cursor: pointer !important; transition: all 0.2s ease !important;
+            }
+            .btn-plus { border-color: #00ecff !important; color: #00ecff !important; }
+            @media (max-width: 480px) {
+                .header-top { justify-content: center; text-align: center; }
+                .afiliados-tag { font-size: 7px !important; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 
     if (isPortal) {
-        header.innerHTML = `
-            <div class="container header-container">
-                <div class="logo">
-                    <img src="imagenes/logo.png" alt="Makumoto Logo">
-                    <span id="portal-sector-name" style="animation: vibrant-glow 2s ease-in-out infinite;">MAKUMOTO® AFILIADOS</span>
-                </div>
-            </div>`;
+        header.innerHTML = '<div class="header-container"><div class="logo" style="display:flex; align-items:center; gap:10px;"><img src="imagenes/logo.png" alt="Logo" style="height:25px;"><span style="color:#FFD700; font-weight:bold; font-size:14px;">MAKUMOTO® AFILIADOS</span></div></div>';
     } else {
         header.innerHTML = `
             <div class="header-container">
                 <div class="header-top">
-                    <a href="index.html" class="logo">
-                        <img src="imagenes/logo.png" alt="Makumoto Logo">
-                        <div class="logo-text-group">
-                            <span class="shine-effect" style="color: var(--color-primary); font-weight: bold;">MAKUMOTO®</span>
-                            <span class="afiliados-tag">AFILIADOS</span>
+                    <a href="index.html" class="logo" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+                        <img src="imagenes/logo.png" alt="Logo" style="height:35px;">
+                        <div style="display:flex; flex-direction:column; align-items:center; line-height:1;">
+                            <span style="color:#FFD700; font-weight:900; font-size:18px;">MAKUMOTO®</span>
+                            <span style="font-size:9px; letter-spacing:3px; color:#fff; font-weight:700;">AFILIADOS</span>
                         </div>
                     </a>
-                    <a href="index.html#seccion-precios-directa" class="cta-button-header">CONTRATAR</a>
+                    <a href="index.html#seccion-precios-directa" style="background:#FFD700; color:#101010; padding:10px 20px; border-radius:5px; text-decoration:none; font-weight:900; font-size:13px;">CONTRATAR</a>
                 </div>
                 <div class="header-bottom">
                     <a href="directorio.html" class="login-button-header">Directorio</a>
                     <button id="btn-show-login" class="login-button-header">Login</button>
-                    <a href="#" class="login-button-header btn-plus">Afiliados Plus</a>
+                    <a href="gana-dinero.html" class="login-button-header btn-plus">¡Gana Dinero!</a>
                 </div>
             </div>`;
-            
-        // VINCULACIÓN DE EVENTOS PARA EL MODAL (LOGIN Y CIERRE)
-        const btnLogin = document.getElementById('btn-show-login');
-        const btnClose = document.getElementById('close-login-modal');
-        const modal = document.getElementById('login-modal');
-
-        if (btnLogin && modal) {
-            btnLogin.onclick = () => modal.classList.add('visible');
-        }
-        if (btnClose && modal) {
-            btnClose.onclick = () => modal.classList.remove('visible');
-        }
-        if (modal) {
-            modal.onclick = (e) => { 
-                if (e.target === modal) modal.classList.remove('visible'); 
-            };
-        }
     }
 };
 
-// Punto de entrada único
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', window.app.ui.injectHeader);
-} else {
-    window.app.ui.injectHeader();
-}
+// MOTOR DE EVENTOS GLOBAL (Solución definitiva para la X y Modales)
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('login-modal');
+    if (!modal) return;
+
+    if (e.target.id === 'btn-show-login') {
+        modal.classList.add('visible');
+    } else if (e.target.id === 'close-login-modal' || e.target === modal) {
+        modal.classList.remove('visible');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', window.app.ui.injectHeader);

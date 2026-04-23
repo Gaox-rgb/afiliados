@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panel de Control - Makumoto® Plus</title>
+    <link rel="icon" type="image/png" href="imagenes/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap');
+        :root { --color-primary: #FFD700; --color-accent: #00ecff; --color-dark: #000; --font-family: 'Poppins', sans-serif; }
+        
+        body { font-family: var(--font-family); background-color: #000; color: #fff; margin: 0; line-height: 1.6; overflow-x: hidden; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        
+        /* HEADER */
+        #main-header { min-height: 70px; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 2000; border-bottom: 2px solid #fff; }
+
+        /* HERO SECTION */
+        .hero-tools { padding: 40px 0; text-align: center; }
+        .hero-tools img.main-logo { width: 65px; filter: drop-shadow(0 0 10px var(--color-accent)); margin-bottom: 20px; }
+        .hero-tools h1 { font-size: 2.6rem; font-weight: 900; color: var(--color-accent); margin: 0; text-transform: uppercase; line-height: 1.1; }
+        .hero-tools p { font-size: 1.1rem; max-width: 600px; margin: 15px auto; color: #fff; font-weight: 400; }
+
+        /* GRID TOP 5 */
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin: 30px 0; }
+        .tool-card { 
+            background: #000; padding: 30px 15px; border-radius: 28px; border: 2px solid #fff; 
+            text-align: center; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .tool-card i { 
+            font-size: 2.5rem; color: var(--color-accent); margin-bottom: 15px; 
+            filter: drop-shadow(0 0 8px rgba(0,236,255,0.4));
+        }
+        .tool-card h3 { font-size: 0.8rem; text-transform: uppercase; margin: 0; letter-spacing: 1px; color: #fff; font-weight: 800; }
+
+        /* BANNER PROFIT */
+        .profit-banner { 
+            background: linear-gradient(135deg, #00ecff 0%, #0072ff 100%); color: #000; 
+            padding: 35px 20px; border-radius: 30px; text-align: center; margin: 40px 0;
+            box-shadow: 0 15px 40px rgba(0, 236, 255, 0.4);
+        }
+        .profit-banner h2 { font-size: 2rem; font-weight: 900; margin: 0; text-transform: uppercase; line-height: 1; }
+        .profit-banner p { font-weight: 800; margin: 8px 0 0; font-size: 1.1rem; }
+
+        /* ACCIONES */
+        .main-actions { text-align: center; padding-bottom: 60px; }
+        #btn-open-catalog {
+            background: #fff; color: #000; padding: 22px 50px; 
+            border-radius: 60px; font-weight: 900; font-size: 1.2rem; cursor: pointer;
+            border: none; box-shadow: 0 10px 30px rgba(255,255,255,0.3); transition: 0.4s;
+            text-transform: uppercase;
+        }
+        #btn-open-catalog:hover { transform: translateY(-3px); box-shadow: 0 15px 40px var(--color-accent); background: var(--color-accent); }
+
+        .panel-link {
+            margin-top: 35px; display: inline-block;
+            color: var(--color-primary); font-weight: 800; text-transform: uppercase; 
+            font-size: 0.9rem; text-decoration: none; border-bottom: 2px solid var(--color-primary); 
+            padding-bottom: 5px; cursor: pointer;
+        }
+
+        /* MODALES */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); backdrop-filter: blur(20px);
+            z-index: 5000; display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.visible { display: flex; }
+        
+        .modal-card {
+            background: #000; width: 95%; max-width: 500px; height: 88vh;
+            border-radius: 40px; border: 2px solid #fff; position: relative;
+            display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 0 60px rgba(255,255,255,0.1);
+        }
+
+        .modal-header { 
+            padding: 20px; background: #000; border-bottom: 2px solid #fff;
+            text-align: center; display: flex; flex-direction: column; align-items: center;
+        }
+        .modal-header h2 { 
+            margin: 0; font-size: 1rem; font-weight: 900; 
+            text-transform: uppercase; line-height: 1.3; color: var(--color-accent);
+            padding: 0 40px; /* ESPACIO PARA QUE EL TEXTO NO TOQUE EL BOTÓN */
+        }
+        
+        /* BOTÓN CERRAR AZUL - POSICIÓN CORREGIDA */
+        .close-discrete { 
+            font-size: 0.75rem; color: #fff; cursor: pointer; text-transform: uppercase; 
+            font-weight: 900; background: transparent; border: none; padding: 5px; 
+            margin-bottom: 10px; transition: 0.3s;
+        }
+        .close-discrete:hover { transform: scale(1.1); background: #fff; }
+
+        .modal-scroll { padding: 20px; overflow-y: auto; flex-grow: 1; scroll-behavior: smooth; }
+        
+        /* TARJETAS MODAL */
+        .func-item { 
+            display: flex; align-items: center; gap: 20px; padding: 20px; 
+            background: #000; border-radius: 30px; 
+            border: 2px solid #fff; margin-bottom: 15px; transition: 0.3s;
+        }
+        .func-item i { 
+            font-size: 1.8rem; color: var(--color-accent); 
+            background: rgba(255,255,255,0.1); width: 60px; height: 60px; 
+            display: flex; align-items: center; justify-content: center; border-radius: 20px;
+        }
+        .func-item h4 { margin: 0; font-size: 0.95rem; text-transform: uppercase; color: #fff; font-weight: 800; }
+        .func-item p { margin: 4px 0 0 0; font-size: 0.85rem; color: #fff; line-height: 1.4; opacity: 1; }
+
+        /* FLECHA RETORNO AL INICIO */
+        .back-to-top {
+            position: absolute; bottom: 25px; right: 25px; width: 45px; height: 45px;
+            background: var(--color-accent); color: #000; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,236,255,0.6); opacity: 0; visibility: hidden; transition: 0.4s; z-index: 100;
+        }
+        .back-to-top.show { opacity: 1; visibility: visible; }
+
+        /* LOGIN */
+        .login-card { 
+            background: #000; width: 90%; max-width: 400px; padding: 45px 35px;
+            border-radius: 40px; border: 2px solid #fff; text-align: center;
+            box-shadow: 0 20px 50px rgba(255,255,255,0.1); position: relative;
+        }
+        .login-form { width: 100%; display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .login-form input {
+            padding: 18px; border-radius: 20px; border: 2px solid #fff; 
+            background: #000; color: #fff; font-family: var(--font-family); font-size: 1rem; text-align: center;
+        }
+        .login-form button {
+            background: var(--color-accent); color: #000; font-weight: 900; 
+            border: none; padding: 20px; border-radius: 20px; cursor: pointer; 
+            text-transform: uppercase; font-size: 1rem; margin-top: 10px;
+        }
+
+        /* Estilos de asistente eliminados */
+    </style>
+</head>
+<body>
+
+<header id="main-header"></header>
+
+<main class="container">
+    <section class="hero-tools">
+        <img src="imagenes/logo.png" alt="Makumoto Logo" class="main-logo">
+        <h1>TU COMUNIDAD,<br>TU MINA DE ORO.</h1>
+        <p>Gana dinero recomendando las herramientas que todos necesitan hoy en día directamente en su celular.</p>
+    </section>
+
+    <div class="tools-grid">
+        <div class="tool-card"><i class="fas fa-comment-dots"></i><h3>20 Mensajes</h3></div>
+        <div class="tool-card"><i class="fas fa-utensils"></i><h3>Buscador Calorías</h3></div>
+        <div class="tool-card"><i class="fas fa-first-aid"></i><h3>Primeros Auxilios</h3></div>
+        <div class="tool-card"><i class="fas fa-barcode"></i><h3>Scanner Comida</h3></div>
+        <div class="tool-card"><i class="fas fa-bolt"></i><h3>Linterna SOS</h3></div>
+    </div>
+
+    <section class="profit-banner">
+        <h2>¿QUIERES GANAR DINERO?</h2>
+        <p>Te pagamos el 50% mensual de por vida.</p>
+    </section>
+
+    <div class="main-actions">
+        <button id="btn-open-catalog">VER LAS 25 FUNCIONES</button>
+        <br>
+        <div class="panel-link" onclick="openLoginModal()">
+            <i class="fas fa-user-shield"></i> ENTRAR AL PANEL AFILIADOS PLUS
+        </div>
+    </div>
+</main>
+
+<!-- Botón eliminado -->
+
+<!-- CATÁLOGO -->
+<div id="modal-catalog" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <span class="close-discrete" onclick="closeCatalog()">CERRAR [X]</span>
+            <h2>25 Funciones Fantásticas<br>en la comodidad de tu celular</h2>
+        </div>
+        
+        <div class="modal-scroll" id="modal-scroll-area">
+            <div class="func-list" id="list-injector"></div>
+            
+            <div class="back-to-top" id="arrow-up" onclick="scrollToTop()">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+
+            <button onclick="closeCatalog()" style="width:100%; padding:20px; background:#fff; color:#000; border:none; border-radius:25px; font-weight:900; cursor:pointer; margin-top:30px; text-transform:uppercase;">Cerrar Catálogo</button>
+        </div>
+    </div>
+</div>
+
+<!-- LOGIN -->
+<div id="modal-arsenal-login" class="modal-overlay">
+    <div class="login-card">
+        <span class="close-discrete" onclick="closeLoginModal()" style="position:absolute; top:20px; right:20px;">&times;</span>
+        <h2 style="color:var(--color-accent); font-weight:900; text-transform:uppercase; margin-bottom:5px; line-height: 1.1;">Panel de Control<br>Afiliados Plus</h2>
+        <p style="font-size: 0.9rem; color: #fff; margin-top: 10px;">Bienvenida a tu centro de control personal.</p>
+        <form id="arsenal-login-form" class="login-form">
+            <input type="email" id="arsenal-email" placeholder="Tu Email" required>
+            <input type="text" id="arsenal-code" placeholder="CÓDIGO DE AFILIADO" required style="text-transform: uppercase;">
+            <button type="submit" id="btn-login-submit">INGRESAR AHORA</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.header.js"></script>
+
+<script>
+    const funciones = [
+        { t: "Disciplina Diaria", d: "Alertas motivacionales cada mañana.", i: "fa-sun" },
+        { t: "Buscador de Calorías", d: "Controla tu peso sin usar internet.", i: "fa-utensils" },
+        { t: "Primeros Auxilios", d: "Manual de emergencias paso a paso.", i: "fa-first-aid" },
+        { t: "Detector de Químicos", d: "Escanea etiquetas de comida.", i: "fa-barcode" },
+        { t: "Linterna de Rescate", d: "Luz SOS de alta potencia.", i: "fa-bolt" },
+        { t: "Control de Ayuno", d: "Mejora tu salud con horarios.", i: "fa-hourglass-half" },
+        { t: "Calculadora de Metas", d: "Proyecta tus ahorros y ganancias.", i: "fa-calculator" },
+        { t: "Diario Positivo", d: "Espacio para agradecer y crecer.", i: "fa-heart" },
+        { t: "Alarma de Agua", d: "No olvides hidratar tu cuerpo.", i: "fa-tint" },
+        { t: "Corrector de Espalda", d: "Cuida tu postura al usar el móvil.", i: "fa-user-check" },
+        { t: "Enfoque Productivo", d: "Temporizador para tareas del hogar.", i: "fa-stopwatch" },
+        { t: "Mapa de Ayuda", d: "Ubica médicos y hospitales cerca.", i: "fa-map-marked-alt" },
+        { t: "Pasos y Salud", d: "Cuenta tu actividad física diaria.", i: "fa-shoe-prints" },
+        { t: "Recetario Saludable", d: "Ideas rápidas con lo que hay en casa.", i: "fa-book-open" },
+        { t: "Protección Nocturna", d: "Filtro para descansar la vista.", i: "fa-moon" },
+        { t: "Respiración Guiada", d: "Elimina el estrés en un minuto.", i: "fa-wind" },
+        { t: "Ahorro Inteligente", d: "Vigilancia de precios y mercados.", i: "fa-chart-line" },
+        { t: "Control de Gastos", d: "Administra el dinero de la casa.", i: "fa-wallet" },
+        { t: "Ejercicios en Casa", d: "Rutinas fáciles sin pesas.", i: "fa-dumbbell" },
+        { t: "Calidad de Sueño", d: "Mejora tu descanso nocturno.", i: "fa-bed" },
+        { t: "Sonidos Relajantes", d: "Música para concentrarte o dormir.", i: "fa-music" },
+        { t: "Peso Ideal", d: "Calcula tu porcentaje de grasa.", i: "fa-weight" },
+        { t: "Botón de Pánico", d: "Avisa a tu familia si estás en peligro.", i: "fa-shield-alt" },
+        { t: "Entrenamiento 7 Min.", d: "Ponte en forma en poco tiempo.", i: "fa-running" },
+        { t: "Lista de Logros", d: "Anota tus hábitos cumplidos.", i: "fa-tasks" }
+    ];
+
+    const injector = document.getElementById('list-injector');
+    const scrollArea = document.getElementById('modal-scroll-area');
+    const arrowUp = document.getElementById('arrow-up');
+
+    function openCatalog() {
+        injector.innerHTML = funciones.map(f => `
+            <div class="func-item">
+                <i class="fas ${f.i}"></i>
+                <div><h4>${f.t}</h4><p>${f.d}</p></div>
+            </div>`).join('');
+        document.getElementById('modal-catalog').classList.add('visible');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCatalog() { document.getElementById('modal-catalog').classList.remove('visible'); document.body.style.overflow = 'auto'; }
+    function openLoginModal() { document.getElementById('modal-arsenal-login').classList.add('visible'); }
+    function closeLoginModal() { document.getElementById('modal-arsenal-login').classList.remove('visible'); }
+
+    scrollArea.onscroll = () => {
+        if (scrollArea.scrollTop > 300) arrowUp.classList.add('show');
+        else arrowUp.classList.remove('show');
+    };
+
+    function scrollToTop() { scrollArea.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    document.getElementById('btn-open-catalog').onclick = openCatalog;
+    // Referencia eliminada
+
+    document.getElementById('arsenal-login-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btn-login-submit');
+        btn.disabled = true; btn.innerHTML = 'INGRESANDO...';
+        try {
+            const verify = firebase.functions().httpsCallable('verifyArsenalAccess');
+            const res = await verify({ email: document.getElementById('arsenal-email').value, affiliateNumber: document.getElementById('arsenal-code').value });
+            if (res.data.success) { sessionStorage.setItem('arsenal_access', 'true'); window.location.href = 'makumoto-app.html'; }
+        } catch (error) { alert("Error: " + error.message); btn.disabled = false; btn.innerHTML = 'INGRESAR AHORA'; }
+    };
+
+    window.onkeydown = (e) => { if (e.key === "Escape") { closeCatalog(); closeLoginModal(); } };
+</script>
+</body>
+</html>

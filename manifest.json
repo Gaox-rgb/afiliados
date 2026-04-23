@@ -1,0 +1,23 @@
+{
+  "name": "Makumoto® Arsenal Digital",
+  "short_name": "Arsenal",
+  "description": "25 Herramientas de Supervivencia y Salud Makumoto.",
+  "start_url": "makumoto-app.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00ecff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "imagenes/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "imagenes/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

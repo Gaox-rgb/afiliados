@@ -217,19 +217,7 @@ section { padding: 60px 0; text-align: center; }
 <script src="js/app.header.js"></script>
 <script src="js/directorio.js"></script>
 
-<!-- Lógica de Autenticación Requerida para el Header -->
-<script>
-    window.app = window.app || {}; // Asegura que el objeto global exista
-    window.app.ui = window.app.ui || {}; // Asegura el espacio de nombres de UI
-
-    // Lógica mínima para el modal de login
-    const loginModal = document.getElementById('login-modal');
-    if (loginModal) {
-        document.getElementById('btn-show-login').onclick = () => loginModal.classList.add('visible');
-        document.getElementById('close-login-modal').onclick = () => loginModal.classList.remove('visible');
-        loginModal.onclick = (e) => { if (e.target === loginModal) loginModal.classList.remove('visible'); };
-    }
-</script>
+<!-- La lógica del modal de login ahora reside exclusivamente en js/app.header.js -->
 
 </body>
 </html>

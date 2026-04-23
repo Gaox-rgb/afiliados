@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Makumoto® Arsenal Plus</title>
+    <link rel="icon" type="image/png" href="imagenes/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        // GATEKEEPER: Protección de acceso inmediato (Independiente)
+        if (sessionStorage.getItem('arsenal_access') !== 'true') {
+            window.location.replace('gana-dinero.html');
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap');
+        
+        :root { --color-accent: #00ecff; --color-dark: #000; --color-card: #1c1c1e; }
+
+        body { 
+            background: var(--color-dark); color: #fff; font-family: 'Poppins', sans-serif; 
+            margin: 0; padding: 20px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; 
+        }
+
+        /* SKELETON LOADER */
+        #skeleton-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; transition: opacity 0.4s;
+        }
+        .sk-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 40px; }
+        .sk-box { width: 65px; height: 65px; background: #1c1c1e; border-radius: 18px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+        /* HEADER TÁCTICO */
+        .app-header { text-align: center; margin-bottom: 30px; position: relative; padding-top: 10px; }
+        .app-header img { width: 45px; margin-bottom: 5px; }
+        .app-header h2 { font-size: 0.8rem; color: var(--color-accent); letter-spacing: 3px; font-weight: 900; margin: 0; text-transform: uppercase; }
+        .back-btn { position: absolute; left: 10px; top: 15px; font-size: 1.3rem; color: #fff; cursor: pointer; opacity: 0.6; }
+
+        /* GRID DE HERRAMIENTAS (4 COLUMNAS) */
+        .app-grid { 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; 
+            max-width: 500px; margin: 0 auto; padding-bottom: 100px;
+        }
+
+        .app-icon { 
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; 
+            text-decoration: none; color: #fff; transition: transform 0.1s;
+        }
+        .app-icon:active { transform: scale(0.9); }
+
+        .icon-box { 
+            width: 65px; height: 65px; background: var(--color-card); border-radius: 18px; 
+            display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+            margin-bottom: 6px; border: 1px solid #333; transition: 0.2s;
+        }
+        .app-icon span { font-size: 0.6rem; font-weight: 600; text-align: center; opacity: 0.7; text-transform: uppercase; }
+
+        /* VISTA MAESTRA DE HERRAMIENTA */
+        .tool-view { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(15px);
+            z-index: 5000; display: none; padding: 40px 20px; box-sizing: border-box; 
+        }
+        .tool-view.active { display: flex; flex-direction: column; }
+
+        .view-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; 
+        }
+        .view-header h3 { margin: 0; color: var(--color-accent); font-weight: 900; text-transform: uppercase; font-size: 1.1rem; }
+        .close-view-btn { font-size: 2rem; color: #fff; cursor: pointer; opacity: 0.6; }
+
+        /* CONTENEDORES INTERNOS */
+        .content-card { background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff; margin: 10px 0; box-sizing: border-box; font-family: inherit; }
+        .btn-action { background: var(--color-accent); color: #000; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+<!-- SKELETON SCREEN (ZERO-LATENCY FEEL) -->
+<div id="skeleton-loader">
+    <img src="imagenes/logo.png" width="50" style="margin-bottom: 20px;">
+    <div class="sk-grid">
+        <div class="sk-box"></div><div class="sk-box"></div><div class="sk-box"></div><div class="sk-box"></div>
+        <div class="sk-box"></div><div class="sk-box"></div><div class="sk-box"></div><div class="sk-box"></div>
+    </div>
+</div>
+
+<div class="app-header">
+    <i class="fas fa-chevron-left back-btn" onclick="exitArsenal()"></i>
+    <img src="imagenes/logo.png" alt="Makumoto Logo">
+    <h2>Arsenal Digital</h2>
+</div>
+
+<!-- GRID DINÁMICO -->
+<div class="app-grid" id="main-grid"></div>
+
+<!-- VISTA ÚNICA DE HERRAMIENTAS -->
+<div id="tool-master-view" class="tool-view">
+    <div class="view-header">
+        <h3 id="view-title">Función</h3>
+        <span class="close-view-btn" onclick="closeView()">&times;</span>
+    </div>
+    <div id="view-body" style="overflow-y: auto; flex-grow: 1;"></div>
+</div>
+
+<!-- SCRIPTS DE LÓGICA -->
+<script src="js/app.tools.js"></script>
+<script>
+    // 1. DEFINICIÓN MAESTRA DE LAS 25 HERRAMIENTAS
+    const tools = [
+        { n: "Mensajes", i: "fa-comment-dots", f: "showMessages" },
+        { n: "Calorías", i: "fa-utensils", f: "showCalories" },
+        { n: "Manual", i: "fa-first-aid", f: "showManual" },
+        { n: "Scanner", i: "fa-barcode", f: "showScanner" },
+        { n: "Linterna", i: "fa-bolt", f: "doFlash" },
+        { n: "Ayuno", i: "fa-clock", f: "generic" },
+        { n: "Ganancias", i: "fa-dollar-sign", f: "generic" },
+        { n: "Gratitud", i: "fa-heart", f: "generic" },
+        { n: "Agua", i: "fa-tint", f: "generic" },
+        { n: "Postura", i: "fa-child", f: "generic" },
+        { n: "Pomodoro", i: "fa-stopwatch", f: "generic" },
+        { n: "Pasos", i: "fa-shoe-prints", f: "generic" },
+        { n: "Recetas", i: "fa-book-open", f: "generic" },
+        { n: "Luz Azul", i: "fa-eye", f: "generic" },
+        { n: "Respirar", i: "fa-wind", f: "generic" },
+        { n: "Mercados", i: "fa-chart-line", f: "generic" },
+        { n: "Gastos", i: "fa-wallet", f: "generic" },
+        { n: "Rutinas", i: "fa-dumbbell", f: "generic" },
+        { n: "Sueño", i: "fa-moon", f: "generic" },
+        { n: "Sonidos", i: "fa-volume-up", f: "generic" },
+        { n: "Grasa", i: "fa-percentage", f: "generic" },
+        { n: "Pánico", i: "fa-exclamation-triangle", f: "doPanic" },
+        { n: "Training", i: "fa-running", f: "generic" },
+        { n: "Hábitos", i: "fa-check-double", f: "generic" },
+        { n: "GPS", i: "fa-map-marker-alt", f: "generic" }
+    ];
+
+    // 2. RENDERIZADO DEL GRID
+    const grid = document.getElementById('main-grid');
+    grid.innerHTML = tools.map(t => `
+        <div class="app-icon" onclick="executeTool('${t.f}', '${t.n}')">
+            <div class="icon-box"><i class="fas ${t.i}"></i></div>
+            <span>${t.n}</span>
+        </div>
+    `).join('');
+
+    // 3. CONTROLADOR DE INTERFAZ
+    const masterView = document.getElementById('tool-master-view');
+    const viewBody = document.getElementById('view-body');
+
+    function executeTool(func, name) {
+        window.app.tools.vibrate(); // Feedback háptico
+        document.getElementById('view-title').innerText = name;
+        viewBody.innerHTML = ""; 
+        
+        if (func === "generic") {
+            showGeneric();
+        } else {
+            window[func]();
+        }
+        
+        masterView.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeView() { 
+        masterView.classList.remove('active'); 
+        document.body.style.overflow = 'auto'; 
+    }
+
+    function exitArsenal() {
+        window.app.tools.logout();
+    }
+
+    // 4. FUNCIONES ESPECÍFICAS DE HERRAMIENTAS
+    function showCalories() {
+        viewBody.innerHTML = `
+            <div class="content-card">
+                <p style="font-size:0.8rem; opacity:0.6; margin-bottom:10px;">BUSCADOR ZERO-LATENCY</p>
+                <input type="text" placeholder="Ej: Pollo, Huevo..." oninput="handleSearch(this.value)">
+                <div id="results-area" style="margin-top:15px"></div>
+            </div>`;
+    }
+
+    window.handleSearch = (val) => {
+        const results = window.app.tools.searchCalories(val);
+        document.getElementById('results-area').innerHTML = results.map(r => `
+            <div style="padding:12px; border-bottom:1px solid #222; display:flex; justify-content:space-between;">
+                <span>${r.n}</span>
+                <span style="color:var(--color-accent)">${r.c} kcal</span>
+            </div>
+        `).join('');
+    };
+
+    function doFlash() {
+        window.app.tools.flashlight.toggle().then(isOn => {
+            viewBody.innerHTML = `
+                <div class="content-card" style="text-align:center; padding:50px 20px;">
+                    <i class="fas fa-bolt fa-4x" style="color:${isOn ? 'var(--color-accent)' : '#444'}"></i>
+                    <h2 style="margin-top:20px">${isOn ? 'LINTERNA ACTIVADA' : 'LINTERNA APAGADA'}</h2>
+                    <button class="btn-action" onclick="doFlash()" style="margin-top:20px">INTERRUPTOR</button>
+                </div>`;
+        });
+    }
+
+    function showManual() {
+        const data = window.app.tools.data.emergency;
+        viewBody.innerHTML = Object.keys(data).map(key => `
+            <div class="content-card">
+                <h4 style="margin:0; color:var(--color-accent); text-transform:uppercase;">${key}</h4>
+                <p style="font-size:0.85rem; margin:10px 0 0 0; line-height:1.4;">${data[key]}</p>
+            </div>
+        `).join('');
+    }
+
+    function showMessages() {
+        viewBody.innerHTML = `
+            <div class="content-card" style="text-align:center;">
+                <i class="fas fa-bell fa-2x" style="color:var(--color-accent); margin-bottom:15px;"></i>
+                <p>Las alertas de disciplina se envían automáticamente a tu centro de notificaciones.</p>
+                <button class="btn-action" onclick="window.app.tools.sendDailyNotification()" style="margin-top:15px;">PROBAR NOTIFICACIÓN</button>
+            </div>`;
+    }
+
+    function showGeneric() {
+        viewBody.innerHTML = `
+            <div class="content-card" style="text-align:center; padding:40px 20px;">
+                <i class="fas fa-microchip fa-3x" style="color:var(--color-accent); margin-bottom:15px"></i>
+                <p>MÓDULO CALIBRADO.<br><span style="opacity:0.6; font-size:0.8rem">Listo para recolección de datos biométricos.</span></p>
+            </div>`;
+    }
+
+    function doPanic() {
+        viewBody.innerHTML = `
+            <div class="content-card" style="text-align:center; border-color: #ff4444;">
+                <i class="fas fa-exclamation-triangle fa-3x" style="color:#ff4444; margin-bottom:15px"></i>
+                <p>¿ACTIVAR PROTOCOLO DE PÁNICO?<br><small>Se enviará tu ubicación GPS a tus contactos de emergencia.</small></p>
+                <button class="btn-action" style="background:#ff4444; color:#fff; margin-top:20px;" onclick="alert('Ubicación enviada (Simulación)')">ACTIVAR SOS</button>
+            </div>`;
+    }
+
+    // 5. INICIALIZACIÓN
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('skeleton-loader').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('skeleton-loader').style.display = 'none';
+            }, 400);
+        }, 800); // Simulación de calibración de sensores
+    });
+
+    // Cierre con ESC
+    window.onkeydown = (e) => { if (e.key === "Escape") closeView(); };
+</script>
+
+</body>
+</html>
