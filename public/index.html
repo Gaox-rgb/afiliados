@@ -842,11 +842,32 @@ window.app = window.app || {}; // ESTA ES LA LÍNEA MÁS IMPORTANTE. DEBE IR PRI
 // ADVERTENCIA DE SEGURIDAD: La configuración de Firebase nunca debe estar
 // hardcodeada directamente en el código fuente que se sube a un repositorio.
 // Se cargará desde un archivo externo no versionado (firebase-config.js).
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-window.app.functions = firebase.functions(); // Ahora esto es seguro, porque window.app ya existe.
-// ===== END: NÚCLEO DE INICIALIZACIÓN =====
+const cleanConfig = {
+  apiKey: "AIzaSyAPLpOe3YD0D7YgPYD8YCUhjnekQG7X5-I",
+  authDomain: "afiliados-makumoto.firebaseapp.com",
+  projectId: "afiliados-makumoto",
+  storageBucket: "afiliados-makumoto.firebasestorage.app",
+  messagingSenderId: "522354303224",
+  appId: "1:522354303224:web:c9da3e4ecaf5dd7ad29b0d"
+};
 
+if (firebase.apps.length) {
+    const currentProject = firebase.app().options.projectId;
+    if (currentProject !== "afiliados-makumoto") {
+        console.warn("Forzando corrección de proyecto detectado en caché: " + currentProject);
+        firebase.app().delete();
+    }
+}
 
+const firebaseApp = firebase.apps.length ? firebase.app() : firebase.initializeApp(cleanConfig);
+window.app.functions = firebaseApp.functions("us-central1");
+
+if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    console.log("MAKUMOTO® DEBUG: Entorno local detectado. Conectando a los emuladores locales...");
+    // Comentamos los emuladores para que el frontend local consuma las funciones reales del servidor B2B
+    // firebase.auth().useEmulator("http://127.0.0.1:9099/");
+    // window.app.functions.useEmulator("127.0.0.1", 5001);
+}
 // ===== END: NÚCLEO DE INICIALIZACIÓN =====
 
 // =======================================================================
@@ -1142,22 +1163,8 @@ window.app.events = {
         window.app.ui.showLoader('Contactando a PayPal...');
 
         try {
-            if (!firebaseConfig || !firebaseConfig.projectId) {
-                throw new Error("La configuración de Firebase (firebaseConfig) no está disponible o no contiene el projectId. Asegúrate de que firebase-config.js se cargue correctamente.");
-            }
-            const functionUrl = `https://us-central1-${firebaseConfig.projectId}.cloudfunctions.net/createAffiliatePaypalOrder`;
-
-            const response = await fetch(functionUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: { planId: planId } })
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.error || `Error del servidor: ${response.statusText}`);
-            }
+            const createOrder = window.app.functions.httpsCallable('createAffiliatePaypalOrder');
+            const result = await createOrder({ planId: planId });
 
             if (result.data && result.data.approveUrl) {
                 window.location.href = result.data.approveUrl;
