@@ -122,69 +122,19 @@
                 </ul>
             </div>
 
-            <!-- SIMULADORES INTERACTIVOS B2B (LOS 5 EJEMPLOS) -->
-            <div class="demo-box">
-                <strong style="color:var(--color-accent); font-size:0.75rem;"><i class="fas fa-desktop"></i> PROBADOR B2B: 5 Simuladores del Centro de Mando</strong>
-                <div style="display:flex; gap:3px; margin:8px 0; overflow-x:auto;">
-                    <button onclick="switchB2BSim(1)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">1. Alerta</button>
-                    <button onclick="switchB2BSim(2)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">2. Radar</button>
-                    <button onclick="switchB2BSim(3)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">3. Clima</button>
-                    <button onclick="switchB2BSim(4)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">4. Retención</button>
-                    <button onclick="switchB2BSim(5)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">5. Consola</button>
-                </div>
-
-                <div class="demo-screen">
-                    <!-- SIM 1: ALERTA TÁCTICA -->
-                    <div id="b2b-sim-1">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">1. Disparo de Alerta Motivacional:</strong>
-                        <button onclick="runB2BSim1()" style="background:var(--color-primary); color:#000; border:none; padding:6px 12px; border-radius:10px; font-weight:900; font-size:0.7rem; cursor:pointer; width:100%; margin-top:5px; text-transform:uppercase;">DISPARAR NOTIFICACIÓN EN VIVO</button>
-                        <div id="b2b-out-1" style="display:none; margin-top:8px; background:rgba(0,236,255,0.1); padding:8px; border-radius:8px; font-size:0.7rem;">
-                            <p style="color:var(--color-accent); font-weight:bold;">📡 Disparado a 180 miembros:</p>
-                            <span style="background:#222; color:#2ecc71; padding:2px 6px; border-radius:8px; font-size:0.6rem;">+10 Puntos</span>
-                            <span style="background:#222; color:#fff; padding:2px 6px; border-radius:8px; font-size:0.6rem;">Carlos R: ¡Recibido! 🦵</span>
-                            <span style="background:#222; color:#fff; padding:2px 6px; border-radius:8px; font-size:0.6rem;">Ana L: ¡Listo Coach! 🔥</span>
-                        </div>
-                    </div>
-
-                    <!-- SIM 2: RADAR MAPA DE MISIÓN -->
-                    <div id="b2b-sim-2" style="display:none;">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">2. Radar del Mapa de Misión:</strong>
-                        <p style="font-size:0.7rem; color:#aaa; margin:3px 0;">Toca el pin para ver asistencia en tiempo real:</p>
-                        <button onclick="runB2BSim2()" style="background:#222; color:var(--color-accent); border:1px solid var(--color-accent); padding:6px; border-radius:8px; font-size:0.7rem; width:100%; cursor:pointer;">📍 Gimnasio Acero Fit (Click)</button>
-                        <div id="b2b-out-2" style="display:none; margin-top:8px; background:#111; padding:8px; border-radius:8px; border:1px solid #333; font-size:0.7rem;">
-                            <strong style="color:var(--color-primary);">Check-in Confirmado:</strong>
-                            <p>Socio: Carlos R. - Rutina de Pierna 🦵 (Hace 2 mins)</p>
-                        </div>
-                    </div>
-
-                    <!-- SIM 3: TERMÓMETRO CLIMA LABORAL -->
-                    <div id="b2b-sim-3" style="display:none;">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">3. Termómetro del Clima Laboral:</strong>
-                        <p style="font-size:0.7rem; color:#aaa;">Arrastra el nivel de ánimo del equipo:</p>
-                        <input type="range" min="10" max="100" value="85" oninput="runB2BSim3(this.value)" style="width:100%; cursor:pointer;">
-                        <div id="b2b-out-3" style="font-weight:bold; color:var(--color-accent); font-size:0.8rem; text-align:center; margin-top:5px;">Felicidad del Equipo: 85% 🔥</div>
-                    </div>
-
-                    <!-- SIM 4: CALCULADORA RETENCIÓN -->
-                    <div id="b2b-sim-4" style="display:none;">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">4. Calculadora de Retención:</strong>
-                        <p style="font-size:0.7rem; color:#aaa;">Mueve los socios salvados de cancelar:</p>
-                        <input type="range" min="1" max="20" value="5" oninput="runB2BSim4(this.value)" style="width:100%; cursor:pointer;">
-                        <div id="b2b-out-4" style="font-size:0.75rem; color:#2ecc71; margin-top:5px; text-align:center; font-weight:bold;">Dinero Salvado: $2,500 MXN/mes (Costo app: $200 MXN)</div>
-                    </div>
-
-                    <!-- SIM 5: CONSOLA DE COMUNICADOS -->
-                    <div id="b2b-sim-5" style="display:none;">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">5. Consola de Mando Táctica:</strong>
-                        <button onclick="runB2BSim5()" style="background:#222; color:#fff; border:1px solid #555; padding:6px; border-radius:8px; font-size:0.7rem; width:100%; margin-top:5px; cursor:pointer;">Escribir Comunicado Automático</button>
-                        <div id="b2b-out-5" style="display:none; font-size:0.7rem; color:var(--color-accent); margin-top:5px; background:#111; padding:6px; border-radius:6px;">
-                            "¡Hoy viernes de hidratación!" ➔ Sent a 150 miembros.
-                        </div>
-                    </div>
+            <!-- SIMULADORES MASTERPIECE B2B (LOS 5 MODALES TÁCTICOS) -->
+            <div style="margin-top:15px; text-align:center;">
+                <strong style="color:var(--color-primary); font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;"><i class="fas fa-cubes"></i> MUESTRAS INMERSIVAS B2B DE ALTA INGENIERÍA:</strong>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-top:10px;">
+                    <button onclick="openMasterSim(1)" style="background:rgba(255,215,0,0.1); color:var(--color-primary); border:1px solid var(--color-primary); padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-satellite-dish"></i> 1. Disparo Alerta</button>
+                    <button onclick="openMasterSim(2)" style="background:rgba(0,236,255,0.1); color:var(--color-accent); border:1px solid var(--color-accent); padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-radar"></i> 2. Radar Misión</button>
+                    <button onclick="openMasterSim(3)" style="background:rgba(255,215,0,0.1); color:var(--color-primary); border:1px solid var(--color-primary); padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-chart-line"></i> 3. Clima Equipo</button>
+                    <button onclick="openMasterSim(4)" style="background:rgba(0,236,255,0.1); color:var(--color-accent); border:1px solid var(--color-accent); padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-calculator"></i> 4. Retención ROI</button>
+                    <button onclick="openMasterSim(5)" style="background:rgba(255,215,0,0.1); color:var(--color-primary); border:1px solid var(--color-primary); padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-terminal"></i> 5. Consola IA</button>
                 </div>
             </div>
             
-            <p style="color:var(--color-primary); font-weight:bold; font-size:0.9rem; margin-top:15px;">Tu Ganancia: ¡El 50% directo del paquete elegido!</p>
+            <p style="color:var(--color-primary); font-weight:bold; font-size:0.9rem; margin-top:20px;">Tu Ganancia: ¡El 50% directo del paquete elegido!</p>
         </div>
 
         <!-- PRODUCTO 2: ARSENAL PLUS B2C INDIVIDUAL -->
@@ -199,51 +149,15 @@
                 <p style="color:#888; font-size:0.75rem;">(Precio accesible para todo público).</p>
             </div>
 
-            <!-- SIMULADORES INTERACTIVOS B2C (LOS 5 EJEMPLOS) -->
-            <div class="demo-box">
-                <strong style="color:var(--color-primary); font-size:0.75rem;"><i class="fas fa-mobile"></i> PROBADOR B2C: 5 Funciones del Arsenal Plus</strong>
-                <div style="display:flex; gap:3px; margin:8px 0; overflow-x:auto;">
-                    <button onclick="switchB2CSim(6)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">6. Calorías</button>
-                    <button onclick="switchB2CSim(7)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">7. Linterna</button>
-                    <button onclick="switchB2CSim(8)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">8. Auxilios</button>
-                    <button onclick="switchB2CSim(9)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">9. Luz Azul</button>
-                    <button onclick="switchB2CSim(10)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">10. Ruleta 25</button>
-                </div>
-
-                <div class="demo-screen">
-                    <!-- SIM 6: CALORÍAS OFFLINE -->
-                    <div id="b2c-sim-6">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">6. Buscador Calorías Sin Internet (0 ms):</strong>
-                        <input type="text" placeholder="Escribe 'Pollo' o 'Huevo'..." oninput="runB2CSim6(this.value)" style="width:100%; padding:6px; border-radius:8px; border:1px solid #444; background:#111; color:#fff; font-size:0.75rem; margin-top:4px;">
-                        <div id="b2c-out-6" style="margin-top:5px; color:var(--color-accent); font-size:0.7rem;">Resultado instantáneo sin consumir datos.</div>
-                    </div>
-
-                    <!-- SIM 7: LINTERNA SOS -->
-                    <div id="b2c-sim-7" style="display:none; text-align:center;">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">7. Linterna SOS & Botón Pánico:</strong>
-                        <button id="b2c-sos-btn" onclick="runB2CSim7()" style="background:#ff4444; color:#fff; border:none; padding:8px 15px; border-radius:12px; font-weight:bold; font-size:0.75rem; cursor:pointer; width:100%; margin-top:5px;">ACTIVAR LUZ SOS</button>
-                    </div>
-
-                    <!-- SIM 8: PRIMEROS AUXILIOS 3D -->
-                    <div id="b2c-sim-8" style="display:none; font-size:0.7rem;">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">8. Manual 3D RCP de Emergencia:</strong>
-                        <div style="background:#111; padding:6px; border-radius:6px; border:1px solid #333; margin-top:4px;">
-                            1. Comprobar respiración.<br>2. Presiones fuertes en centro del pecho (100/min).
-                        </div>
-                    </div>
-
-                    <!-- SIM 9: PROTECCIÓN LUZ AZUL NOCTURNA -->
-                    <div id="b2c-sim-9" style="display:none; text-align:center;">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">9. Filtro Nocturno Luz Azul:</strong>
-                        <button onclick="runB2CSim9(this)" style="background:#f39c12; color:#000; border:none; padding:6px 12px; border-radius:10px; font-weight:bold; font-size:0.7rem; cursor:pointer; width:100%; margin-top:5px;">ACTIVAR FILTRO ÁMBAR (SUEÑO +40%)</button>
-                    </div>
-
-                    <!-- SIM 10: RULETA DE LAS 25 FUNCIONES -->
-                    <div id="b2c-sim-10" style="display:none; text-align:center;">
-                        <strong style="color:var(--color-primary); font-size:0.75rem;">10. Ruleta de 25 Herramientas:</strong>
-                        <button onclick="runB2CSim10()" style="background:var(--color-primary); color:#000; border:none; padding:6px 12px; border-radius:10px; font-weight:900; font-size:0.7rem; cursor:pointer; width:100%; margin-top:5px;">🎰 GIRAR RULETA DE FUNCIONES</button>
-                        <div id="b2c-out-10" style="font-weight:bold; color:var(--color-accent); margin-top:5px; font-size:0.75rem;"></div>
-                    </div>
+            <!-- SIMULADORES MASTERPIECE B2C (LOS 5 MODALES INDIVIDUALES) -->
+            <div style="margin-top:15px; text-align:center;">
+                <strong style="color:var(--color-accent); font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;"><i class="fas fa-fire"></i> MUESTRAS INMERSIVAS B2C DEL ARSENAL PLUS:</strong>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-top:10px;">
+                    <button onclick="openMasterSim(6)" style="background:rgba(0,236,255,0.1); color:var(--color-accent); border:1px solid var(--color-accent); padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-search-plus"></i> 6. Calorías 0ms</button>
+                    <button onclick="openMasterSim(7)" style="background:rgba(255,68,68,0.1); color:#ff4444; border:1px solid #ff4444; padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-bolt"></i> 7. Pánico SOS</button>
+                    <button onclick="openMasterSim(8)" style="background:rgba(255,215,0,0.1); color:var(--color-primary); border:1px solid var(--color-primary); padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-first-aid"></i> 8. Auxilios 3D</button>
+                    <button onclick="openMasterSim(9)" style="background:rgba(243,156,18,0.1); color:#f39c12; border:1px solid #f39c12; padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-moon"></i> 9. Luz Nocturna</button>
+                    <button onclick="openMasterSim(10)" style="background:rgba(0,236,255,0.1); color:var(--color-accent); border:1px solid var(--color-accent); padding:10px; border-radius:12px; font-weight:800; font-size:0.7rem; cursor:pointer; text-transform:uppercase;"><i class="fas fa-dharmachakra"></i> 10. Ruleta 25</button>
                 </div>
             </div>
             
@@ -308,27 +222,204 @@
 <!-- MODAL DE REGISTRO LIGERO DE NUEVO PROMOTOR -->
 <div id="modal-promoter-register" class="modal-overlay">
     <div class="login-card">
-        <span onclick="closePromoterRegisterModal()" style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem; color:#aaa;">&times;</span>
-        <h2 style="color:var(--color-primary); font-weight:900; text-transform:uppercase; margin-bottom:5px; font-size:1.3rem;">¡Bienvenido al Equipo! 🚀</h2>
-        <p style="font-size: 0.85rem; color: #ccc; margin-bottom: 20px;">Registro 100% gratuito. Ingresa tus datos iniciales para comenzar:</p>
-        
-        <form class="login-form" onsubmit="handlePromoterRegistration(event)">
-            <input type="text" id="promoter-name" placeholder="Tu Nombre Completo" required>
-            <input type="email" id="promoter-personal-email" placeholder="Tu Correo Personal" required>
-            
-            <p style="font-size:0.75rem; color:var(--color-accent); text-align:left; margin-bottom:15px; line-height:1.3;">
-                💡 <strong>Sugerencia de Cobro:</strong> Te notificaremos a este correo cuando tus comisiones estén listas. Te sugerimos abrir o vincular una cuenta gratuita en PayPal con este mismo correo para recibir tus pagos.
-            </p>
-
-            <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; text-align:left;">
-                <input type="checkbox" id="accept-terms-check" required style="width: 20px; height: 20px; margin-top: 3px; cursor: pointer;">
-                <label for="accept-terms-check" style="font-size: 0.75rem; color: #ccc; line-height: 1.3;">
-                    Acepto de forma libre los <a href="terminos-y-condiciones.html" target="_blank" style="color: var(--color-accent); text-decoration: underline;">Términos Mercantiles</a> y el <a href="politica-de-privacidad.html" target="_blank" style="color: var(--color-accent); text-decoration: underline;">Aviso de Privacidad</a> (Relación comercial independiente sin subordinación ni horario).
-                </label>
-            </div>
-            
-            <button type="submit" class="btn-cta-primary" style="padding:15px 30px; font-size:1rem; width:100%;">¡ACTIVAR MI CUENTA AHORA!</button>
+        <span class="close-discrete" onclick="closeLoginModal()" style="position:absolute; top:20px; right:20px;">&times;</span>
+        <h2 style="color:var(--color-accent); font-weight:900; text-transform:uppercase; margin-bottom:5px; line-height: 1.1;">Panel de Control<br>Afiliados Plus</h2>
+        <p style="font-size: 0.9rem; color: #fff; margin-top: 10px;">Bienvenida a tu centro de control personal.</p>
+        <form id="arsenal-login-form" class="login-form">
+            <input type="email" id="arsenal-email" placeholder="Tu Email" required>
+            <input type="text" id="arsenal-code" placeholder="CÓDIGO DE AFILIADO" required style="text-transform: uppercase;">
+            <button type="submit" id="btn-login-submit">INGRESAR AHORA</button>
         </form>
+    </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CONTENEDOR DE LAS 10 VENTANAS MODALES MASTERPIECE DE IA Y SIMULACIÓN  -->
+<!-- ======================================================================= -->
+
+<!-- MODAL MASTER 1: DISPARO TÁCTICO B2B -->
+<div id="master-modal-1" class="modal-overlay">
+    <div class="login-card" style="max-width:550px; background:#050505; border-color:var(--color-primary);">
+        <span onclick="closeMasterSim(1)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:var(--color-primary); font-weight:900; text-transform:uppercase;"><i class="fas fa-satellite-dish"></i> 1. Disparo Táctico de Impacto Masivo</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Simulación en vivo de envío de alertas comunitarias instantáneas.</p>
+
+        <div style="background:#111; padding:20px; border-radius:20px; border:1px solid #333; text-align:center; position:relative; overflow:hidden;">
+            <div id="radar-pulse" style="width:100px; height:100px; border-radius:50%; background:rgba(255,215,0,0.1); border:2px solid var(--color-primary); margin:0 auto 15px; display:flex; align-items:center; justify-content:center; animation: pulse 1.5s infinite;">
+                <i class="fas fa-broadcast-tower fa-2x" style="color:var(--color-primary);"></i>
+            </div>
+            <button onclick="triggerMasterSim1()" style="background:var(--color-primary); color:#000; border:none; padding:12px 25px; border-radius:30px; font-weight:900; cursor:pointer; width:100%; text-transform:uppercase; font-size:0.9rem;">
+                🚀 EJECUTAR DISPARO DE NOTIFICACIÓN A 180 MIEMBROS
+            </button>
+            <div id="master-sim1-output" style="display:none; margin-top:15px; text-align:left;">
+                <div style="background:rgba(0,236,255,0.1); border:1px solid var(--color-accent); padding:12px; border-radius:12px; font-size:0.8rem;">
+                    <p style="color:var(--color-accent); font-weight:bold;"><i class="fas fa-check-circle"></i> Transmisión Exitosa (0.2s):</p>
+                    <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:8px;">
+                        <span style="background:#000; color:#2ecc71; padding:4px 10px; border-radius:10px;">Carlos R: +10 Puntos 🦵</span>
+                        <span style="background:#000; color:#fff; padding:4px 10px; border-radius:10px;">Ana L: ¡Confirmado Coach! 🔥</span>
+                        <span style="background:#000; color:var(--color-primary); padding:4px 10px; border-radius:10px;">TechCorp: 180/180 Recibido</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MASTER 2: RADAR MAPA DE MISIÓN B2B -->
+<div id="master-modal-2" class="modal-overlay">
+    <div class="login-card" style="max-width:550px; background:#050505; border-color:var(--color-accent);">
+        <span onclick="closeMasterSim(2)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:var(--color-accent); font-weight:900; text-transform:uppercase;"><i class="fas fa-radar"></i> 2. Radar de Misión y Geolocalización</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Simulación de rastreo de asistencia en tiempo real.</p>
+
+        <div style="background:#111; padding:20px; border-radius:20px; border:1px solid #333; text-align:center;">
+            <div style="background:#000; height:120px; border-radius:15px; border:1px solid var(--color-accent); display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:15px;">
+                <p style="color:#aaa; font-size:0.75rem;">[ MAPA MENTAL SATELITAL ACTIVO ]</p>
+                <button onclick="triggerMasterSim2()" style="position:absolute; background:var(--color-accent); color:#000; border:none; padding:8px 15px; border-radius:20px; font-weight:900; font-size:0.75rem; cursor:pointer; box-shadow:0 0 15px var(--color-accent);">
+                    📍 TAP PIN: Gimnasio Acero Fit
+                </button>
+            </div>
+            <div id="master-sim2-output" style="display:none; text-align:left; background:rgba(255,215,0,0.1); border:1px solid var(--color-primary); padding:12px; border-radius:12px; font-size:0.8rem;">
+                <strong style="color:var(--color-primary);"> Check-in Biométrico Confirmado:</strong>
+                <p style="margin-top:5px;">• Socio: Carlos Rodríguez<br>• Actividad: Rutina de Pierna 🦵<br>• Coordenadas GPS: Validadas en tiempo real.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MASTER 3: TERMÓMETRO CLIMA LABORAL B2B -->
+<div id="master-modal-3" class="modal-overlay">
+    <div class="login-card" style="max-width:550px; background:#050505; border-color:var(--color-primary);">
+        <span onclick="closeMasterSim(3)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:var(--color-primary); font-weight:900; text-transform:uppercase;"><i class="fas fa-chart-line"></i> 3. Termómetro de Clima y Ánimo AI</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Medidor de felicidad y retención de equipos en vivo.</p>
+
+        <div style="background:#111; padding:20px; border-radius:20px; border:1px solid #333; text-align:center;">
+            <p style="font-size:0.8rem; color:#ccc; margin-bottom:10px;">Arrastra el nivel de energía del equipo:</p>
+            <input type="range" min="10" max="100" value="90" oninput="updateMasterSim3(this.value)" style="width:100%; height:10px; border-radius:5px; background:var(--color-accent); cursor:pointer;">
+            <div id="master-sim3-val" style="font-size:1.5rem; font-weight:900; color:var(--color-primary); margin-top:15px;">Felicidad: 90% 🔥</div>
+            <p style="font-size:0.75rem; color:#2ecc71; margin-top:5px;">✔ Riesgo de Renuncia / Deserción: 0.2% (Óptimo)</p>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MASTER 4: RETENCIÓN Y ROI FINANCIERO B2B -->
+<div id="master-modal-4" class="modal-overlay">
+    <div class="login-card" style="max-width:550px; background:#050505; border-color:var(--color-accent);">
+        <span onclick="closeMasterSim(4)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:var(--color-accent); font-weight:900; text-transform:uppercase;"><i class="fas fa-calculator"></i> 4. Calculadora de Retención & ROI</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Simulador financiero de ingresos salvados para el negocio.</p>
+
+        <div style="background:#111; padding:20px; border-radius:20px; border:1px solid #333; text-align:center;">
+            <p style="font-size:0.8rem; color:#ccc;">Mueve los socios que la app evita que cancelen:</p>
+            <input type="range" min="1" max="30" value="10" oninput="updateMasterSim4(this.value)" style="width:100%; cursor:pointer;">
+            <div id="master-sim4-val" style="background:rgba(46,204,113,0.1); border:1px solid #2ecc71; padding:15px; border-radius:15px; margin-top:15px;">
+                <strong style="color:#2ecc71; font-size:1.2rem; display:block;">Dinero Preservado: $5,000 MXN / mes</strong>
+                <span style="font-size:0.75rem; color:#aaa;">Inversión Makumoto: $200 MXN / mes (ROI: +2,400%)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MASTER 5: CONSOLA DE MANDO IA B2B -->
+<div id="master-modal-5" class="modal-overlay">
+    <div class="login-card" style="max-width:550px; background:#050505; border-color:var(--color-primary);">
+        <span onclick="closeMasterSim(5)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:var(--color-primary); font-weight:900; text-transform:uppercase;"><i class="fas fa-terminal"></i> 5. Consola Táctica de Inteligencia Artificial</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Redacción automatizada e instantánea de comunicados.</p>
+
+        <div style="background:#111; padding:20px; border-radius:20px; border:1px solid #333; text-align:left;">
+            <button onclick="typeMasterSim5()" style="background:var(--color-accent); color:#000; border:none; padding:10px; border-radius:10px; font-weight:900; font-size:0.8rem; cursor:pointer; width:100%; text-transform:uppercase; margin-bottom:10px;">
+                <i class="fas fa-magic"></i> AUTO-GENERAR COMUNICADO DE VIERNES
+            </button>
+            <div id="master-sim5-text" style="background:#000; padding:12px; border-radius:10px; border:1px solid #444; font-family:monospace; font-size:0.8rem; color:var(--color-primary); min-height:60px;">
+                [ Esperando comando de la Consola... ]
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MASTER 6: CALORÍAS 0ms B2C -->
+<div id="master-modal-6" class="modal-overlay">
+    <div class="login-card" style="max-width:550px; background:#050505; border-color:var(--color-accent);">
+        <span onclick="closeMasterSim(6)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:var(--color-accent); font-weight:900; text-transform:uppercase;"><i class="fas fa-search-plus"></i> 6. Buscador de Calorías Offline 0 ms</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Búsqueda instantánea sin gastar datos ni requerir internet.</p>
+
+        <div style="background:#111; padding:20px; border-radius:20px; border:1px solid #333; text-align:left;">
+            <input type="text" placeholder="Prueba escribir 'Pollo', 'Huevo' o 'Aguacate'..." oninput="searchMasterSim6(this.value)" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--color-accent); background:#000; color:#fff; font-size:0.9rem;">
+            <div id="master-sim6-out" style="margin-top:15px; font-size:0.85rem; color:var(--color-primary); background:#000; padding:12px; border-radius:10px; border:1px solid #333;">
+                Escribe arriba para probar la velocidad en tiempo real...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MASTER 7: LINTERNA Y BOTÓN PÁNICO B2C -->
+<div id="master-modal-7" class="modal-overlay">
+    <div class="login-card" style="max-width:550px; background:#050505; border-color:#ff4444;">
+        <span onclick="closeMasterSim(7)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:#ff4444; font-weight:900; text-transform:uppercase;"><i class="fas fa-bolt"></i> 7. Linterna SOS y Pánico Quantum</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Seguridad de emergencia familiar al alcance de un botón.</p>
+
+        <div id="sos-canvas" style="background:#111; padding:30px; border-radius:20px; border:1px solid #333; text-align:center; transition:0.3s;">
+            <button id="master-sos-btn" onclick="toggleMasterSOS()" style="background:#ff4444; color:#fff; border:none; padding:15px 30px; border-radius:40px; font-weight:900; font-size:1rem; cursor:pointer; width:100%; box-shadow:0 0 20px rgba(255,68,68,0.5);">
+                🚨 DISPARAR DESTELLO STROBO DE EMERGENCIA
+            </button>
+            <p id="sos-status-text" style="font-size:0.8rem; color:#aaa; margin-top:15px;">Presiona para simular la linterna estroboscópica de señalización.</p>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MASTER 8: PRIMEROS AUXILIOS 3D B2C -->
+<div id="master-modal-8" class="modal-overlay">
+    <div class="login-card" style="max-width:550px; background:#050505; border-color:var(--color-primary);">
+        <span onclick="closeMasterSim(8)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:var(--color-primary); font-weight:900; text-transform:uppercase;"><i class="fas fa-first-aid"></i> 8. Manual 3D de Primeros Auxilios</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Guías paso a paso para responder ante emergencias reales.</p>
+
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+            <button onclick="showMasterAux('rcp')" style="background:#111; color:var(--color-primary); border:1px solid var(--color-primary); padding:10px; border-radius:10px; font-weight:bold; font-size:0.75rem; cursor:pointer;">🫀 RCP</button>
+            <button onclick="showMasterAux('atrag')" style="background:#111; color:var(--color-accent); border:1px solid var(--color-accent); padding:10px; border-radius:10px; font-weight:bold; font-size:0.75rem; cursor:pointer;">😮‍💨 Heimlich</button>
+            <button onclick="showMasterAux('quem')" style="background:#111; color:#ff4444; border:1px solid #ff4444; padding:10px; border-radius:10px; font-weight:bold; font-size:0.75rem; cursor:pointer;">🔥 Quemadura</button>
+        </div>
+        <div id="master-aux-output" style="margin-top:15px; background:#111; padding:15px; border-radius:12px; border:1px solid #333; text-align:left; font-size:0.8rem; color:#ccc;">
+            Selecciona una emergencia médica para ver el protocolo de respuesta.
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MASTER 9: PROTECCIÓN NOCTURNA LUZ AZUL B2C -->
+<div id="master-modal-9" class="modal-overlay">
+    <div class="login-card" id="night-sim-card" style="max-width:550px; background:#050505; border-color:#f39c12; transition:0.5s;">
+        <span onclick="closeMasterSim(9)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:#f39c12; font-weight:900; text-transform:uppercase;"><i class="fas fa-moon"></i> 9. Filtro Nocturno & Ritmo Circadiano</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Protección de descanso para el uso nocturno del celular.</p>
+
+        <div style="background:#111; padding:25px; border-radius:20px; border:1px solid #333; text-align:center;">
+            <button onclick="toggleNightFilter()" style="background:#f39c12; color:#000; border:none; padding:12px 25px; border-radius:30px; font-weight:900; font-size:0.85rem; cursor:pointer; width:100%; text-transform:uppercase;">
+                🌙 ACTIVAR MODO ÁMBAR CIRCADIANO
+            </button>
+            <p id="night-status" style="font-size:0.8rem; color:#aaa; margin-top:15px;">Luz azul filtrada: 0% (Pantalla normal)</p>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MASTER 10: RULETA 25 HERRAMIENTAS B2C -->
+<div id="master-modal-10" class="modal-overlay">
+    <div class="login-card" style="max-width:550px; background:#050505; border-color:var(--color-accent);">
+        <span onclick="closeMasterSim(10)" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:var(--color-accent); font-weight:900; text-transform:uppercase;"><i class="fas fa-dharmachakra"></i> 10. Ruleta Holográfica de las 25 Funciones</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Prueba aleatoria del potencial de la app Arsenal Plus.</p>
+
+        <div style="background:#111; padding:25px; border-radius:20px; border:1px solid #333; text-align:center;">
+            <button onclick="spinHoloWheel()" style="background:linear-gradient(135deg, var(--color-accent), #0072ff); color:#000; border:none; padding:15px 30px; border-radius:40px; font-weight:900; font-size:0.9rem; cursor:pointer; width:100%; text-transform:uppercase; box-shadow:0 0 20px var(--color-accent);">
+                🎰 GIRAR RULETA DE HERRAMIENTAS
+            </button>
+            <div id="holo-wheel-out" style="font-size:1.1rem; font-weight:900; color:var(--color-primary); margin-top:20px; min-height:40px;">
+                ¡Haz clic arriba para probar tu suerte!
+            </div>
+        </div>
     </div>
 </div>
 
@@ -347,46 +438,89 @@
     function openPromoterRegisterModal() { document.getElementById('modal-promoter-register').classList.add('visible'); }
     function closePromoterRegisterModal() { document.getElementById('modal-promoter-register').classList.remove('visible'); }
 
-    // B2B SIMULATORS (1-5)
-    function switchB2BSim(num) {
-        for (let i = 1; i <= 5; i++) {
-            document.getElementById('b2b-sim-' + i).style.display = i === num ? 'block' : 'none';
-        }
-    }
-    function runB2BSim1() { document.getElementById('b2b-out-1').style.display = 'block'; }
-    function runB2BSim2() { document.getElementById('b2b-out-2').style.display = 'block'; }
-    function runB2BSim3(val) { document.getElementById('b2b-out-3').textContent = 'Felicidad del Equipo: ' + val + '% 🔥'; }
-    function runB2BSim4(val) { document.getElementById('b2b-out-4').textContent = 'Dinero Salvado: $' + (val * 500) + ' MXN/mes (Costo app: $200 MXN)'; }
-    function runB2BSim5() { document.getElementById('b2b-out-5').style.display = 'block'; }
+    // ABRIR Y CERRAR LOS 10 MODALES MASTERPIECE
+    function openMasterSim(num) { document.getElementById('master-modal-' + num).classList.add('visible'); }
+    function closeMasterSim(num) { document.getElementById('master-modal-' + num).classList.remove('visible'); }
 
-    // B2C SIMULATORS (6-10)
-    function switchB2CSim(num) {
-        for (let i = 6; i <= 10; i++) {
-            document.getElementById('b2c-sim-' + i).style.display = i === num ? 'block' : 'none';
+    // LOGICA DE LOS 10 SIMULADORES DE ALTA INGENIERÍA
+    function triggerMasterSim1() { document.getElementById('master-sim1-output').style.display = 'block'; }
+    function triggerMasterSim2() { document.getElementById('master-sim2-output').style.display = 'block'; }
+    function updateMasterSim3(val) { document.getElementById('master-sim3-val').textContent = 'Felicidad: ' + val + '% 🔥'; }
+    function updateMasterSim4(val) {
+        const saved = val * 500;
+        document.getElementById('master-sim4-val').innerHTML = '<strong style="color:#2ecc71; font-size:1.2rem; display:block;">Dinero Preservado: $' + saved + ' MXN / mes</strong><span style="font-size:0.75rem; color:#aaa;">Inversión Makumoto: $200 MXN / mes (ROI: +' + (val * 240) + '%)</span>';
+    }
+    function typeMasterSim5() {
+        document.getElementById('master-sim5-text').innerHTML = "📢 <strong style='color:#fff;'>[ALERTA B2B DISPARADA]:</strong> '¡Hoy viernes de hidratación y reto deportivo!' ➔ 150 miembros notificados (0.2s)";
+    }
+
+    function searchMasterSim6(val) {
+        const out = document.getElementById('master-sim6-out');
+        if (!val) { out.innerHTML = "Escribe arriba para probar la velocidad en tiempo real..."; return; }
+        if (val.toLowerCase().includes('pol')) out.innerHTML = "🍗 Pechuga de Pollo (100g): <strong>165 kcal / 31g Proteína / 0g Carbos</strong>";
+        else if (val.toLowerCase().includes('hue')) out.innerHTML = "🥚 Huevo Entero (1 pza): <strong>78 kcal / 6g Proteína / 0.6g Carbos</strong>";
+        else if (val.toLowerCase().includes('agu')) out.innerHTML = "🥑 Aguacate Hass (100g): <strong>160 kcal / 2g Proteína / 15g Grasas Saludables</strong>";
+        else out.innerHTML = "🔍 " + val + ": <strong>Búsqueda Offline Instantánea (0 ms)</strong>";
+    }
+
+    let sosOn = false;
+    function toggleMasterSOS() {
+        const card = document.getElementById('sos-canvas');
+        const btn = document.getElementById('master-sos-btn');
+        const txt = document.getElementById('sos-status-text');
+        sosOn = !sosOn;
+        if (sosOn) {
+            card.style.background = "#ff4444";
+            btn.style.background = "#000";
+            btn.style.color = "#fff";
+            btn.textContent = "🚨 ¡DESTELLO SOS STROBO Y SEÑAL ACTIVA!";
+            txt.style.color = "#fff";
+            txt.textContent = "Señal de emergencia visual transmitiendo a máxima potencia.";
+        } else {
+            card.style.background = "#111";
+            btn.style.background = "#ff4444";
+            btn.style.color = "#fff";
+            btn.textContent = "🚨 DISPARAR DESTELLO STROBO DE EMERGENCIA";
+            txt.style.color = "#aaa";
+            txt.textContent = "Presiona para simular la linterna estroboscópica de señalización.";
         }
     }
-    function runB2CSim6(val) {
-        const res = document.getElementById('b2c-out-6');
-        if (!val) { res.innerHTML = "Resultado instantáneo sin consumir datos."; return; }
-        if (val.toLowerCase().includes('pol')) res.innerHTML = "🍗 Pechuga Pollo: <strong>165 kcal / 31g Pro</strong>";
-        else if (val.toLowerCase().includes('hue')) res.innerHTML = "🥚 Huevo (1 pza): <strong>78 kcal / 6g Pro</strong>";
-        else res.innerHTML = "🔍 " + val + ": <strong>Instantáneo 0 ms (Offline)</strong>";
+
+    function showMasterAux(type) {
+        const out = document.getElementById('master-aux-output');
+        if (type === 'rcp') out.innerHTML = "<strong style='color:var(--color-primary);'>🫀 Protocolo RCP:</strong><br>1. Confirmar estado de conciencia.<br>2. Llamar emergencias 911.<br>3. Compresiones centro del pecho (100 a 120 por min).";
+        else if (type === 'atrag') out.innerHTML = "<strong style='color:var(--color-accent);'>😮‍💨 Maniobra Heimlich:</strong><br>1. Colocarse detrás de la persona.<br>2. Puño cerrado arriba del ombligo.<br>3. Presiones rápidas hacia adentro y arriba.";
+        else out.innerHTML = "<strong style='color:#ff4444;'>🔥 Primeros Auxilios Quemaduras:</strong><br>1. Enfriar con agua corriente (no hielo).<br>2. No reventar ampollas.<br>3. Cubrir con gasa limpia y seca.";
     }
-    let simSosOn = false;
-    function runB2CSim7() {
-        const btn = document.getElementById('b2c-sos-btn');
-        simSosOn = !simSosOn;
-        btn.style.background = simSosOn ? "#2ecc71" : "#ff4444";
-        btn.textContent = simSosOn ? "¡ESTROBOSCÓPICO ACTIVADO (SOS)!" : "ACTIVAR LUZ SOS";
+
+    let nightOn = false;
+    function toggleNightFilter() {
+        const card = document.getElementById('night-sim-card');
+        const txt = document.getElementById('night-status');
+        nightOn = !nightOn;
+        if (nightOn) {
+            card.style.background = "#4a2c00";
+            txt.style.color = "#FFD700";
+            txt.textContent = "✔ Luz azul bloqueada al 98% (Filtro Ámbar Circadiano Activo)";
+        } else {
+            card.style.background = "#050505";
+            txt.style.color = "#aaa";
+            txt.textContent = "Luz azul filtrada: 0% (Pantalla normal)";
+        }
     }
-    function runB2CSim9(btn) {
-        btn.style.background = "#2ecc71";
-        btn.textContent = "✔ FILTRO ÁMBAR ACTIVO (Melatonina Protegida)";
-    }
-    const tools25 = ["Alarma de Agua", "Control de Ayuno", "Manual RCP", "Buscador Calorías", "Linterna SOS", "Calculadora Ahorro", "Diario Positivo", "Corrector Postura"];
-    function runB2CSim10() {
-        const item = tools25[Math.floor(Math.random() * tools25.length)];
-        document.getElementById('b2c-out-10').textContent = "🎯 ¡Salió: " + item + "!";
+
+    const holoTools = [
+        "🍏 Buscador de Calorías 0ms", "🚑 Manual de Primeros Auxilios", "🚨 Linterna SOS & Pánico", "💧 Alarma de Hidratación",
+        "⌛ Control de Ayuno Intermitente", "🧘 Respiración Guiada Anti-Estrés", "🌙 Filtro Nocturno Luz Azul", "📊 Contador de Pasos",
+        "📖 Recetario Saludable", "🧘 Corrector de Postura", "⏱️ Enfoque Productivo Pomodoro", "💰 Control de Gastos"
+    ];
+    function spinHoloWheel() {
+        const out = document.getElementById('holo-wheel-out');
+        out.textContent = "🌀 Girando ruleta holográfica...";
+        setTimeout(() => {
+            const picked = holoTools[Math.floor(Math.random() * holoTools.length)];
+            out.innerHTML = "🎯 ¡Salió: <span style='color:var(--color-accent);'>" + picked + "</span>!";
+        }, 600);
     }
 
     function handlePromoterRegistration(e) {
