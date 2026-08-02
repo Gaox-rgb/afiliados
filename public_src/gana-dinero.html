@@ -122,14 +122,65 @@
                 </ul>
             </div>
 
-            <!-- SIMULADOR INTERACTIVO B2B -->
+            <!-- SIMULADORES INTERACTIVOS B2B (LOS 5 EJEMPLOS) -->
             <div class="demo-box">
-                <strong style="color:var(--color-accent); font-size:0.75rem;"><i class="fas fa-eye"></i> Muestra de lo que le vendes al cliente:</strong>
+                <strong style="color:var(--color-accent); font-size:0.75rem;"><i class="fas fa-desktop"></i> PROBADOR B2B: 5 Simuladores del Centro de Mando</strong>
+                <div style="display:flex; gap:3px; margin:8px 0; overflow-x:auto;">
+                    <button onclick="switchB2BSim(1)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">1. Alerta</button>
+                    <button onclick="switchB2BSim(2)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">2. Radar</button>
+                    <button onclick="switchB2BSim(3)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">3. Clima</button>
+                    <button onclick="switchB2BSim(4)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">4. Retención</button>
+                    <button onclick="switchB2BSim(5)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">5. Consola</button>
+                </div>
+
                 <div class="demo-screen">
-                    <p style="color:#2ecc71; font-weight:bold;">✔ Centro de Mando B2B Activo</p>
-                    <p>• El dueño agrega a sus clientes por ID.</p>
-                    <p>• Envía comunicados motivacionales a todos.</p>
-                    <p>• Ve el Mapa de Misión de actividades en tiempo real.</p>
+                    <!-- SIM 1: ALERTA TÁCTICA -->
+                    <div id="b2b-sim-1">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">1. Disparo de Alerta Motivacional:</strong>
+                        <button onclick="runB2BSim1()" style="background:var(--color-primary); color:#000; border:none; padding:6px 12px; border-radius:10px; font-weight:900; font-size:0.7rem; cursor:pointer; width:100%; margin-top:5px; text-transform:uppercase;">DISPARAR NOTIFICACIÓN EN VIVO</button>
+                        <div id="b2b-out-1" style="display:none; margin-top:8px; background:rgba(0,236,255,0.1); padding:8px; border-radius:8px; font-size:0.7rem;">
+                            <p style="color:var(--color-accent); font-weight:bold;">📡 Disparado a 180 miembros:</p>
+                            <span style="background:#222; color:#2ecc71; padding:2px 6px; border-radius:8px; font-size:0.6rem;">+10 Puntos</span>
+                            <span style="background:#222; color:#fff; padding:2px 6px; border-radius:8px; font-size:0.6rem;">Carlos R: ¡Recibido! 🦵</span>
+                            <span style="background:#222; color:#fff; padding:2px 6px; border-radius:8px; font-size:0.6rem;">Ana L: ¡Listo Coach! 🔥</span>
+                        </div>
+                    </div>
+
+                    <!-- SIM 2: RADAR MAPA DE MISIÓN -->
+                    <div id="b2b-sim-2" style="display:none;">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">2. Radar del Mapa de Misión:</strong>
+                        <p style="font-size:0.7rem; color:#aaa; margin:3px 0;">Toca el pin para ver asistencia en tiempo real:</p>
+                        <button onclick="runB2BSim2()" style="background:#222; color:var(--color-accent); border:1px solid var(--color-accent); padding:6px; border-radius:8px; font-size:0.7rem; width:100%; cursor:pointer;">📍 Gimnasio Acero Fit (Click)</button>
+                        <div id="b2b-out-2" style="display:none; margin-top:8px; background:#111; padding:8px; border-radius:8px; border:1px solid #333; font-size:0.7rem;">
+                            <strong style="color:var(--color-primary);">Check-in Confirmado:</strong>
+                            <p>Socio: Carlos R. - Rutina de Pierna 🦵 (Hace 2 mins)</p>
+                        </div>
+                    </div>
+
+                    <!-- SIM 3: TERMÓMETRO CLIMA LABORAL -->
+                    <div id="b2b-sim-3" style="display:none;">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">3. Termómetro del Clima Laboral:</strong>
+                        <p style="font-size:0.7rem; color:#aaa;">Arrastra el nivel de ánimo del equipo:</p>
+                        <input type="range" min="10" max="100" value="85" oninput="runB2BSim3(this.value)" style="width:100%; cursor:pointer;">
+                        <div id="b2b-out-3" style="font-weight:bold; color:var(--color-accent); font-size:0.8rem; text-align:center; margin-top:5px;">Felicidad del Equipo: 85% 🔥</div>
+                    </div>
+
+                    <!-- SIM 4: CALCULADORA RETENCIÓN -->
+                    <div id="b2b-sim-4" style="display:none;">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">4. Calculadora de Retención:</strong>
+                        <p style="font-size:0.7rem; color:#aaa;">Mueve los socios salvados de cancelar:</p>
+                        <input type="range" min="1" max="20" value="5" oninput="runB2BSim4(this.value)" style="width:100%; cursor:pointer;">
+                        <div id="b2b-out-4" style="font-size:0.75rem; color:#2ecc71; margin-top:5px; text-align:center; font-weight:bold;">Dinero Salvado: $2,500 MXN/mes (Costo app: $200 MXN)</div>
+                    </div>
+
+                    <!-- SIM 5: CONSOLA DE COMUNICADOS -->
+                    <div id="b2b-sim-5" style="display:none;">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">5. Consola de Mando Táctica:</strong>
+                        <button onclick="runB2BSim5()" style="background:#222; color:#fff; border:1px solid #555; padding:6px; border-radius:8px; font-size:0.7rem; width:100%; margin-top:5px; cursor:pointer;">Escribir Comunicado Automático</button>
+                        <div id="b2b-out-5" style="display:none; font-size:0.7rem; color:var(--color-accent); margin-top:5px; background:#111; padding:6px; border-radius:6px;">
+                            "¡Hoy viernes de hidratación!" ➔ Sent a 150 miembros.
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -140,7 +191,7 @@
         <div class="product-card promo">
             <span class="promo-tag">¡Súper Oferta $50 MXN!</span>
             <h3 style="color:var(--color-accent); font-weight:900; text-transform:uppercase; margin-bottom:8px;"><i class="fas fa-mobile-alt"></i> 2. Línea Individual "Arsenal Plus"</h3>
-            <p style="font-size:0.85rem; color:#ccc;">Una suite de **25 Herramientas Digitales de Salud y Supervivencia** en su celular. Ideal para amas de casa, familias e individuos.</p>
+            <p style="font-size:0.85rem; color:#ccc;">Una suite de <strong>25 Herramientas Digitales de Salud y Supervivencia</strong> en su celular. Ideal para amas de casa, familias e individuos.</p>
             
             <div style="background:#111; padding:12px; border-radius:12px; margin:15px 0; font-size:0.8rem;">
                 <strong style="color:var(--color-accent);">¡Promoción Especial por Tiempo Limitado!</strong>
@@ -148,14 +199,51 @@
                 <p style="color:#888; font-size:0.75rem;">(Precio accesible para todo público).</p>
             </div>
 
-            <!-- SIMULADOR INTERACTIVO B2C -->
+            <!-- SIMULADORES INTERACTIVOS B2C (LOS 5 EJEMPLOS) -->
             <div class="demo-box">
-                <strong style="color:var(--color-primary); font-size:0.75rem;"><i class="fas fa-eye"></i> Muestra de lo que le vendes al individuo:</strong>
+                <strong style="color:var(--color-primary); font-size:0.75rem;"><i class="fas fa-mobile"></i> PROBADOR B2C: 5 Funciones del Arsenal Plus</strong>
+                <div style="display:flex; gap:3px; margin:8px 0; overflow-x:auto;">
+                    <button onclick="switchB2CSim(6)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">6. Calorías</button>
+                    <button onclick="switchB2CSim(7)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">7. Linterna</button>
+                    <button onclick="switchB2CSim(8)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">8. Auxilios</button>
+                    <button onclick="switchB2CSim(9)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">9. Luz Azul</button>
+                    <button onclick="switchB2CSim(10)" style="padding:4px 8px; font-size:0.65rem; background:#222; color:#fff; border:1px solid #444; border-radius:6px; cursor:pointer;">10. Ruleta 25</button>
+                </div>
+
                 <div class="demo-screen">
-                    <p style="color:var(--color-accent); font-weight:bold;">✔ App Arsenal Plus con 25 Herramientas:</p>
-                    <p>• Buscador de Calorías SIN INTERNET.</p>
-                    <p>• Manual Guía de Primeros Auxilios.</p>
-                    <p>• Linterna de Rescate SOS + Botón de Pánico.</p>
+                    <!-- SIM 6: CALORÍAS OFFLINE -->
+                    <div id="b2c-sim-6">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">6. Buscador Calorías Sin Internet (0 ms):</strong>
+                        <input type="text" placeholder="Escribe 'Pollo' o 'Huevo'..." oninput="runB2CSim6(this.value)" style="width:100%; padding:6px; border-radius:8px; border:1px solid #444; background:#111; color:#fff; font-size:0.75rem; margin-top:4px;">
+                        <div id="b2c-out-6" style="margin-top:5px; color:var(--color-accent); font-size:0.7rem;">Resultado instantáneo sin consumir datos.</div>
+                    </div>
+
+                    <!-- SIM 7: LINTERNA SOS -->
+                    <div id="b2c-sim-7" style="display:none; text-align:center;">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">7. Linterna SOS & Botón Pánico:</strong>
+                        <button id="b2c-sos-btn" onclick="runB2CSim7()" style="background:#ff4444; color:#fff; border:none; padding:8px 15px; border-radius:12px; font-weight:bold; font-size:0.75rem; cursor:pointer; width:100%; margin-top:5px;">ACTIVAR LUZ SOS</button>
+                    </div>
+
+                    <!-- SIM 8: PRIMEROS AUXILIOS 3D -->
+                    <div id="b2c-sim-8" style="display:none; font-size:0.7rem;">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">8. Manual 3D RCP de Emergencia:</strong>
+                        <div style="background:#111; padding:6px; border-radius:6px; border:1px solid #333; margin-top:4px;">
+                            1. Comprobar respiración.<br>2. Presiones fuertes en centro del pecho (100/min).
+                        </div>
+                    </div>
+
+                    <!-- SIM 9: PROTECCIÓN LUZ AZUL NOCTURNA -->
+                    <div id="b2c-sim-9" style="display:none; text-align:center;">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">9. Filtro Nocturno Luz Azul:</strong>
+                        <button onclick="runB2CSim9(this)" style="background:#f39c12; color:#000; border:none; padding:6px 12px; border-radius:10px; font-weight:bold; font-size:0.7rem; cursor:pointer; width:100%; margin-top:5px;">ACTIVAR FILTRO ÁMBAR (SUEÑO +40%)</button>
+                    </div>
+
+                    <!-- SIM 10: RULETA DE LAS 25 FUNCIONES -->
+                    <div id="b2c-sim-10" style="display:none; text-align:center;">
+                        <strong style="color:var(--color-primary); font-size:0.75rem;">10. Ruleta de 25 Herramientas:</strong>
+                        <button onclick="runB2CSim10()" style="background:var(--color-primary); color:#000; border:none; padding:6px 12px; border-radius:10px; font-weight:900; font-size:0.7rem; cursor:pointer; width:100%; margin-top:5px;">🎰 GIRAR RULETA DE FUNCIONES</button>
+                        <div id="b2c-out-10" style="font-weight:bold; color:var(--color-accent); margin-top:5px; font-size:0.75rem;"></div>
+                    </div>
                 </div>
             </div>
             
@@ -259,16 +347,55 @@
     function openPromoterRegisterModal() { document.getElementById('modal-promoter-register').classList.add('visible'); }
     function closePromoterRegisterModal() { document.getElementById('modal-promoter-register').classList.remove('visible'); }
 
+    // B2B SIMULATORS (1-5)
+    function switchB2BSim(num) {
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById('b2b-sim-' + i).style.display = i === num ? 'block' : 'none';
+        }
+    }
+    function runB2BSim1() { document.getElementById('b2b-out-1').style.display = 'block'; }
+    function runB2BSim2() { document.getElementById('b2b-out-2').style.display = 'block'; }
+    function runB2BSim3(val) { document.getElementById('b2b-out-3').textContent = 'Felicidad del Equipo: ' + val + '% 🔥'; }
+    function runB2BSim4(val) { document.getElementById('b2b-out-4').textContent = 'Dinero Salvado: $' + (val * 500) + ' MXN/mes (Costo app: $200 MXN)'; }
+    function runB2BSim5() { document.getElementById('b2b-out-5').style.display = 'block'; }
+
+    // B2C SIMULATORS (6-10)
+    function switchB2CSim(num) {
+        for (let i = 6; i <= 10; i++) {
+            document.getElementById('b2c-sim-' + i).style.display = i === num ? 'block' : 'none';
+        }
+    }
+    function runB2CSim6(val) {
+        const res = document.getElementById('b2c-out-6');
+        if (!val) { res.innerHTML = "Resultado instantáneo sin consumir datos."; return; }
+        if (val.toLowerCase().includes('pol')) res.innerHTML = "🍗 Pechuga Pollo: <strong>165 kcal / 31g Pro</strong>";
+        else if (val.toLowerCase().includes('hue')) res.innerHTML = "🥚 Huevo (1 pza): <strong>78 kcal / 6g Pro</strong>";
+        else res.innerHTML = "🔍 " + val + ": <strong>Instantáneo 0 ms (Offline)</strong>";
+    }
+    let simSosOn = false;
+    function runB2CSim7() {
+        const btn = document.getElementById('b2c-sos-btn');
+        simSosOn = !simSosOn;
+        btn.style.background = simSosOn ? "#2ecc71" : "#ff4444";
+        btn.textContent = simSosOn ? "¡ESTROBOSCÓPICO ACTIVADO (SOS)!" : "ACTIVAR LUZ SOS";
+    }
+    function runB2CSim9(btn) {
+        btn.style.background = "#2ecc71";
+        btn.textContent = "✔ FILTRO ÁMBAR ACTIVO (Melatonina Protegida)";
+    }
+    const tools25 = ["Alarma de Agua", "Control de Ayuno", "Manual RCP", "Buscador Calorías", "Linterna SOS", "Calculadora Ahorro", "Diario Positivo", "Corrector Postura"];
+    function runB2CSim10() {
+        const item = tools25[Math.floor(Math.random() * tools25.length)];
+        document.getElementById('b2c-out-10').textContent = "🎯 ¡Salió: " + item + "!";
+    }
+
     function handlePromoterRegistration(e) {
         e.preventDefault();
         const name = document.getElementById('promoter-name').value;
         const email = document.getElementById('promoter-personal-email').value;
         
-        // Almacenar temporalmente los datos del promotor
         sessionStorage.setItem('active_promoter', JSON.stringify({ name, email }));
-        
         alert(`¡Felicidades ${name}! 🎉\n\nTu cuenta de promotor independiente ha sido activada con éxito.\nSerás redirigido a tu Portal Privado para consultar tus herramientas y reportar tus ventas.`);
-        
         window.location.href = 'promotor-dashboard.html';
     }
 </script>
