@@ -2,50 +2,23 @@
 // ARCHIVO: functions/index.js - REGISTRO Y EXPORTACIÓN DE FUNCIONES B2B
 // =================================================================================
 
-const { setGlobalOptions } = require("firebase-functions/v2");
+const portal = require("./portal.js");
+const payments = require("./payments.js");
 
-setGlobalOptions({
-  region: "us-central1",
-  cors: true, // <--- HABILITA CORS GLOBAL AUTOMÁTICO EN LA INFRAESTRUCTURA DE GOOGLE
-});
+// Grupo Portal B2B
+exports.getPortalData = portal.getPortalData;
+exports.addMemberToMasterList = portal.addMemberToMasterList;
+exports.getCompanyMasterList = portal.getCompanyMasterList;
+exports.getMissionCheckIns = portal.getMissionCheckIns;
+exports.createCompanyBroadcast = portal.createCompanyBroadcast;
+exports.setCompanySector = portal.setCompanySector;
 
-const functionGroups = {
-  portal: "./portal",
-  payments: "./payments",
-};
-
-const functionManifest = {
-    portal: [
-        'getPortalData', 
-        'addMemberToMasterList', 
-        'getCompanyMasterList', 
-        'getMissionCheckIns', 
-        'createCompanyBroadcast',
-        'setCompanySector'
-    ],
-    payments: [
-        'getPayPalConfig', 
-        'createAffiliatePaypalOrder', 
-        'finalizeAffiliatePurchase', 
-        'getManagerEmailByCode', 
-        'getAffiliateCredentialsByOrder',
-        'sendRecoveryCredentials',
-        'paypalWebhookHandler'
-    ]
-};
-
-for (const group in functionManifest) {
-    const filePath = functionGroups[group];
-    if (!filePath) continue;
-
-    functionManifest[group].forEach(functionName => {
-        Object.defineProperty(exports, functionName, {
-            get: () => {
-                const module = require(filePath);
-                return module[functionName];
-            },
-            enumerable: true,
-            configurable: true
-        });
-    });
-}
+// Grupo Pagos y Licencias B2B
+exports.getPayPalConfig = payments.getPayPalConfig;
+exports.createAffiliatePaypalOrder = payments.createAffiliatePaypalOrder;
+exports.finalizeAffiliatePurchase = payments.finalizeAffiliatePurchase;
+exports.resolveManagerEmailByCode = payments.resolveManagerEmailByCode;
+exports.getAffiliateCredentialsByOrder = payments.getAffiliateCredentialsByOrder;
+exports.sendRecoveryCredentials = payments.sendRecoveryCredentials;
+exports.activateAffiliateAccount = payments.activateAffiliateAccount;
+exports.paypalWebhookHandler = payments.paypalWebhookHandler;

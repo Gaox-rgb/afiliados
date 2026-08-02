@@ -10,7 +10,6 @@ const portalOpts = {
   region: "us-central1",
   memory: "256MiB",
   maxInstances: 10,
-  cors: true,
   invoker: "public",
 };
 

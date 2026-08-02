@@ -58,20 +58,17 @@ function handleError(error, context) {
 // --- 2. COMUNICADOS DE EMAIL (RESEND) ---
 function ensureResendInitialized() {
   if (resend) return true;
-  const { Resend } = require("resend");
-
-  let apiKey = "";
   try {
-    apiKey = resendApiKey.value();
-  } catch (e) {
-    apiKey = process.env.RESEND_API_KEY;
+    const { Resend } = require("resend");
+    const apiKey = getSecret(resendApiKey, "RESEND_API_KEY");
+    if (apiKey) {
+      resend = new Resend(apiKey);
+      return true;
+    }
+  } catch (err) {
+    logger.error("Error al instanciar el cliente de Resend:", err);
   }
-
-  if (apiKey) {
-    resend = new Resend(apiKey);
-    return true;
-  }
-  logger.warn("⚠️ FALTA RESEND_API_KEY: Los correos se simularán en logs.");
+  logger.warn("⚠️ FALTA RESEND_API_KEY o módulo 'resend': Los correos se simularán en logs.");
   return false;
 }
 
@@ -89,9 +86,14 @@ async function sendConfirmationEmail(to, emailOptions) {
       subject: emailOptions.subject,
       html: emailOptions.html,
     });
-    logger.info(`Email corporativo enviado a ${to}. ID: ${response.data.id}`);
+    
+    if (response.error) {
+      logger.error(`❌ [RESEND ERROR API] Error enviando correo a ${to}:`, response.error);
+    } else {
+      logger.info(`✅ Email corporativo enviado a ${to}. ID: ${response.data?.id}`);
+    }
   } catch (error) {
-    logger.error(`Error enviando correo a ${to}:`, error);
+    logger.error(`❌ [RESEND EXCEPTION] Error enviando correo a ${to}:`, error);
   }
 }
 

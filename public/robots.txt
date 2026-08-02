@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /portal.html
+Disallow: /makumoto-app.html
+Disallow: /success.html
+
+# Directorio del Mapa del Sitio
+Sitemap: https://afiliados.makumoto.com/sitemap.xml

@@ -25,6 +25,36 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/api/finalizeAffiliatePurchase",
+        "function": {
+          "id": "finalizeAffiliatePurchase",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/getManagerEmailByCode",
+        "function": {
+          "id": "resolveManagerEmailByCode",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/getAffiliateCredentialsByOrder",
+        "function": {
+          "id": "getAffiliateCredentialsByOrder",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/sendRecoveryCredentials",
+        "function": {
+          "id": "sendRecoveryCredentials",
+          "region": "us-central1"
+        }
+      }
     ]
   }
 }

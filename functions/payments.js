@@ -6,7 +6,6 @@ const { db, auth, admin } = require("./firebase-admin.js");
 const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 const utils = require("./utils.js");
-
 const adminProps = require("./firebase-admin.js");
 const { 
     paypalClientId, paypalClientSecret, paypalMode, resendApiKey, adminEmail, paypalWebhookId 
@@ -18,7 +17,6 @@ const paymentOpts = {
   maxInstances: 10,
   timeoutSeconds: 60,
   invoker: "public",
-  cors: true,
   secrets: [
     paypalClientId, 
     paypalClientSecret, 
@@ -29,10 +27,19 @@ const paymentOpts = {
   ],
 };
 
+// Configuración optimizada exclusiva para correo y autenticación (Cura definitiva a CORS por preflight)
+const emailOpts = {
+  region: "us-central1",
+  memory: "256MiB",
+  maxInstances: 10,
+  timeoutSeconds: 60,
+  invoker: "public",
+  secrets: [resendApiKey],
+};
+
 exports.getPayPalConfig = onCall({
   region: "us-central1",
   memory: "128MiB",
-  cors: true,
   invoker: "public",
   secrets: [paypalClientId],
 }, async (request) => {
@@ -43,9 +50,9 @@ exports.getPayPalConfig = onCall({
 
 exports.createAffiliatePaypalOrder = onCall(paymentOpts, async (request) => {
     try {
-        const { planId } = request.data;
-        if (!planId) {
-            throw new HttpsError("invalid-argument", "Falta el ID del plan.");
+        const { planId, uid, name, email, convenioCode, password } = request.data || {};
+        if (!planId || !uid) {
+            throw new HttpsError("invalid-argument", "Faltan parámetros indispensables de compra.");
         }
 
         const { PRODUCT_CATALOG } = require("./product-catalog.js");
@@ -54,12 +61,15 @@ exports.createAffiliatePaypalOrder = onCall(paymentOpts, async (request) => {
             throw new HttpsError("not-found", "Plan corporativo no encontrado.");
         }
 
+        // Estructuración robusta de custom_id agregando el convenio pre-generado y la contraseña elegida
+        const customIdPayload = `${planId}|${uid}|${encodeURIComponent(name || "")}|${encodeURIComponent(email || "")}|${convenioCode || ""}|${encodeURIComponent(password || "")}`;
+
         const orderData = {
             intent: "CAPTURE",
             purchase_units: [{
                 description: `Suscripción MAKUMOTO Afiliados: ${plan.name}`,
                 amount: { currency_code: "USD", value: plan.price },
-                custom_id: planId,
+                custom_id: customIdPayload,
             }],
             application_context: {
                 return_url: `https://afiliados.makumoto.com/success.html?planId=${planId}&amount=${plan.price}&currency=USD`,
@@ -109,28 +119,69 @@ async function sendSyncRequestToCore(syncData) {
     }
 }
 
-async function createAffiliateManager(orderID, email, name, planId) {
+async function createAffiliateManager(orderID, email, name, planId, uid = null, preApprovedConvenio = null, chosenPassword = null) {
     const { Timestamp } = require("firebase-admin/firestore");
 
     const processedRef = db.collection("processedB2BOrders").doc(orderID);
     const doc = await processedRef.get();
 
     if (doc.exists) {
-        throw new HttpsError('aborted', 'Esta orden ya ha sido procesada anteriormente.');
+        logger.info(`[REDUNDANCIA] Orden ${orderID} ya procesada. Retornando credenciales...`);
+        const procData = doc.data();
+        let existingConvenio = preApprovedConvenio || "REGISTRADO";
+        if (procData?.userId) {
+            const uDoc = await db.collection("users").doc(procData.userId).get();
+            if (uDoc.exists) {
+                const companyId = uDoc.data().corporateData?.companyId;
+                if (companyId) {
+                    const cDoc = await db.collection("companies").doc(companyId).get();
+                    if (cDoc.exists) existingConvenio = cDoc.data().convenioCode;
+                }
+            }
+        }
+        return { email, tempPassword: chosenPassword || "La que elegiste al registrarte", convenioCode: existingConvenio };
     }
 
     const companyRef = db.collection("companies").doc();
-    const convenioCode = `MK${companyRef.id.substring(0, 6).toUpperCase()}`;
+    // Prioridad Absoluta: Código pre-aprobado por el cliente, fallback a aleatorio si falla
+    const convenioCode = preApprovedConvenio ? preApprovedConvenio.toUpperCase() : `MK${companyRef.id.substring(0, 6).toUpperCase()}`;
 
-    const tempPassword = Math.random().toString(36).slice(-8);
     let userRecord;
+    let finalTempPassword = chosenPassword || "La que elegiste al registrarte";
     try {
-        userRecord = await admin.auth().createUser({ email: email, password: tempPassword, displayName: name });
+        if (uid) {
+            userRecord = await admin.auth().getUser(uid);
+        } else {
+            const tempPassword = Math.random().toString(36).slice(-8);
+            finalTempPassword = tempPassword;
+            userRecord = await admin.auth().createUser({ email: email, password: tempPassword, displayName: name });
+        }
     } catch (error) {
         if (error.code === 'auth/email-already-exists') {
-            throw new HttpsError('already-exists', 'El correo ya está registrado.');
+            logger.info(`[IDEMPOTENCIA] El usuario ${email} ya existe en Auth. Recuperando cuenta...`);
+            userRecord = await admin.auth().getUserByEmail(email);
+            
+            const existingUserDoc = await db.collection("users").doc(userRecord.uid).get();
+            if (existingUserDoc.exists) {
+                const extData = existingUserDoc.data();
+                const companyId = extData.corporateData?.companyId;
+                if (companyId) {
+                    const companyDoc = await db.collection("companies").doc(companyId).get();
+                    if (companyDoc.exists) {
+                        logger.info(`[IDEMPOTENCIA] Recuperada compañía ${companyId} con éxito para el test.`);
+                        await processedRef.set({ processedAt: new Date(), planId, email, userId: userRecord.uid }, { merge: true });
+                        return {
+                            email: email,
+                            tempPassword: "La que elegiste al registrarte",
+                            convenioCode: companyDoc.data().convenioCode
+                        };
+                    }
+                }
+            }
+        } else {
+            logger.error("[CREATE_MANAGER_FAIL] Error fatal creando usuario auth:", error);
+            throw new HttpsError("internal", "No se pudo registrar el gerente administrador.");
         }
-        throw error;
     }
 
     await companyRef.set({
@@ -147,130 +198,272 @@ async function createAffiliateManager(orderID, email, name, planId) {
         planStatus: "active"
     };
     
+    // Generación del código aleatorio de 6 dígitos de activación
+    const activationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
     await db.collection("users").doc(userRecord.uid).set({
-        name: name, 
-        email: email, 
-        plan: managerPlanData,
-        corporateData: { isAffiliate: true, role: 'manager', companyId: companyRef.id },
-        requiresPasswordChange: true, 
-        createdAt: Timestamp.now(), 
-        tempPassword: tempPassword,
-    }, { merge: true });
+                name: name, 
+                email: email, 
+                plan: managerPlanData,
+                corporateData: { 
+                    isAffiliate: true, 
+                    role: 'manager', 
+                    companyId: companyRef.id,
+                    activationCode: activationCode,
+                    isActivated: false
+                },
+                requiresPasswordChange: false, 
+                createdAt: Timestamp.now(), // Uso directo del módulo síncrono importado
+                tempPassword: finalTempPassword,
+            }, { merge: true });
 
-    await processedRef.set({ processedAt: new Date(), planId, email, userId: userRecord.uid });
+    await processedRef.set({ processedAt: new Date(), planId, email: email, userId: userRecord.uid });
     
-    // --- DISPARO DE SINCRONIZACIÓN AUTOMÁTICA EN TIEMPO REAL HACIA EL CORE ---
-    const planEndDate = new Date();
-    planEndDate.setDate(planEndDate.getDate() + 30); // Límite estándar de 30 días de vigencia
+    try {
+        const planEndDate = new Date();
+        planEndDate.setDate(planEndDate.getDate() + 30);
+        sendSyncRequestToCore({
+            convenioCode: convenioCode,
+            companyName: name,
+            activePlan: planId,
+            status: "active",
+            expirationDate: planEndDate.toISOString(),
+            userLimit: 50
+        }).catch(e => logger.error("[SYNC_FAIL] Error asíncrono de sincronización Core:", e));
+    } catch (syncErr) {
+        logger.error("[SYNC_CRASH] Excepción en disparo síncrono de sincronización:", syncErr);
+    }
 
-    // Sincronizar de forma asíncrona para no retrasar la carga de la pantalla
-    sendSyncRequestToCore({
-        convenioCode: convenioCode,
-        companyName: name,
-        activePlan: planId,
-        status: "active",
-        expirationDate: planEndDate.toISOString(),
-        userLimit: 50 // Límite de miembros de la tribu
-    }).catch(e => logger.error("[SYNC_FAIL] No se pudo sincronizar de forma caliente.", e));
+    try {
+        const supportMail = { to: "soporte@makumoto.com", subject: `✅ Nuevo Gerente (Cliente): ${name}`, html: `<p>Venta B2B: ${name} (${email}) compró el plan: ${planId}. Código: ${convenioCode}</p>` };
+        // Forzar espera con await para prevenir el throttling del contenedor Gen 2
+        await utils.sendConfirmationEmail(supportMail.to, { subject: supportMail.subject, html: supportMail.html });
+        
+        // EMAIL 1: Envío del código de activación para verificación de email legítimo
+        const clientMail = { 
+            to: email, 
+            subject: "⚡ Código de Activación de Gerentes o Dueños - MAKUMOTO", 
+            html: `
+                <div style="font-family: sans-serif; background-color: #1E1E1E; color: #E0E0E0; padding: 30px; border-radius: 10px; border-top: 5px solid #FFD700; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #FFD700; text-align: center;">¡Paso Final de Registro!</h2>
+                    <p>Hola <b>${name}</b>,</p>
+                    <p>Tu pago ha sido completado con éxito. Para verificar y activar tu cuenta corporativa, ingresa el siguiente código de activación de 6 dígitos en tu pantalla de confirmación:</p>
+                    <div style="background-color: rgba(255, 215, 0, 0.1); border: 1px solid #FFD700; padding: 15px; border-radius: 8px; font-size: 2.2rem; font-weight: bold; text-align: center; color: #FFD700; letter-spacing: 5px; margin: 25px 0;">
+                        ${activationCode}
+                    </div>
+                    <p>Una vez verificado el código en el portal, recibirás un segundo correo con tus datos oficiales de acceso e instructivos para ingresar a tu Centro de Mando.</p>
+                    <div style="background-color: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d; padding: 12px; border-radius: 6px; margin-top: 20px; font-size: 0.85rem; color: #ff9999; text-align: center;">
+                        ⚠️ <b>¿No encuentras el correo de tus credenciales o el código de activación?</b> Revisa siempre tu <b>carpeta de correo no deseado (SPAM)</b> o de promociones y márcalo como remitente seguro.
+                    </div>
+                </div>
+            `
+        };
+        await utils.sendConfirmationEmail(clientMail.to, { subject: clientMail.subject, html: clientMail.html });
+    } catch (mailErr) {
+        logger.error("[MAIL_CRASH] Excepción en el disparo de correos:", mailErr);
+    }
 
-    const supportMail = { to: "soporte@makumoto.com", subject: `✅ Nuevo Gerente (Cliente): ${name}`, html: `<p>Venta B2B: ${name} (${email}) compró el plan: ${planId}. Código: ${convenioCode}</p>` };
-    utils.sendConfirmationEmail(supportMail.to, { subject: supportMail.subject, html: supportMail.html }).catch(e => logger.error("Fallo email a soporte", e));
-    
-    const clientMail = { to: email, subject: "Tus credenciales de Makumoto", html: `<p>Hola ${name}, bienvenido. Tu código de acceso es <b>${convenioCode}</b> y tu contraseña temporal es <b>${tempPassword}</b>.</p>` };
-    utils.sendConfirmationEmail(clientMail.to, { subject: clientMail.subject, html: clientMail.html }).catch(e => logger.error("Fallo email al cliente", e));
-
-    return { email, tempPassword, convenioCode };
+    return { email, tempPassword: finalTempPassword, convenioCode };
 }
 
 exports.finalizeAffiliatePurchase = onCall(paymentOpts, async (request) => {
-    const { orderID } = request.data;
-    if (!orderID) throw new HttpsError("invalid-argument", "Falta el ID de la orden.");
-
-    let orderDetails;
     try {
-        orderDetails = await utils.capturePayPalOrder(orderID);
+        const { orderID } = request.data || {};
+        if (!orderID) return { success: false, error: "Falta el ID de la orden en la petición." };
+
+        const processedDoc = await db.collection("processedB2BOrders").doc(orderID).get();
+        if (processedDoc.exists) {
+            const processedData = processedDoc.data();
+            const userId = processedData?.userId;
+            
+            if (!userId) {
+                return { success: false, error: "La orden fue procesada pero no contiene ID de usuario asociado." };
+            }
+
+            const userDoc = await db.collection("users").doc(userId).get();
+            if (!userDoc.exists) {
+                return { success: false, error: "No se encontró el registro del gerente asociado en users." };
+            }
+
+            const userData = userDoc.data();
+            const companyId = userData?.corporateData?.companyId;
+            if (!companyId) {
+                return { success: false, error: "El usuario recuperado no tiene una compañía asociada en Firestore." };
+            }
+
+            const companyDoc = await db.collection("companies").doc(companyId).get();
+            if (!companyDoc.exists) {
+                return { success: false, error: "La compañía asociada a esta cuenta no fue encontrada." };
+            }
+
+            return {
+                success: true,
+                credentials: {
+                    email: userData.email,
+                    tempPassword: "La que elegiste al registrarte",
+                    convenioCode: companyDoc.data().convenioCode
+                }
+            };
+        }
+
+        let orderDetails;
+        try {
+            orderDetails = await utils.capturePayPalOrder(orderID);
+        } catch (error) {
+            logger.error("[FINALIZE_CAPTURE_FAIL] Error capturando orden PayPal:", error);
+            return { success: false, error: `Fallo de pasarela PayPal al intentar capturar la transacción: ${error.message}` };
+        }
+
+        if (orderDetails.status === "COMPLETED" || orderDetails.alreadyProcessed) {
+            const paypalUser = orderDetails.payer || orderDetails.payment_source?.paypal;
+            const email = paypalUser?.email_address;
+            const givenName = paypalUser?.name?.given_name || "";
+            const surname = paypalUser?.name?.surname || "";
+            const name = `${givenName} ${surname}`.trim() || "Cliente Makumoto";
+            
+            let planId = "starter_10";
+            let uid = null;
+            let finalEmail = email;
+            let finalName = name;
+
+            let preApprovedConvenio = null;
+            let chosenPassword = null;
+            const customId = orderDetails.purchase_units?.[0]?.custom_id;
+            if (customId && customId.includes('|')) {
+                const parts = customId.split('|');
+                planId = parts[0];
+                uid = parts[1];
+                if (parts[2]) finalName = decodeURIComponent(parts[2]);
+                if (parts[3]) finalEmail = decodeURIComponent(parts[3]);
+                if (parts[4]) preApprovedConvenio = parts[4];
+                if (parts[5]) chosenPassword = decodeURIComponent(parts[5]);
+            } else {
+                planId = customId || "starter_10";
+            }
+
+            if (!finalEmail) {
+                return { success: false, error: "El email del comprador no pudo ser recuperado desde la orden de PayPal." };
+            }
+
+            const creds = await createAffiliateManager(orderID, finalEmail, finalName, planId, uid, preApprovedConvenio, chosenPassword);
+            return { success: true, credentials: creds };
+        }
+
+        return { success: false, error: `Estado de orden PayPal inválido para la finalización: ${orderDetails.status}` };
     } catch (error) {
-        throw new HttpsError('aborted', 'El pago no pudo ser verificado.');
+        logger.error("[FATAL_FINALIZE_PURCHASE]", error);
+        return { success: false, error: `Excepción interna de Node.js en backend: ${error.message}`, stack: error.stack };
     }
-
-    if (orderDetails.status !== "COMPLETED") {
-        throw new HttpsError("failed-precondition", "Pago no completado.");
-    }
-    
-    const email = orderDetails.payer.email_address;
-    const name = `${orderDetails.payer.name.given_name} ${orderDetails.payer.name.surname}`;
-    const planId = orderDetails.purchase_units[0].custom_id;
-
-    if (!planId) throw new HttpsError('data-loss', 'ID del plan no recuperado.');
-
-    return await createAffiliateManager(orderID, email, name, planId);
 });
 
-exports.getManagerEmailByCode = onCall({
+exports.resolveManagerEmailByCode = onRequest({
     region: "us-central1",
     memory: "128MiB",
-    cors: true,
-    invoker: "public",
-}, async (request) => {
-    const { convenioCode } = request.data;
+    invoker: "public"
+}, async (req, res) => {
+    // Permitir CORS de manera explícita por seguridad ante peticiones directas
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+        res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        return res.status(204).send('');
+    }
+
+    let convenioCode = req.body?.convenioCode || req.query?.convenioCode;
+    
+    // Soporte para peticiones empaquetadas de SDK antiguos (.data)
+    if (req.body?.data?.convenioCode) {
+        convenioCode = req.body.data.convenioCode;
+    }
+
     if (!convenioCode) {
-        throw new HttpsError("invalid-argument", "Falta el código de convenio.");
+        return res.status(400).json({ error: "Falta el código de convenio." });
     }
 
-    const companySnapshot = await db.collection("companies").where("convenioCode", "==", convenioCode.toUpperCase()).limit(1).get();
+    try {
+        const companySnapshot = await db.collection("companies")
+            .where("convenioCode", "==", convenioCode.toUpperCase())
+            .limit(1)
+            .get();
 
-    if (companySnapshot.empty) {
-        throw new HttpsError("not-found", "Código de convenio no válido o no encontrado.");
+        if (companySnapshot.empty) {
+            return res.status(404).json({ error: "Código de convenio no válido o no encontrado." });
+        }
+
+        const companyId = companySnapshot.docs[0].id;
+        const userSnapshot = await db.collection("users")
+            .where("corporateData.companyId", "==", companyId)
+            .where("corporateData.role", "==", "manager")
+            .limit(1)
+            .get();
+
+        if (userSnapshot.empty) {
+            return res.status(404).json({ error: "No se pudo encontrar un gerente para este código." });
+        }
+
+        const userData = userSnapshot.docs[0].data();
+        
+        // Retorna respuestas estructuradas compatibles con fetch y con SDK Callable (.data)
+        return res.status(200).json({ 
+            data: { email: userData.email },
+            email: userData.email 
+        });
+
+    } catch (error) {
+        logger.error("Error en getManagerEmailByCode:", error);
+        return res.status(500).json({ error: "Error interno del servidor." });
     }
-
-    const companyId = companySnapshot.docs[0].id;
-    const userSnapshot = await db.collection("users")
-                              .where("corporateData.companyId", "==", companyId)
-                              .where("corporateData.role", "==", "manager")
-                              .limit(1).get();
-
-    if (userSnapshot.empty) {
-        throw new HttpsError("internal", "No se pudo encontrar un gerente para este código.");
-    }
-
-    const userData = userSnapshot.docs[0].data();
-    return { email: userData.email };
 });
+
+// Duplicación corrupta removida con éxito.
 
 exports.getAffiliateCredentialsByOrder = onCall(paymentOpts, async (request) => {
-    const { orderID } = request.data;
-    if (!orderID) throw new HttpsError("invalid-argument", "Falta el ID de la orden.");
+    try {
+        const { orderID } = request.data || {};
+        if (!orderID) return { success: false, error: "Falta el ID de la orden en la petición." };
 
-    const processedDoc = await db.collection("processedB2BOrders").doc(orderID).get();
-    if (!processedDoc.exists) {
-        throw new HttpsError("not-found", "No se encontró registro para esta orden.");
+        const processedDoc = await db.collection("processedB2BOrders").doc(orderID).get();
+        if (!processedDoc.exists) {
+            return { success: false, error: `No se encontró registro de compra para la orden ${orderID}.` };
+        }
+
+        const processedData = processedDoc.data();
+        let userId = processedData.userId;
+        let userDoc;
+
+        if (userId) {
+            userDoc = await db.collection("users").doc(userId).get();
+        }
+
+        if (!userDoc || !userDoc.exists) {
+            return { success: false, error: `No se encontró el documento de usuario en users para el ID: ${userId}` };
+        }
+        
+        const userData = userDoc.data();
+        const { email, tempPassword, corporateData } = userData;
+
+        if (!corporateData || !corporateData.companyId) {
+            return { success: false, error: "El usuario recuperado no contiene datos corporativos (corporateData) o un companyId asignado." };
+        }
+
+        const companyDoc = await db.collection("companies").doc(corporateData.companyId).get();
+        if (!companyDoc.exists) {
+            return { success: false, error: `La compañía ${corporateData.companyId} asociada al gerente no existe en Firestore.` };
+        }
+
+        const companyData = companyDoc.data();
+        return { 
+            success: true, 
+            credentials: { email, tempPassword, convenioCode: companyData.convenioCode } 
+        };
+    } catch (error) {
+        logger.error("[FATAL_GET_CREDENTIALS]", error);
+        return { success: false, error: `Excepción interna al buscar credenciales: ${error.message}`, stack: error.stack };
     }
-
-    const processedData = processedDoc.data();
-    let userId = processedData.userId;
-    let userDoc;
-
-    if (userId) {
-        userDoc = await db.collection("users").doc(userId).get();
-    }
-
-    if (!userDoc || !userDoc.exists) {
-        throw new HttpsError("not-found", `No se encontró un usuario asociado para la orden ${orderID}.`);
-    }
-    
-    const userData = userDoc.data();
-    const { email, tempPassword, corporateData } = userData;
-
-    const companyDoc = await db.collection("companies").doc(corporateData.companyId).get();
-    if (!companyDoc.exists) {
-        throw new HttpsError("not-found", `No se encontró la compañía.`);
-    }
-
-    const companyData = companyDoc.data();
-    return { email, tempPassword, convenioCode: companyData.convenioCode };
 });
 
-exports.sendRecoveryCredentials = onCall(paymentOpts, async (request) => {
+// Actualizada a emailOpts para inmunidad preflight/CORS
+exports.sendRecoveryCredentials = onCall(emailOpts, async (request) => {
     const { email, convenioCode, tempPassword } = request.data;
     if (!email || !convenioCode || !tempPassword) {
         throw new HttpsError("invalid-argument", "Faltan datos.");
@@ -292,6 +485,73 @@ exports.sendRecoveryCredentials = onCall(paymentOpts, async (request) => {
     };
 
     await utils.sendConfirmationEmail(email, clientMail).catch(e => logger.error("Fallo envío recovery", e));
+    return { success: true };
+});
+
+// NUEVA FUNCIÓN: Verifica el código de activación y envía el Email 2 con las credenciales finales
+exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
+    const { email, code } = request.data || {};
+    if (!email || !code) {
+        throw new HttpsError("invalid-argument", "Faltan parámetros indispensables.");
+    }
+    
+    const userSnapshot = await db.collection("users").where("email", "==", email).limit(1).get();
+    if (userSnapshot.empty) {
+        throw new HttpsError("not-found", "No se encontró ningún usuario con ese correo electrónico.");
+    }
+    
+    const userDoc = userSnapshot.docs[0];
+    const userData = userDoc.data();
+    
+    if (userData.corporateData?.activationCode !== code) {
+        throw new HttpsError("permission-denied", "El código de activación ingresado es incorrecto.");
+    }
+    
+    const companyId = userData.corporateData.companyId;
+    const companyDoc = await db.collection("companies").doc(companyId).get();
+    if (!companyDoc.exists) {
+        throw new HttpsError("not-found", "La compañía asociada no existe.");
+    }
+    
+    const companyData = companyDoc.data();
+    
+    // Activar formalmente el estado en base de datos de forma segura (dot-notation)
+    await userDoc.ref.update({
+        "corporateData.isActivated": true
+    });
+    
+    // EMAIL 2: Envío de las credenciales finales y del instructivo oficial de acceso
+    const convenioCode = companyData.convenioCode;
+    const password = userData.tempPassword || "La que elegiste al registrarte";
+    
+    const mailOptions = {
+        subject: "🔑 Tus Datos de Acceso Oficiales - Centro de Mando MAKUMOTO",
+        html: `
+            <div style="font-family: sans-serif; background-color: #1E1E1E; color: #E0E0E0; padding: 30px; border-radius: 10px; border-top: 5px solid #FFD700; max-width: 600px; margin: 0 auto;">
+                <h1 style="color: #FFD700; text-align: center;">¡Tribu Activada con Éxito!</h1>
+                <p>Hola <b>${userData.name || 'Gerente'}</b>,</p>
+                <p>Tu cuenta corporativa ha sido verificada y activada de forma segura. Aquí tienes tus credenciales de acceso oficiales para ingresar al Centro de Mando:</p>
+                <div style="background-color: rgba(255, 215, 0, 0.1); border: 1px solid #FFD700; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+                    <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Código de Convenio:</strong> <span style="color: #FFD700; font-size: 1.3rem; letter-spacing: 2px;">${convenioCode}</span></p>
+                    <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Contraseña:</strong> <span style="color: #FFD700; font-size: 1.3rem;">${password}</span></p>
+                </div>
+                <h3 style="color: #FFD700; margin-top: 30px;">Instrucciones de Entrada:</h3>
+                <ol style="line-height: 1.6; padding-left: 20px;">
+                    <li>Visita la web principal: <a href="https://afiliados.makumoto.com" style="color: #FFD700; text-decoration: underline;">afiliados.makumoto.com</a></li>
+                    <li>Presiona el botón de <b>Acceso de Gerente</b> situado en la barra superior.</li>
+                    <li>Introduce tu <b>Código de Convenio</b> (${convenioCode}) junto a tu contraseña.</li>
+                </ol>
+                <div style="background-color: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d; padding: 12px; border-radius: 6px; margin-top: 20px; font-size: 0.85rem; color: #ff9999; text-align: center;">
+                    ⚠️ <b>¿No encuentras tus correos de Makumoto?</b> Recuerda revisar tu <b>carpeta de Spam o Correo no deseado</b> y agregar soporte@makumoto.com a tus contactos seguros para no perder notificaciones importantes.
+                </div>
+                <hr style="border: 0; border-top: 1px solid #444; margin: 30px 0;">
+                <p style="font-size: 0.85rem; opacity: 0.7; text-align: center;">Forjando Tribus, No Gestionando Gente. &copy; Makumoto</p>
+            </div>
+        `
+    };
+    
+    await utils.sendConfirmationEmail(email, mailOptions).catch(e => logger.error("Fallo envío Email 2", e));
+    
     return { success: true };
 });
 
@@ -330,8 +590,26 @@ exports.paypalWebhookHandler = onRequest(paymentOpts, async (req, res) => {
                 return res.status(200).send("OK");
             }
             
-            // Ejecutamos la creación automática del Gerente
-            await createAffiliateManager(orderID, email, name, customId);
+            let planId = "starter_10";
+            let uid = null;
+            let finalEmail = email;
+            let finalName = name;
+
+            let preApprovedConvenio = null;
+            let chosenPassword = null;
+            if (customId && customId.includes('|')) {
+                const parts = customId.split('|');
+                planId = parts[0];
+                uid = parts[1];
+                if (parts[2]) finalName = decodeURIComponent(parts[2]);
+                if (parts[3]) finalEmail = decodeURIComponent(parts[3]);
+                if (parts[4]) preApprovedConvenio = parts[4];
+                if (parts[5]) chosenPassword = decodeURIComponent(parts[5]);
+            } else {
+                planId = customId || "starter_10";
+            }
+
+            await createAffiliateManager(orderID, finalEmail, finalName, planId, uid, preApprovedConvenio, chosenPassword);
             logger.info(`[WH_B2B] ¡ÉXITO! Orden ${orderID} procesada de forma automática.`);
         }
 

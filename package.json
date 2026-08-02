@@ -1,0 +1,14 @@
+{
+  "name": "makumoto-afiliados-frontend",
+  "version": "1.0.0",
+  "description": "Compilador del Frontend Makumoto® Afiliados",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "clean-css": "^5.3.3",
+    "html-minifier-terser": "^7.2.0",
+    "javascript-obfuscator": "^4.1.0"
+  },
+  "private": true
+}
