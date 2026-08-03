@@ -57,22 +57,23 @@ exports.createAffiliatePaypalOrder = onCall(paymentOpts, async (request) => {
 
         const { PRODUCT_CATALOG } = require("./product-catalog.js");
         const plan = PRODUCT_CATALOG[planId];
-        if (!plan || plan.type !== "affiliate_plan") {
-            throw new HttpsError("not-found", "Plan corporativo no encontrado.");
+        if (!plan) {
+            throw new HttpsError("not-found", "Plan o membresía no encontrada.");
         }
 
-        // Estructuración robusta de custom_id agregando el convenio pre-generado y la contraseña elegida
         const customIdPayload = `${planId}|${uid}|${encodeURIComponent(name || "")}|${encodeURIComponent(email || "")}|${convenioCode || ""}|${encodeURIComponent(password || "")}`;
+        const isIndividual = plan.type === "individual_plan";
+        const returnPage = isIndividual ? "makumoto-app.html?purchase=success" : "success.html";
 
         const orderData = {
             intent: "CAPTURE",
             purchase_units: [{
-                description: `Suscripción MAKUMOTO Afiliados: ${plan.name}`,
+                description: `Suscripción MAKUMOTO: ${plan.name}`,
                 amount: { currency_code: "USD", value: plan.price },
                 custom_id: customIdPayload,
             }],
             application_context: {
-                return_url: `https://afiliados.makumoto.com/success.html?planId=${planId}&amount=${plan.price}&currency=USD`,
+                return_url: `https://afiliados.makumoto.com/${returnPage}?planId=${planId}&amount=${plan.price}&currency=USD`,
                 cancel_url: "https://afiliados.makumoto.com/index.html",
                 brand_name: "MAKUMOTO",
                 shipping_preference: "NO_SHIPPING",
@@ -545,7 +546,7 @@ exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
                     ⚠️ <b>¿No encuentras tus correos de Makumoto?</b> Recuerda revisar tu <b>carpeta de Spam o Correo no deseado</b> y agregar soporte@makumoto.com a tus contactos seguros para no perder notificaciones importantes.
                 </div>
                 <hr style="border: 0; border-top: 1px solid #444; margin: 30px 0;">
-                <p style="font-size: 0.85rem; opacity: 0.7; text-align: center;">Forjando Tribus, No Gestionando Gente. &copy; Makumoto</p>
+                <p style="font-size: 0.85rem; opacity: 0.7; text-align: center;">Forjamos Líderes. Creamos Ganadores. &copy; Makumoto</p>
             </div>
         `
     };

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Socio Comercial & Promotor | Makumoto® Afiliados</title>
+    <title>Socio Comercial & Promotor | Makumoto Afiliados</title>
     <link rel="icon" type="image/png" href="imagenes/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -110,15 +110,15 @@
         <!-- PRODUCTO 1: B2B EMPRESAS Y GYMS -->
         <div class="product-card">
             <h3 style="color:var(--color-primary); font-weight:900; text-transform:uppercase; margin-bottom:8px;"><i class="fas fa-building"></i> 1. Línea B2B (Empresas, Gyms y Clínicas)</h3>
-            <p style="font-size:0.85rem; color:#ccc;">Les creamos una **Red Social Privada** para sus empleados o clientes. Mantiene al equipo motivado y evita que los clientes de los gimnasios abandonen.</p>
+            <p style="font-size:0.85rem; color:#ccc;">Les creamos una <strong>Red Social Privada</strong> para sus empleados o clientes. Mantiene al equipo motivado y evita que los clientes de los gimnasios abandonen.</p>
             
             <div style="background:#111; padding:12px; border-radius:12px; margin:15px 0; font-size:0.8rem;">
                 <strong>4 Paquetes Disponibles:</strong>
                 <ul style="list-style:none; margin-top:5px; color:#aaa;">
-                    <li>• Starter (Hasta 10 miembros): $2 USD /mes</li>
-                    <li>• Growth (Hasta 50 miembros): $5 USD /mes</li>
-                    <li>• Business (Hasta 200 miembros): $10 USD /mes</li>
-                    <li>• Enterprise (Hasta 500 miembros): $20 USD /mes</li>
+                    <li>• Opus (Hasta 10 miembros): $99 MXN /mes</li>
+                    <li>• Núcleo (Hasta 50 miembros): $199 MXN /mes</li>
+                    <li>• Zenith (Hasta 200 miembros): $299 MXN /mes</li>
+                    <li>• Master (Hasta 500 empleados o clientes): $499 MXN /mes</li>
                 </ul>
             </div>
 
@@ -140,16 +140,20 @@
         <!-- PRODUCTO 2: ARSENAL PLUS B2C INDIVIDUAL -->
         <div class="product-card promo">
             <span class="promo-tag">¡Súper Oferta $50 MXN!</span>
-            <h3 style="color:var(--color-accent); font-weight:900; text-transform:uppercase; margin-bottom:8px;"><i class="fas fa-mobile-alt"></i> 2. Línea Individual "Arsenal Plus"</h3>
-            <p style="font-size:0.85rem; color:#ccc;">Una suite de <strong>25 Herramientas Digitales de Salud y Supervivencia</strong> en su celular. Ideal para amas de casa, familias e individuos.</p>
+            <h3 style="color:var(--color-accent); font-weight:900; text-transform:uppercase; margin-bottom:8px;"><i class="fas fa-user-tie"></i> 2. Plan Plus (Individual para Emprendedores)</h3>
+            <p style="font-size:0.85rem; color:#ccc;">Una suite de <strong>25 Herramientas Digitales de Productividad y Asistencia</strong> en su celular. Diseñada especialmente para emprendedores e independientes.</p>
             
             <div style="background:#111; padding:12px; border-radius:12px; margin:15px 0; font-size:0.8rem;">
                 <strong style="color:var(--color-accent);">¡Promoción Especial por Tiempo Limitado!</strong>
                 <p style="font-size:1.1rem; font-weight:900; color:#fff; margin-top:3px;">Solo $50 MXN / $2.50 USD</p>
-                <p style="color:#888; font-size:0.75rem;">(Precio accesible para todo público).</p>
+                <p style="color:#888; font-size:0.75rem;">(Precio accesible para emprendedores).</p>
             </div>
 
-            <!-- SIMULADORES MASTERPIECE B2C (LOS 5 MODALES INDIVIDUALES) -->
+            <button onclick="buyArsenalPlusIndividual()" style="background:var(--color-accent); color:#000; border:none; padding:12px 20px; border-radius:25px; font-weight:900; font-size:0.85rem; cursor:pointer; width:100%; text-transform:uppercase; margin-bottom:15px; box-shadow:0 0 15px rgba(0,236,255,0.4);">
+                🛒 COMPRAR PLAN PLUS ($50 MXN)
+            </button>
+
+            <!-- SIMULADORES INTERACTIVOS B2C (LOS 5 EJEMPLOS) -->
             <div style="margin-top:15px; text-align:center;">
                 <strong style="color:var(--color-accent); font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;"><i class="fas fa-fire"></i> MUESTRAS INMERSIVAS B2C DEL ARSENAL PLUS:</strong>
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-top:10px;">
@@ -211,6 +215,10 @@
     <div class="main-actions">
         <button class="btn-cta-primary" onclick="openPromoterRegisterModal()">
             <i class="fas fa-user-plus"></i> ¡ME INTERESA, QUIERO SER PROMOTOR!
+        </button>
+        <br>
+        <button class="btn-cta-secondary" onclick="buyArsenalPlusIndividual()" style="border-color:var(--color-accent); color:var(--color-accent); margin-top:10px;">
+            <i class="fas fa-shopping-cart"></i> COMPRAR PLAN INDIVIDUAL ARSENAL PLUS ($50 MXN)
         </button>
         <br>
         <button class="btn-cta-secondary" onclick="window.location.href='promotor-dashboard.html'">
@@ -425,7 +433,7 @@
 
 <footer style="background: #000; border-top: 1px solid #222; padding: 25px 20px; text-align: center; font-size: 0.8rem; color: #888;">
     <div class="container">
-        <p>&copy; 2024 Makumoto® Afiliados & Tecnología. Todos los derechos reservados.</p>
+        <p>&copy; 2024 Makumoto Afiliados & Tecnología. Todos los derechos reservados.</p>
         <div style="margin-top: 10px; display: flex; justify-content: center; gap: 20px;">
             <a href="terminos-y-condiciones.html" target="_blank" style="color: #aaa; text-decoration: none;">Términos y Condiciones Mercantiles</a>
             <a href="politica-de-privacidad.html" target="_blank" style="color: #aaa; text-decoration: none;">Aviso de Privacidad</a>
@@ -521,6 +529,31 @@
             const picked = holoTools[Math.floor(Math.random() * holoTools.length)];
             out.innerHTML = "🎯 ¡Salió: <span style='color:var(--color-accent);'>" + picked + "</span>!";
         }, 600);
+    }
+
+    async function buyArsenalPlusIndividual() {
+        const email = prompt("Ingresa tu correo para enviarte el acceso a las 25 herramientas:");
+        if (!email || !email.includes('@')) { alert("Ingresa un correo válido."); return; }
+        
+        try {
+            sessionStorage.setItem('arsenal_access', 'true');
+            const createOrder = firebase.functions().httpsCallable('createAffiliatePaypalOrder');
+            const res = await createOrder({
+                planId: 'plan_plus',
+                uid: 'B2C_' + Date.now(),
+                name: 'Cliente Plan Plus',
+                email: email,
+                convenioCode: 'PLUS50',
+                password: 'PlusUser123!'
+            });
+            if (res.data && res.data.approveUrl) {
+                window.location.href = res.data.approveUrl;
+            } else {
+                throw new Error("No se obtuvo la URL de pago.");
+            }
+        } catch (err) {
+            alert("Error al iniciar la compra: " + err.message);
+        }
     }
 
     function handlePromoterRegistration(e) {

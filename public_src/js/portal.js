@@ -1,5 +1,5 @@
 // =======================================================================
-//  NÚCLEO DEL CENTRO DE MANDO MAKUMOTO®
+//  NÚCLEO DEL CENTRO DE MANDO Makumoto
 //  "OPERACIÓN GÉNESIS": FLUJO DE INICIACIÓN Y DASHBOARD DINÁMICO
 // =======================================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const arsenalHTML = `
             <div style="text-align: center;">
                 <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">¡Arsenal para ${sectorNames[sector]} Desbloqueado!</h2>
-                <p style="margin-bottom: 2.5rem; opacity: 0.8;">Estas son tus 5 herramientas de comunicación iniciales para conectar con tu tribu.</p>
+                <p style="margin-bottom: 2.5rem; opacity: 0.8;">Estas son tus 5 herramientas de comunicación iniciales para conectar con tu equipo.</p>
                 <div class="kpi-grid">
                     ${arsenalItemsHTML}
                     <div class="kpi-card" style="text-align: left; padding: 15px;">
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .status-pending { color: #ffc107; }
             </style>
             <div style="background-color: var(--color-light-dark); padding: 20px; border-radius: 8px;">
-                <h3>Gestión de Altas de la Tribu</h3>
+                <h3>Gestión de Altas de la Comunidad</h3>
                 <p>Añade miembros a tu lista maestra. Ellos podrán unirse usando su ID y tu Código de Convenio desde la app.</p>
                 <form id="add-member-form" style="display: flex; gap: 10px; margin-top: 1rem; flex-wrap: wrap;">
                     <input type="text" id="member-firstname" placeholder="Nombre(s)" required style="flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #444; background: #333; color: white;">
@@ -532,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#dashboard-content').innerHTML = `
             <div style="background-color: var(--color-light-dark); padding: 20px; border-radius: 8px;">
                 <h3>Consola de Transmisiones</h3>
-                <p>Envía comunicados a toda tu tribu. Los avisos fijados aparecerán de forma destacada.</p>
+                <p>Envía comunicados a toda tu comunidad. Los avisos fijados aparecerán de forma destacada.</p>
                 <button id="btn-new-broadcast" class="cta-button" style="margin-top: 1rem;"><i class="fas fa-plus-circle"></i> Enviar Nuevo Comunicado</button>
             </div>
             <div id="broadcast-history" style="margin-top: 2rem;">
@@ -612,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const createCompanyBroadcast = firebase.functions().httpsCallable('createCompanybroadcast');
             await createCompanyBroadcast(payload);
-            alert('¡Comunicado enviado a tu tribu!');
+            alert('¡Comunicado enviado a tu comunidad!');
             document.getElementById('broadcast-modal').remove();
             renderBroadcastConsole(company); // Re-renderiza la consola
         } catch (error) {
@@ -811,7 +811,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             </style>
             <h3><i class="fas fa-rocket"></i> Mejoras Premium</h3>
-            <p style="margin-bottom: 2rem; opacity: 0.8;">Desbloquea nuevas capacidades para tu Centro de Mando y potencia a tu tribu.</p>
+            <p style="margin-bottom: 2rem; opacity: 0.8;">Desbloquea nuevas capacidades para tu Centro de Mando y potencia a tu comunidad.</p>
             <div id="powerup-grid" class="powerup-grid">
                 <!-- Las tarjetas de mejoras se renderizarán aquí -->
             </div>
@@ -892,7 +892,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .leaflet-container a { color: var(--color-primary); }
             </style>
             <h3><i class="fas fa-map-marked-alt"></i> Mapa de Misión</h3>
-            <p style="margin-bottom: 1.5rem; opacity: 0.8;">Visualiza los últimos check-ins de tu tribu en el campo.</p>
+            <p style="margin-bottom: 1.5rem; opacity: 0.8;">Visualiza los últimos check-ins de tu equipo en el campo.</p>
             <div id="mission-map-container" style="position: relative;">
                 <div id="mission-map"></div>
                 <div id="map-loader" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; border-radius: 8px;">

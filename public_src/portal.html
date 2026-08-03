@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Makumoto® - Centro de Mando</title>
+    <title>Makumoto - Centro de Mando</title>
     <link rel="icon" type="image/png" href="imagenes/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Leaflet.js para el Mapa de Misión -->
@@ -312,7 +312,7 @@
     <script src="/js/portal.js"></script>
 
 <!-- =================================================================== -->
-<!--     INICIO DEL CHATBOT INMERSIVO PARA GERENTES MAKUMOTO®        -->
+<!--     INICIO DEL CHATBOT INMERSIVO PARA GERENTES Makumoto        -->
 <!-- =================================================================== -->
 <div id="manager-chatbot-container">
     <div id="manager-chatbot-bubble">
@@ -416,16 +416,16 @@
             
             const chatbotData = {
                 welcome: { text: "¡Saludos, Gerente! Soy tu asistente táctico. Mi misión es asegurar que domines cada herramienta de este Centro de Mando. ¿Qué necesitas optimizar hoy?" },
-                q1: { question: "¿Cómo afilio a un nuevo miembro?", answer: "Ve a <strong>'Gestión de Altas'</strong>, añade a la persona con un ID único (ej. su ID de empleado). Luego, el miembro usa la app Makumoto®, ese ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Así de fácil!", cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() } },
+                q1: { question: "¿Cómo afilio a un nuevo miembro?", answer: "Ve a <strong>'Gestión de Altas'</strong>, añade a la persona con un ID único (ej. su ID de empleado). Luego, el miembro usa la app Makumoto, ese ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Así de fácil!", cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() } },
                 q2: { question: "¿Comunicado masivo o Mensaje Directo?", answer: "Usa la <strong>'Consola de Comunicados'</strong> para enviar mensajes a TODA tu tribu. Ideal para anuncios. <br><br>Usa la <strong>'Bandeja de Mensajes'</strong> para una conversación privada con un miembro específico." },
-                q3: { question: "¿Para qué sirve el 'Mapa de Misión'?", answer: "Es tu vista de satélite. Te muestra en un mapa <strong>dónde tus miembros realizan sus 'check-ins'</strong>. Es la prueba visual de que tu tribu está activa en el mundo real." },
+                q3: { question: "¿Para qué sirve el 'Mapa de Misión'?", answer: "Es tu vista de satélite. Te muestra en un mapa <strong>dónde tus miembros realizan sus 'check-ins'</strong>. Es la prueba visual de que tu comunidad está activa en el mundo real." },
                 q4: { question: "¿Por qué considerar las 'Mejoras Premium'?", answer: "Te dan una <strong>ventaja táctica decisiva</strong>. Son 'Power-Ups' de pago único que desbloquean funciones avanzadas como retos personalizados o analíticas de comportamiento para llevar tu liderazgo al siguiente nivel.", cta: { text: "Explorar Mejoras", action: () => document.getElementById('btn-show-premium-upgrades').click() } },
                 q5: { question: "¿Qué son los 'Power-Ups'?", answer: "Son módulos que puedes añadir a tu arsenal. Por ejemplo, el Power-Up 'Impulso Personalizado' te permite crear micro-retos específicos, dándote un control granular sobre la motivación del equipo." },
-                q6: { question: "¿Cómo uso el 'Código de Convenio'?", answer: "Es la llave de acceso a tu tribu. Dáselo a todos tus miembros junto con el ID que les asignaste en la 'Gestión de Altas'. Es el método seguro para que solo tu gente pueda entrar." },
+                q6: { question: "¿Cómo uso el 'Código de Convenio'?", answer: "Es la llave de acceso a tu comunidad. Dáselo a todos tus miembros junto con el ID que les asignaste en la 'Gestión de Altas'. Es el método seguro para que solo tu gente pueda entrar." },
                 q7: { question: "Necesito eliminar a un miembro, ¿cómo lo hago?", answer: "Actualmente, la funcionalidad para dar de baja a un miembro se gestiona desde el sistema central. Si necesitas revocar el acceso a alguien, contacta a soporte y lo haremos de inmediato por ti." },
-                q8: { question: "¿Qué pasa si mi plan está por expirar?", answer: "Verás un botón de 'Actualizar Plan' aparecer junto al contador de vigencia cuando queden menos de 10 días. El proceso de renovación es simple y rápido para que tu tribu nunca pierda el acceso." },
+                q8: { question: "¿Qué pasa si mi plan está por expirar?", answer: "Verás un botón de 'Actualizar Plan' aparecer junto al contador de vigencia cuando queden menos de 10 días. El proceso de renovación es simple y rápido para que tu comunidad nunca pierda el acceso." },
                 q9: { question: "¿Puedo cambiar de Sector más adelante?", answer: "No. La elección de Sector (Empresa, Gimnasio, Clínica) que haces en tu primer login es <strong>permanente</strong>, ya que calibra todo tu Centro de Mando. Elige sabiamente para alinear las herramientas con tus objetivos." },
-                q10: { question: "¿Cómo mido el rendimiento de mi tribu?", answer: "Tu primer vistazo es el 'Mapa de Misión' para ver actividad. Para métricas más profundas sobre engagement y comportamiento, explora las 'Mejoras Premium'. Hay Power-Ups de analítica diseñados para darte esa inteligencia de negocio." }
+                q10: { question: "¿Cómo mido el rendimiento de mi comunidad?", answer: "Tu primer vistazo es el 'Mapa de Misión' para ver actividad. Para métricas más profundas sobre engagement y comportamiento, explora las 'Mejoras Premium'. Hay Power-Ups de analítica diseñados para darte esa inteligencia de negocio." }
             };
 
             const showMainMenu = () => {

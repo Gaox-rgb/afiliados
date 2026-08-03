@@ -3,33 +3,52 @@
 // =================================================================================
 
 exports.PRODUCT_CATALOG = {
-  "starter_10": {
-    name: "Plan Starter 10 Afiliados",
-    price: 2.00,
-    type: "affiliate_plan",
-    description: "El primer paso para una cultura invencible.",
-    affiliateLimit: 10
-  },
-  "growth_50": {
-    name: "Plan Growth 50 Afiliados",
+  "opus_10": {
+    name: "Plan Opus 10 Afiliados ($99 MXN)",
     price: 5.00,
     type: "affiliate_plan",
-    description: "De un equipo a una tribu imparable.",
-    affiliateLimit: 50
+    description: "Para equipos pequeños con grandes ambiciones.",
+    affiliateLimit: 10
   },
-  "business_200": {
-    name: "Plan Business 200 Afiliados",
+  "nucleo_50": {
+    name: "Plan Núcleo 50 Afiliados ($199 MXN)",
     price: 10.00,
     type: "affiliate_plan",
-    description: "La herramienta definitiva para la retención.",
+    description: "Convierte a tus clientes en una comunidad leal.",
+    affiliateLimit: 50
+  },
+  "zenith_200": {
+    name: "Plan Zenith 200 Afiliados ($299 MXN)",
+    price: 15.00,
+    type: "affiliate_plan",
+    description: "La herramienta definitiva de retención y lealtad.",
     isRecommended: true,
     affiliateLimit: 200
   },
-  "enterprise_500": {
-    name: "Plan Enterprise 500 Afiliados",
-    price: 20.00,
+  "master_500": {
+    name: "Plan Master 500 Afiliados ($499 MXN)",
+    price: 25.00,
     type: "affiliate_plan",
-    description: "Domine su industria desde adentro.",
+    description: "Cubre hasta 500 empleados o clientes.",
     affiliateLimit: 500
+  },
+  "starter_10": { name: "Plan Opus", price: 5.00, type: "affiliate_plan", affiliateLimit: 10 },
+  "growth_50": { name: "Plan Núcleo", price: 10.00, type: "affiliate_plan", affiliateLimit: 50 },
+  "business_200": { name: "Plan Zenith", price: 15.00, type: "affiliate_plan", isRecommended: true, affiliateLimit: 200 },
+  "enterprise_500": { name: "Plan Master", price: 25.00, type: "affiliate_plan", affiliateLimit: 500 }
+},
+  "plan_plus": {
+    name: "Plan Plus Individual (Emprendedores)",
+    price: 2.50,
+    type: "individual_plan",
+    description: "Acceso individual completo enfocado en emprendedores.",
+    affiliateLimit: 1
+  },
+  "arsenal_plus": {
+    name: "Plan Plus Individual (Emprendedores)",
+    price: 2.50,
+    type: "individual_plan",
+    description: "Acceso individual completo enfocado en emprendedores.",
+    affiliateLimit: 1
   }
 };

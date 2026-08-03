@@ -74,7 +74,7 @@ window.app.profile = {
         const data = companyData.landingPageData || {};
 
         // Actualizar título de la página para SEO y usabilidad
-        document.title = `${data.companyName || 'Perfil'} - Makumoto®`;
+        document.title = `${data.companyName || 'Perfil'} - Makumoto`;
         
         // Rellenar elementos
         this.elements.companyLogo.src = data.logoUrl || 'https://placehold.co/150x150/FFD700/000000?text=Logo';

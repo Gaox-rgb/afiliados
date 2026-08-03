@@ -1,7 +1,7 @@
 {
   "name": "makumoto-afiliados-frontend",
   "version": "1.0.0",
-  "description": "Compilador del Frontend Makumoto® Afiliados",
+  "description": "Compilador del Frontend Makumoto Afiliados",
   "scripts": {
     "build": "node build.js"
   },

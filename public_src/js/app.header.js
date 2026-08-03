@@ -31,7 +31,7 @@ window.app.ui.injectHeader = function() {
     }
 
     if (isPortal) {
-        header.innerHTML = '<div class="header-container"><div class="logo" style="display:flex; align-items:center; gap:10px;"><img src="imagenes/logo.png" alt="Logo" style="height:25px;"><span style="color:#FFD700; font-weight:bold; font-size:14px;">MAKUMOTO® AFILIADOS</span></div></div>';
+        header.innerHTML = '<div class="header-container"><div class="logo" style="display:flex; align-items:center; gap:10px;"><img src="imagenes/logo.png" alt="Logo" style="height:25px;"><span style="color:#FFD700; font-weight:bold; font-size:14px;">Makumoto AFILIADOS</span></div></div>';
     } else {
         header.innerHTML = `
             <div class="header-container">
@@ -39,7 +39,7 @@ window.app.ui.injectHeader = function() {
                     <a href="index.html" class="logo" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
                         <img src="imagenes/logo.png" alt="Logo" style="height:35px;">
                         <div style="display:flex; flex-direction:column; align-items:center; line-height:1;">
-                            <span style="color:#FFD700; font-weight:900; font-size:18px;">MAKUMOTO®</span>
+                            <span style="color:#FFD700; font-weight:900; font-size:18px;">Makumoto</span>
                             <span style="font-size:9px; letter-spacing:3px; color:#fff; font-weight:700;">AFILIADOS</span>
                         </div>
                     </a>

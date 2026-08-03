@@ -131,7 +131,7 @@ async function processHtmlFiles() {
 
 // Ejecutor principal
 async function build() {
-    console.log('🚀 Iniciando Pipeline de Compilación Makumoto®...');
+    console.log('🚀 Iniciando Pipeline de Compilación Makumoto...');
     copyImages();
     processJsonFiles();
     processJsFiles();

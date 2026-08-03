@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Afiliados Makumoto® | Tu Mina de Oro en Retención B2B</title>
-<meta name="description" content="Fideliza a tus empleados y clientes con una app gamificada. La herramienta líder para transformar tu comunidad en una tribu.">
-<meta name="keywords" content="Makumoto, Fidelización de Clientes, Retención Laboral, Clima Laboral, Gamificación B2B, Tribus Corporativas, Gimnasios, Clínicas">
+<title>Afiliados Makumoto | Tu Mina de Oro en Retención B2B</title>
+<meta name="description" content="Fideliza a tus empleados y clientes con una app gamificada. La herramienta líder para transformar la lealtad de tu equipo.">
+<meta name="keywords" content="Makumoto, Fidelización de Clientes, Retención Laboral, Clima Laboral, Gamificación B2B, Comunidades Corporativas, Gimnasios, Clínicas">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://afiliados.makumoto.com/">
 
@@ -13,13 +13,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://afiliados.makumoto.com/">
 <meta property="og:title" content="Afiliados Makumoto | Tu Mina de Oro en Retención B2B">
-<meta property="og:description" content="Fideliza a tus empleados y clientes con una app gamificada. La herramienta líder para transformar tu comunidad en una tribu.">
+<meta property="og:description" content="Fideliza a tus empleados y clientes con una app gamificada. La herramienta líder para transformar la lealtad de tu equipo.">
 <meta property="og:image" content="https://afiliados.makumoto.com/imagenes/pantalla_makumoto.png">
 <meta property="og:image:secure_url" content="https://afiliados.makumoto.com/imagenes/pantalla_makumoto.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Makumoto® Pantalla Principal">
+<meta property="og:image:alt" content="Makumoto Pantalla Principal">
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image">
@@ -112,7 +112,7 @@
 
 
     :root {
-        --color-primary: #FFD700; /* Amarillo Makumoto® */
+        --color-primary: #FFD700; /* Amarillo Makumoto */
         --color-secondary: #ff4d4d; /* Rojo Peligro */
         --color-dark: #101010; /* Negro casi absoluto */
         --color-light-dark: #1E1E1E;
@@ -443,6 +443,63 @@
 
 
     /* ===== PUNTO 6: OFERTA ===== */
+    /* ===== NUEVO APARTADO PLAN PLUS (2 COLUMNAS) ===== */
+    .plan-plus-wrapper {
+        margin-top: 50px;
+        background: linear-gradient(135deg, rgba(0, 236, 255, 0.08) 0%, rgba(20, 20, 20, 0.95) 100%);
+        border: 2px solid var(--color-accent);
+        border-radius: 16px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0, 236, 255, 0.15);
+    }
+    .plan-plus-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 35px;
+        align-items: center;
+    }
+    @media (min-width: 850px) {
+        .plan-plus-grid {
+            grid-template-columns: 1.1fr 0.9fr;
+        }
+    }
+    .plan-plus-diffs {
+        text-align: left;
+    }
+    .plan-plus-diffs h3 {
+        color: var(--color-accent);
+        font-size: 1.8rem;
+        font-weight: 900;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .plan-plus-diffs p {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+    .diff-list {
+        list-style: none;
+        padding: 0;
+    }
+    .diff-list li {
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        color: var(--color-text);
+    }
+    .diff-list i {
+        color: var(--color-accent);
+        margin-top: 3px;
+        font-size: 1.1rem;
+    }
+
     .seccion-oferta { background: var(--color-light-dark); padding: 60px 0; }
     .banner-oferta h2 { color: var(--color-primary); font-size: 2.5rem; text-shadow: none; }
     .texto-oferta { font-size: 1.2rem; margin: 15px auto; color: white; max-width: 700px; }
@@ -494,15 +551,76 @@
     .testimonios-slider {
         position: relative; min-height: 350px; max-width: 700px; margin: 0 auto;
     }
-    .testimonio {
-        position: absolute; top: 0; left: 0; width: 100%;
-        opacity: 0; transition: opacity 0.8s ease-in-out;
-        display: flex; flex-direction: column; align-items: center;
+    /* ===== ESCENARIO DINÁMICO DE TESTIMONIOS (4 COLUMNAS PARPADEO) ===== */
+    .testimonios-stage-container {
+        max-width: 1200px;
+        margin: 30px auto 0;
+        padding: 0 10px;
     }
-    .testimonio.active { opacity: 1; }
-    .testimonio img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; border: 3px solid var(--color-primary); }
-    .testimonio blockquote { font-style: italic; margin-bottom: 15px; font-size: 1.1rem; }
-    .testimonio cite { font-weight: 700; color: var(--color-primary); }
+    .testimonios-stage {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 20px;
+        justify-content: center;
+    }
+    @media (min-width: 600px) {
+        .testimonios-stage { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px) {
+        .testimonios-stage { grid-template-columns: repeat(4, 1fr); }
+    }
+    .testimonio-card-live {
+        background: linear-gradient(145deg, #1c1c1c 0%, #101010 100%);
+        border: 1px solid #333;
+        border-top: 3px solid var(--color-primary);
+        border-radius: 14px;
+        padding: 25px 18px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 290px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease;
+        opacity: 1;
+        transform: scale(1);
+    }
+    .testimonio-card-live.twinkle-out {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    .testimonio-card-live:hover {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+    }
+    .testimonio-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--color-primary);
+        margin-bottom: 12px;
+        box-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+    }
+    .testimonio-quote {
+        font-style: italic;
+        font-size: 0.88rem;
+        color: #e0e0e0;
+        line-height: 1.5;
+        margin-bottom: 15px;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .testimonio-author {
+        font-weight: 700;
+        font-size: 0.82rem;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
     #fomo-container {
         position: fixed;
@@ -547,16 +665,16 @@
     .plan-business { color: var(--color-primary); }
     .plan-enterprise { color: var(--color-secondary); }
 
-    /* ===== ESTILOS ESPECÍFICOS DE MAKUMOTO® SEGÚN SOLICITUD ===== */
+    /* ===== ESTILOS ESPECÍFICOS DE Makumoto SEGÚN SOLICITUD ===== */
     .makumoto-hero-highlight {
-        color: var(--color-primary); /* Amarillo Makumoto® */
-        text-shadow: 0 0 5px var(--color-secondary), 0 0 10px var(--color-secondary); /* Destello rojo Makumoto® */
+        color: var(--color-primary); /* Amarillo Makumoto */
+        text-shadow: 0 0 5px var(--color-secondary), 0 0 10px var(--color-secondary); /* Destello rojo Makumoto */
         font-weight: 700; /* Para que el destello se vea mejor */
     }
 
     .makumoto-triaje-h2 {
-        color: var(--color-primary); /* Amarillo Makumoto® */
-        text-shadow: 0 0 3px var(--color-secondary); /* Destello rojo más sutil Makumoto® */
+        color: var(--color-primary); /* Amarillo Makumoto */
+        text-shadow: 0 0 3px var(--color-secondary); /* Destello rojo más sutil Makumoto */
         font-size: 0.9em; /* Reduce el tamaño respecto al h2 contenedor */
         text-transform: none; /* Asegura mayúsculas y minúsculas */
         font-weight: 700;
@@ -693,7 +811,7 @@
 <header id="main-header">
     </header>
 
-<main id="fortaleza-makumoto®">
+<main id="fortaleza-Makumoto">
 
        <!-- =================================================================== -->
     <!-- INICIO DEL NUEVO FLUJO: "LA TRIBU MAKUMOTO"                       -->
@@ -702,9 +820,9 @@
     <!-- PUNTO 1: LA PROPUESTA (QUÉ VENDEMOS Y PARA QUÉ) -->
     <section id="seccion-invitacion" class="seccion-manifiesto">
         <div class="container">
-            <h2 class="titulo-seccion">Crea una Red Social Privada para tu Gente.<br>Conviértelos en una Tribu.</h2>
-            <p class="texto-manifiesto">Con <strong>MAKUMOTO®</strong>, ofreces a tus clientes o empleados acceso exclusivo a una red social de bienestar que se siente como un juego. No es solo una app; es un ecosistema donde creas <strong>tu propia tribu privada</strong>. Ellos compiten, mejoran y se divierten bajo tu marca, mientras tú te vuelves indispensable.</p>
-            <img src="imagenes/pantalla_makumoto.png" alt="Interfaz adictiva y divertida de Makumoto®" class="imagen-preview">
+            <h2 class="titulo-seccion">Crea una Red Social Privada para tu Gente.<br>Construye lealtad, participación y colaboradores o clientes entusiastas.</h2>
+            <p class="texto-manifiesto">Con <strong>MAKUMOTO®</strong>, ofreces a tus clientes o empleados acceso exclusivo a una red social de bienestar que se siente como un juego. No es solo una app; es un ecosistema donde creas <strong>tu propia comunidad privada</strong>. Ellos compiten, mejoran y se divierten bajo tu marca, mientras tú te vuelves indispensable.</p>
+            <img src="imagenes/pantalla_makumoto.png" alt="Interfaz adictiva y divertida de Makumoto" class="imagen-preview">
             <a href="https://makumoto.com" target="_blank" class="link-brillante">
                 <span class="texto-blanco-estatico">Conoce</span> MAKUMOTO.COM
             </a>
@@ -714,48 +832,80 @@
     <!-- PUNTO 4: LOS PLANES (PRECIOS CLAROS) -->
     <section id="seccion-precios-directa" class="seccion-precios">
         <div class="container">
-             <h2 class="titulo-seccion">Planes de Afiliados: Elige el Tamaño de tu Tribu.</h2>
+             <h2 class="titulo-seccion">Planes de Afiliados: Elige el Alcance de tu Comunidad.</h2>
 
              <div class="precios-grid">
                  <div class="precio-tarjeta">
-                    <h3>starter_10</h3><p class="lema-paquete">"Para equipos pequeños con grandes ambiciones."</p><p class="precio-valor">$2 USD <span>/mes</span></p>
+                    <h3>Opus</h3><p class="lema-paquete">"Para equipos pequeños con grandes ambiciones."</p><p class="precio-valor">$99 MXN <span>/ $5 USD/mes</span></p>
                     <ul>
                         <li><i class="fas fa-users"></i> <strong>Hasta 10</strong> Miembros</li>
-                        <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Tribu</li>
+                        <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Comunidad</li>
                         <li><i class="fas fa-check-circle"></i> Implementa beneficios de tu sector</li>
                         <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto®</li>
                     </ul>
-                    <button class="cta-precio" data-plan="starter_10" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA</button>
+                    <button class="cta-precio" data-plan="opus_10" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA ($99 MXN)</button>
                 </div>
                 <div class="precio-tarjeta">
-                    <h3>growth_50</h3><p class="lema-paquete">"Convierte a tus clientes en una comunidad leal."</p><p class="precio-valor">$5 USD <span>/mes</span></p>
+                    <h3>Núcleo</h3><p class="lema-paquete">"Convierte a tus clientes en una comunidad leal."</p><p class="precio-valor">$199 MXN <span>/ $10 USD/mes</span></p>
                     <ul>
                         <li><i class="fas fa-users"></i> <strong>Hasta 50</strong> Miembros</li>
-                        <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Tribu</li>
+                        <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Comunidad</li>
                         <li><i class="fas fa-check-circle"></i> Implementa beneficios de tu sector</li>
                         <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto®</li>
                     </ul>
-                    <button class="cta-precio" data-plan="growth_50" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA</button>
+                    <button class="cta-precio" data-plan="nucleo_50" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA ($199 MXN)</button>
                 </div>
                 <div class="precio-tarjeta recomendada">
-                    <span class="etiqueta-recomendada">MÁS POPULAR</span><h3>business_200</h3><p class="lema-paquete">"La herramienta definitiva de retención y lealtad."</p><p class="precio-valor">$10 USD <span>/mes</span></p>
+                    <span class="etiqueta-recomendada">MÁS POPULAR</span><h3>Zenith</h3><p class="lema-paquete">"La herramienta definitiva de retención y lealtad."</p><p class="precio-valor">$299 MXN <span>/ $15 USD/mes</span></p>
                     <ul>
                         <li><i class="fas fa-users"></i> <strong>Hasta 200</strong> Miembros</li>
-                        <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Tribu</li>
+                        <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Comunidad</li>
                         <li><i class="fas fa-check-circle"></i> Implementa beneficios de tu sector</li>
                         <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto®</li>
                     </ul>
-                    <button class="cta-precio cta-recomendada" data-plan="business_200" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA</button>
+                    <button class="cta-precio cta-recomendada" data-plan="zenith_200" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA ($299 MXN)</button>
                 </div>
                 <div class="precio-tarjeta">
-                    <h3>enterprise_500</h3><p class="lema-paquete">"Domina tu mercado con una comunidad imparable."</p><p class="precio-valor">$20 USD <span>/mes</span></p>
+                    <h3>Master</h3><p class="lema-paquete">"Domina tu mercado con una comunidad imparable."</p><p class="precio-valor">$499 MXN <span>/ $25 USD/mes</span></p>
                     <ul>
-                        <li><i class="fas fa-users"></i> <strong>Hasta 500</strong> Miembros</li>
-                        <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Tribu</li>
+                        <li><i class="fas fa-users"></i> Cubre hasta <strong>500 empleados o clientes</strong></li>
+                        <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Comunidad</li>
                         <li><i class="fas fa-check-circle"></i> Implementa beneficios de tu sector</li>
                         <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto®</li>
                     </ul>
-                    <button class="cta-precio" data-plan="enterprise_500" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA</button>
+                    <button class="cta-precio" data-plan="master_500" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA ($499 MXN)</button>
+                </div>
+            </div>
+
+            <!-- APARTADO DEDICADO DE 2 COLUMNAS PARA EL PLAN PLUS INDIVIDUAL -->
+            <div class="plan-plus-wrapper">
+                <div class="plan-plus-grid">
+                    <div class="plan-plus-diffs">
+                        <h3 style="color: #00ecff; font-size: 1.6rem; line-height: 1.3;"><i class="fas fa-rocket" style="color: #00ecff; margin-right: 8px;"></i> Plan Plus, pensado para individuos y líderes que enfrentan los desafíos solos.</h3>
+                        <p style="margin-top: 10px;">Diseñado exclusivamente para emprendedores, consultores e independientes que requieren autonomía total sin la necesidad de administrar una plantilla de miembros.</p>
+                        <ul class="diff-list">
+                            <li><i class="fas fa-check-circle"></i> <span><strong>Autonomía Individual:</strong> No requiere gestión de código de convenio ni padrón de empleados.</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span><strong>25 Herramientas Tácticas:</strong> Suite completa de utilidad inmediata en tu móvil.</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span><strong>Velocidad Zero-Latency:</strong> Buscador de datos y módulos de asistencia utilizables SIN INTERNET.</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span><strong>Suscripción Asequible:</strong> Tarifa plana accesible de solo $50 MXN ($2.50 USD) al mes.</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="precio-tarjeta" style="border-color: #00ecff; border-width: 2px; background: #121212; margin: 0; position: relative; padding-top: 25px;">
+                        <div style="text-align: center; margin-bottom: 10px;">
+                            <span style="background-color: #00ecff !important; color: #000000 !important; font-weight: 900; font-size: 0.75rem; padding: 6px 16px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; box-shadow: 0 0 12px rgba(0,236,255,0.6);">USO INDIVIDUAL</span>
+                        </div>
+                        <h3 style="color: #00ecff; font-size: 1.8rem; margin-top: 5px;">PLAN PLUS</h3>
+                        <p class="lema-paquete">"La suite de herramientas para el emprendedor enfocado."</p>
+                        <p class="precio-valor" style="color: #ffffff;">$50 MXN <span style="font-size: 1rem; color: #00ecff; font-weight: bold;">/ $2.50 USD</span></p>
+                        <ul style="margin-bottom: 25px;">
+                            <li><i class="fas fa-user-tie" style="color: #00ecff;"></i> Diseñado para Emprendedores</li>
+                            <li><i class="fas fa-mobile-alt" style="color: #00ecff;"></i> Acceso Individual a 25 Herramientas</li>
+                            <li><i class="fas fa-wifi" style="color: #00ecff;"></i> Buscador y Módulos SIN INTERNET</li>
+                            <li><i class="fas fa-bolt" style="color: #00ecff;"></i> Asistencia Táctica y Utilidades 0ms</li>
+                        </ul>
+                        <button data-plan="plan_plus" onclick="window.app.events.handlePlanPurchase(this)" style="background-color: #00ecff !important; color: #000000 !important; font-weight: 900 !important; font-size: 1.1rem; width: 100%; padding: 16px; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 25px rgba(0, 236, 255, 0.6); transition: transform 0.2s;">COMPRAR PLAN PLUS ($50 MXN)</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -765,28 +915,28 @@
     <section id="seccion-oferta" class="seccion-oferta">
         <div class="container">
             <div class="banner-oferta">
-                <h2><i class="fas fa-gift"></i> ¡OFERTA DE SEMANA SANTA!</h2>
-                <p class="texto-oferta">Esta Semana Santa, impulsa tu comunidad como nunca. Las primeras <strong>100</strong> empresas en afiliarse desbloquean este paquete de crecimiento estratégico sin costo adicional:</p>
+                <h2><i class="fas fa-gift"></i> ¡OFERTA DE VERANO!</h2>
+                <p class="texto-oferta">Este Verano, impulsa tu comunidad como nunca. Las primeras <strong>100</strong> empresas en afiliarse desbloquean este paquete de crecimiento estratégico sin costo adicional:</p>
                 <div class="oferta-grid">
                     <div class="beneficio-card">
-                        <i class="fas fa-layer-group"></i>
-                        <h4>Doble Impacto</h4>
-                        <p>Duplica el impulso inicial de tu tribu con un mes adicional de servicio totalmente gratis. 60 días de lealtad por el precio de 30.</p>
+                        <i class="fas fa-hand-sparkles"></i>
+                        <h4>Bienvenida VIP por Pipoko & Lyra</h4>
+                        <p>Pipoko y Lyra, los guardianes interactivos de Makumoto®, darán un saludo especial de bienvenida a ti como líder y a todos tus colaboradores o clientes. Les explicarán de forma divertida quién es quién, haciendo que sentirse saludados y reconocidos desde el primer día sea una experiencia inolvidable.</p>
                     </div>
                     <div class="beneficio-card">
-                        <i class="fas fa-bullseye"></i>
-                        <h4>Visibilidad Directa</h4>
-                        <p>Inyecta tu marca en nuestra app con 10 Boonies promocionales. Genera tráfico y conversiones desde nuestra comunidad a tu web durante 10 días.</p>
+                        <i class="fas fa-brain"></i>
+                        <h4>Trivia Exclusiva de tu Marca</h4>
+                        <p>Diseñamos un reto interactivo de preguntas y respuestas 100% personalizado para tu negocio, gimnasio o clínica. Pon a prueba y divierte a tu comunidad con trivia gamificada enfocada en tu profesión o historia comercial.</p>
                     </div>
                     <div class="beneficio-card">
                         <i class="fas fa-sitemap"></i>
-                        <h4>Página de Aterrizaje Propia</h4>
-                        <p>Te creamos una landing page básica y te destacamos en nuestro directorio oficial, atrayendo nuevos clientes desde nuestra plataforma.</p>
+                        <h4>Página de Aterrizaje & Directorio</h4>
+                        <p>Te creamos una landing page corporativa de presentación y te destacamos en nuestro directorio oficial, proyectando prestigio e impulsando el descubrimiento de tu negocio.</p>
                     </div>
                     <div class="beneficio-card">
                         <i class="fas fa-crown"></i>
-                        <h4>Estatus de Fundador</h4>
-                        <p>Asegura tu acceso prioritario a los mejores descuentos y promociones en todas las futuras herramientas de expansión de Makumoto®.</p>
+                        <h4>Estatus de Empresa Fundadora</h4>
+                        <p>Tu negocio recibirá la insignia digital de Comunidad Fundadora, asegurando acceso prioritario a todas las futuras herramientas premium y actualizaciones de Makumoto®.</p>
                     </div>
                 </div>
                 <div class="contador-oferta">
@@ -799,7 +949,7 @@
     <!-- PUNTO 3: TU TRIBU (EL TRIAJE PERSONALIZADO) -->
     <section id="seccion-triaje" class="seccion-triaje">
         <div class="container">
-             <h2 class="titulo-seccion">Tu Tribu, Tus Reglas.</h2>
+             <h2 class="titulo-seccion">Tu Comunidad, Tus Reglas.</h2>
              <p class="subtitulo-triaje">Así se Juega en tu Sector.</p>
             <p class="nota-triaje">Pulsa sobre tu sector para descubrir los beneficios únicos que obtendrás. Al afiliar a tus empleados o clientes, les otorgas acceso a una experiencia exclusiva que fortalece su lealtad.</p>
             <div class="triage-buttons">
@@ -815,24 +965,11 @@
     <!-- PUNTO 5: PRUEBA SOCIAL (VALIDACIÓN) -->
     <section id="seccion-prueba-social" class="seccion-prueba-social">
         <div class="container">
-            <h2 class="titulo-seccion">Líderes que ya convirtieron equipos en Tribus.</h2>
-             <div class="testimonios-slider">
-                 <div class="testimonio active"><img src="imagenes/testimonio1.jpg" alt="Laura M."><blockquote>"En dos semanas, la energía en la oficina cambió por completo. La gente viene más feliz."</blockquote><cite>Laura M. - Directora de Talento</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio2.jpg" alt="Carlos R."><blockquote>"Mis clientes ahora compiten en la app. La retención se ha disparado. Increíble."</blockquote><cite>Carlos R. - Fundador de PowerFit Gym</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio3.jpg" alt="Dr. Soto"><blockquote>"La adherencia al tratamiento de mis pacientes subió un 30%. Makumoto® es mi nuevo asistente."</blockquote><cite>Dr. Soto - Clínica Dental Soto</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio4.jpg" alt="Sofía G."><blockquote>"Nunca pensé que diría esto, pero las actividades de la empresa ahora son divertidas. Los retos son adictivos."</blockquote><cite>Sofía G. - Miembro de Equipo</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio5.jpg" alt="Miguel A."><blockquote>"El Power-Up de analítica me mostró quién estaba a punto de renunciar. Salvé a dos talentos clave. Se pagó solo en un mes."</blockquote><cite>Miguel A. - CEO de TechCorp</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio6.jpg" alt="Elena V."><blockquote>"Implementamos Makumoto para el programa de bienestar y la adopción fue inmediata. Es la primera vez que veo algo así."</blockquote><cite>Elena V. - Gerente de RRHH</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio7.jpg" alt="Javier P."><blockquote>"Uso la tribu para mis grupos de entrenamiento. La gente se motiva entre sí, y mi trabajo como coach es más fácil."</blockquote><cite>Javier P. - Coach Personal</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio8.jpg" alt="Dra. Isabel Reyes"><blockquote>"Perfecto para el seguimiento de mis pacientes con ansiedad. Las pequeñas metas diarias de la app les dan un sentido de control."</blockquote><cite>Dra. Isabel Reyes - Psicóloga Clínica</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio9.jpg" alt="Ricardo Solís"><blockquote>"Redujimos el ausentismo un 15% en el primer trimestre. El 'Termómetro de Ánimo' nos da data que antes no teníamos."</blockquote><cite>Ricardo Solís - Gerente de Operaciones</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio10.jpg" alt="Ana Lucía"><blockquote>"Entrenar se sentía solitario. Ahora soy parte de la tribu del gym y hasta he hecho amigos. Voy con más ganas."</blockquote><cite>Ana Lucía - Miembro de PowerFit Gym</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio11.jpg" alt="David Chen"><blockquote>"La competencia sana que se genera es increíble. Mi equipo de desarrolladores está más unido y enfocado que nunca."</blockquote><cite>David Chen - Líder de Proyecto en TechCorp</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio12.jpg" alt="Mónica Arias"><blockquote>"Mis pacientes registran sus comidas y hábitos en Makumoto. Las consultas son más productivas porque llego con data real."</blockquote><cite>Mónica Arias - Nutrióloga</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio13.jpg" alt="Fernando Garza"><blockquote>"Antes odiaba las pausas activas. Ahora compito por ser el que más las hace. Es una tontería, pero funciona."</blockquote><cite>Fernando Garza - Empleado en InnovaCorp</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio14.jpg" alt="Valeria Ríos"><blockquote>"Para mi estudio de yoga, es la herramienta perfecta. Comparto horarios, retos de meditación y mantengo a mi comunidad conectada."</blockquote><cite>Valeria Ríos - Fundadora de Zen Studio</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio15.jpg" alt="Dr. Morales"><blockquote>"Lo mejor son los recordatorios de medicamentos. Simple, efectivo y le quita una carga de encima a mis pacientes de la tercera edad."</blockquote><cite>Dr. Morales - Médico General</cite></div>
-                <div class="testimonio"><img src="imagenes/testimonio16.jpg" alt="Carolina F."><blockquote>"Construir cultura es difícil. Makumoto nos dio un lenguaje común de bienestar y competencia que nos ha unido muchísimo."</blockquote><cite>Carolina F. - Jefa de Cultura Organizacional</cite></div>
+            <h2 class="titulo-seccion">Líderes que ya transformaron sus equipos de trabajo.</h2>
+             <div class="testimonios-stage-container">
+                <div id="testimonios-stage" class="testimonios-stage">
+                    <!-- Las 4 tarjetas dinámicas de parpadeo se renderizan por JS -->
+                </div>
             </div>
         </div>
     </section>
@@ -893,7 +1030,7 @@
 <!-- ===== LÍNEA DE RETAGUARDIA ESTABLECIDA ===== -->
 <footer id="main-footer">
     <div class="container">
-        <p>&copy; 2024 Makumoto®. Todos los derechos reservados. Forjando Tribus, No Gestionando Gente.</p>
+        <p>&copy; 2024 Makumoto. Todos los derechos reservados. Prohibida su reproducción por cualquier medio.</p>
     </div>
 </footer>
 
@@ -905,7 +1042,7 @@
 <!-- CONFIGURACIÓN Y HEADER DESPUÉS -->
 <script src="js/firebase-config.js"></script>
 <script src="js/app.header.js"></script>
-<!-- ===== NÚCLEO DEL MONOLITO MAKUMOTO® (JS FUSIONADO) ===== -->
+<!-- ===== NÚCLEO DEL MONOLITO Makumoto (JS FUSIONADO) ===== -->
 <script>
 // ===== START: NÚCLEO DE INICIALIZACIÓN UNIFICADO =====
 window.app = window.app || {}; // ESTA ES LA LÍNEA MÁS IMPORTANTE. DEBE IR PRIMERO.
@@ -945,7 +1082,7 @@ const firebaseApp = firebase.apps.length ? firebase.app() : firebase.initializeA
 window.app.functions = firebaseApp.functions("us-central1");
 
 if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-    console.log("MAKUMOTO® DEBUG: Entorno local detectado. Conectando a los emuladores locales...");
+    console.log("Makumoto DEBUG: Entorno local detectado. Conectando a los emuladores locales...");
     // Comentamos los emuladores para que el frontend local consuma las funciones reales del servidor B2B
     // firebase.auth().useEmulator("http://127.0.0.1:9099/");
     // window.app.functions.useEmulator("127.0.0.1", 5001);
@@ -958,7 +1095,7 @@ if (window.location.hostname === "localhost" || window.location.hostname === "12
 const auth = firebase.auth();
 
 function initializeAuthHandlers() {
-    console.log("MAKUMOTO® DEBUG: Inicializando Handlers de Autenticación en Landing...");
+    console.log("Makumoto DEBUG: Inicializando Handlers de Autenticación en Landing...");
     
     // Referencias al DOM
     const loginForm = document.getElementById('login-form');
@@ -1029,7 +1166,7 @@ function initializeAuthHandlers() {
 // =======================================================================
 
 // ===== START: app.state.js =====
-console.log("MAKUMOTO® DEBUG: app.state.js comenzando.");
+console.log("Makumoto DEBUG: app.state.js comenzando.");
 window.app.state = {
     benefits: {
         empresa: [
@@ -1085,7 +1222,7 @@ window.app.state = {
         ]
     }
 };
-console.log("MAKUMOTO® DEBUG: app.state.js finalizado.");
+console.log("Makumoto DEBUG: app.state.js finalizado.");
 // ===== END: app.state.js =====
 
 
@@ -1093,7 +1230,7 @@ console.log("MAKUMOTO® DEBUG: app.state.js finalizado.");
 
 
 // ===== START: app.ui.js =====
-console.log("MAKUMOTO® DEBUG: app.ui.js comenzando.");
+console.log("Makumoto DEBUG: app.ui.js comenzando.");
 window.app.ui = {
     decodeHtmlEntities: function(text) {
         const textArea = document.createElement('textarea');
@@ -1182,15 +1319,73 @@ window.app.ui = {
     },
 
     initTestimonialSlider: function() {
-        const testimonios = document.querySelectorAll('.testimonio');
-        if (testimonios.length > 0) {
-            let current = 0;
-            setInterval(() => {
-                testimonios[current].classList.remove('active');
-                current = (current + 1) % testimonios.length;
-                testimonios[current].classList.add('active');
-            }, 6000);
-        }
+        const stage = document.getElementById('testimonios-stage');
+        if (!stage) return;
+
+        const data = [
+            { img: "imagenes/testimonio1.jpg", q: '"En dos semanas, la energía en la oficina cambió por completo. La gente viene más feliz."', a: "Laura M. - Directora de Talento" },
+            { img: "imagenes/testimonio2.jpg", q: '"Mis clientes ahora compiten en la app. La retención se ha disparado. Increíble."', a: "Carlos R. - Fundador de PowerFit Gym" },
+            { img: "imagenes/testimonio3.jpg", q: '"La adherencia al tratamiento de mis pacientes subió un 30%. Makumoto® es mi nuevo asistente."', a: "Dr. Soto - Clínica Dental Soto" },
+            { img: "imagenes/testimonio4.jpg", q: '"Nunca pensé que diría esto, pero las actividades de la empresa ahora son divertidas. Los retos son adictivos."', a: "Sofía G. - Miembro de Equipo" },
+            { img: "imagenes/testimonio5.jpg", q: '"El Power-Up de analítica me mostró quién estaba a punto de renunciar. Salvé a dos talentos clave. Se pagó solo en un mes."', a: "Miguel A. - CEO de TechCorp" },
+            { img: "imagenes/testimonio6.jpg", q: '"Implementamos Makumoto para el programa de bienestar y la adopción fue inmediata. Es la primera vez que veo algo así."', a: "Elena V. - Gerente de RRHH" },
+            { img: "imagenes/testimonio7.jpg", q: '"Uso la comunidad para mis grupos de entrenamiento. La gente se motiva entre sí, y mi trabajo como coach es más fácil."', a: "Javier P. - Coach Personal" },
+            { img: "imagenes/testimonio8.jpg", q: '"Perfecto para el seguimiento de mis pacientes con ansiedad. Las pequeñas metas diarias de la app les dan un sentido de control."', a: "Dra. Isabel Reyes - Psicóloga Clínica" },
+            { img: "imagenes/testimonio9.jpg", q: '"Redujimos el ausentismo un 15% en el primer trimestre. El \'Termómetro de Ánimo\' nos da data que antes no teníamos."', a: "Ricardo Solís - Gerente de Operaciones" },
+            { img: "imagenes/testimonio10.jpg", q: '"Entrenar se sentía solitario. Ahora soy parte de la comunidad del gym y hasta he hecho amigos. Voy con más ganas."', a: "Ana Lucía - Miembro de PowerFit Gym" },
+            { img: "imagenes/testimonio11.jpg", q: '"La competencia sana que se genera es increíble. Mi equipo de desarrolladores está más unido y enfocado que nunca."', a: "David Chen - Líder de Proyecto en TechCorp" },
+            { img: "imagenes/testimonio12.jpg", q: '"Mis pacientes registran sus comidas y hábitos en Makumoto. Las consultas son más productivas porque llego con data real."', a: "Mónica Arias - Nutrióloga" },
+            { img: "imagenes/testimonio13.jpg", q: '"Antes odiaba las pausas activas. Ahora compito por ser el que más las hace. Es una tontería, pero funciona."', a: "Fernando Garza - Empleado en InnovaCorp" },
+            { img: "imagenes/testimonio14.jpg", q: '"Para mi estudio de yoga, es la herramienta perfecta. Comparto horarios, retos de meditación y mantengo a mi comunidad conectada."', a: "Valeria Ríos - Fundadora de Zen Studio" },
+            { img: "imagenes/testimonio15.jpg", q: '"Lo mejor son los recordatorios de medicamentos. Simple, efectivo y le quita una carga de encima a mis pacientes de la tercera edad."', a: "Dr. Morales - Médico General" },
+            { img: "imagenes/testimonio16.jpg", q: '"Construir cultura es difícil. Makumoto nos dio un lenguaje común de bienestar y competencia que nos ha unido muchísimo."', a: "Carolina F. - Jefa de Cultura Organizacional" }
+        ];
+
+        // Estado inicial: 4 tarjetas activas
+        let activeIndexes = [0, 1, 2, 3];
+
+        const renderStage = () => {
+            stage.innerHTML = activeIndexes.map((dataIndex, slotIndex) => {
+                const item = data[dataIndex];
+                return `
+                    <div class="testimonio-card-live" id="testi-slot-${slotIndex}">
+                        <img src="${item.img}" alt="${item.a}" class="testimonio-avatar" onerror="this.src='https://placehold.co/70x70/FFD700/000000?text=M';">
+                        <blockquote class="testimonio-quote">${item.q}</blockquote>
+                        <div class="testimonio-author">${item.a}</div>
+                    </div>`;
+            }).join('');
+        };
+
+        renderStage();
+
+        // Motor de parpadeo destellante cada 2.2 segundos
+        setInterval(() => {
+            const slotToChange = Math.floor(Math.random() * 4);
+            const slotEl = document.getElementById(`testi-slot-${slotToChange}`);
+            if (!slotEl) return;
+
+            // Desvanecimiento OUT
+            slotEl.classList.add('twinkle-out');
+
+            setTimeout(() => {
+                // Seleccionar un nuevo testimonio no visible actualmente
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * data.length);
+                } while (activeIndexes.includes(newIndex));
+
+                activeIndexes[slotToChange] = newIndex;
+                const newItem = data[newIndex];
+
+                slotEl.querySelector('.testimonio-avatar').src = newItem.img;
+                slotEl.querySelector('.testimonio-quote').textContent = newItem.q;
+                slotEl.querySelector('.testimonio-author').textContent = newItem.a;
+
+                // Desvanecimiento IN
+                slotEl.classList.remove('twinkle-out');
+            }, 500);
+
+        }, 2200);
     },
 
     initFomoBubbles: function() {
@@ -1272,7 +1467,7 @@ window.app.ui = {
 };
     
     // ===== START: app.events.js =====
-console.log("MAKUMOTO® DEBUG: app.events.js comenzando.");
+console.log("Makumoto DEBUG: app.events.js comenzando.");
 window.app.events = {
     handlePlanPurchase: function(button) {
         const planId = button.dataset.plan;
@@ -1302,12 +1497,12 @@ window.app.events = {
         }
     }
 };
-console.log("MAKUMOTO® DEBUG: app.events.js finalizado.");
+console.log("Makumoto DEBUG: app.events.js finalizado.");
 // ===== END: app.events.js =====
     
     // ===== START: MÓDULO DE EJECUCIÓN CENTRALIZADO =====
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("MAKUMOTO® DEBUG: DOMContentLoaded. Iniciando arsenal.");
+    console.log("Makumoto DEBUG: DOMContentLoaded. Iniciando arsenal.");
 
     // 1. Asignar los listeners a los botones de triaje
     document.querySelectorAll('.triage-btn').forEach(button => {
@@ -1316,14 +1511,14 @@ document.addEventListener('DOMContentLoaded', () => {
             window.app.ui.showBenefitsModal(segment);
         });
     });
-    console.log("MAKUMOTO® DEBUG: Listeners de triaje asignados.");
+    console.log("Makumoto DEBUG: Listeners de triaje asignados.");
 
     // 2. Inicializar las dinámicas de la UI (incluyendo el nuevo modal)
     if (window.app.ui && typeof window.app.ui.initLandingDynamics === 'function') {
         window.app.ui.initLandingDynamics();
-        console.log("MAKUMOTO® DEBUG: Dinámicas de UI inicializadas.");
+        console.log("Makumoto DEBUG: Dinámicas de UI inicializadas.");
     } else { 
-        console.error("MAKUMOTO® CRITICAL: ui.initLandingDynamics no disponible."); 
+        console.error("Makumoto CRITICAL: ui.initLandingDynamics no disponible."); 
     }
 
     // 3. Inicializar los manejadores de autenticación
@@ -1410,7 +1605,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    console.log("MAKUMOTO® DEBUG: Módulo de ejecución finalizado. Sistema listo.");
+    console.log("Makumoto DEBUG: Módulo de ejecución finalizado. Sistema listo.");
 });
 // ===== END: MÓDULO DE EJECUCIÓN =====
 </script>
@@ -1419,7 +1614,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <div id="fomo-container"></div>
 
 <!-- =================================================================== -->
-<!--     INICIO DEL CHATBOT INMERSIVO PARA PROSPECTOS MAKUMOTO®      -->
+<!--     INICIO DEL CHATBOT INMERSIVO PARA PROSPECTOS Makumoto      -->
 <!-- =================================================================== -->
 <div id="makumoto-chatbot-container">
     <div id="chatbot-bubble">
@@ -1427,7 +1622,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     <div id="chatbot-window">
         <div id="chatbot-header">
-            <h3>Guía de Tribus Makumoto®</h3>
+            <h3>Guía de Comunidades Makumoto®</h3>
             <button id="chatbot-close-btn">&times;</button>
         </div>
         <div class="chatbot-content-wrapper">
@@ -1521,7 +1716,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const chatbotData = {
             welcome: { text: "¡Hola! Soy tu guía para convertir a tu equipo en una Tribu. Estoy aquí para resolver tus dudas y que puedas empezar a liderar hoy mismo. ¿Qué te gustaría saber?" },
-            q1: { question: "¿Qué es exactamente Makumoto® para Afiliados?", answer: "Es tu oportunidad de crear una <strong>red social privada y exclusiva para tu gente</strong> (empleados, clientes, pacientes). Les das una app divertida que fortalece su lealtad a TU marca, mientras tú obtienes una herramienta de retención y gestión poderosa." },
+            q1: { question: "¿Qué es exactamente Makumoto para Afiliados?", answer: "Es tu oportunidad de crear una <strong>red social privada y exclusiva para tu gente</strong> (empleados, clientes, pacientes). Les das una app divertida que fortalece su lealtad a TU marca, mientras tú obtienes una herramienta de retención y gestión poderosa." },
             q2: { question: "No sé qué 'Sector' elegir (Empresa, Gym, Clínica)...", answer: "¡No te preocupes! Eliges tu sector en tu primer inicio de sesión, <strong>después de comprar</strong>. Esta elección simplemente adapta las herramientas de tu panel para que sean perfectas para ti: engagement para <strong>Empresas</strong>, asistencia para <strong>Gimnasios</strong> o adherencia para <strong>Clínicas</strong>." },
             q3: { question: "¿Cómo funcionan los planes?", answer: "Es muy simple: cada plan define el <strong>tamaño máximo de tu Tribu</strong>. El plan 'business_200', por ejemplo, te permite gestionar hasta 200 miembros. ¡Puedes empezar con uno y crecer cuando lo necesites! Todos los planes tienen acceso a todas las funciones básicas." },
             q4: { question: "¿Qué pasa justo después de que pago?", answer: "El sistema es <strong>100% automático</strong>. Al instante, recibirás un correo con tus credenciales de acceso: tu <strong>Código de Convenio</strong> y una <strong>contraseña temporal</strong>. Con eso, podrás ingresar a tu Centro de Mando y empezar a construir tu Tribu de inmediato." },
@@ -1529,7 +1724,7 @@ document.addEventListener('DOMContentLoaded', () => {
             q6: { question: "¿Qué hacen mis miembros en la app?", answer: "¡Juegan a mejorar! Compiten en rankings, completan misiones diarias, ganan puntos y medallas, y socializan en un entorno privado y seguro. Para ellos, es un juego de bienestar; para ti, es una fuente de datos y engagement." },
             q7: { question: "¿Es un pago único o suscripción?", answer: "Es una <strong>suscripción mensual sin contratos forzosos</strong>. El precio que ves es lo que pagas cada mes por mantener activa a tu tribu. Puedes cancelar cuando quieras, pero estamos seguros de que no querrás hacerlo." },
             q8: { question: "¿Puedo poner mi propia marca?", answer: "¡Claro! Tu marca es la protagonista. Tu nombre y logo estarán presentes, y la tribu se sentirá parte de TU comunidad, no de Makumoto. Nosotros proveemos la tecnología, tú construyes el imperio." },
-            q9: { question: "¿Qué diferencia hay con un grupo de WhatsApp?", answer: "Es la diferencia entre un campamento y un ejército. WhatsApp es caos, ruido y sin métricas. Makumoto® es <strong>estructura, gamificación, datos y control</strong>. Con nosotros, no solo comunicas: diriges, mides y potencias." },
+            q9: { question: "¿Qué diferencia hay con un grupo de WhatsApp?", answer: "Es la diferencia entre un campamento y un ejército. WhatsApp es caos, ruido y sin métricas. Makumoto es <strong>estructura, gamificación, datos y control</strong>. Con nosotros, no solo comunicas: diriges, mides y potencias." },
             q10: { question: "Me interesa, pero ¿hay soporte?", answer: "Absolutamente. Al ser afiliado, tienes acceso a nuestro canal de soporte para gerentes. Tu éxito es nuestro éxito. Estamos contigo en cada paso para asegurar que tu tribu prospere." }
         };
         
