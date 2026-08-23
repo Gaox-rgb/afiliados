@@ -2,6 +2,38 @@
 //  NÚCLEO DEL CENTRO DE MANDO Makumoto
 //  "OPERACIÓN GÉNESIS": FLUJO DE INICIACIÓN Y DASHBOARD DINÁMICO
 // =======================================================================
+/**
+ * Crea u obtiene un contenedor dinámico posicionado inmediatamente debajo de la tarjeta clickeada (Ámbito Global).
+ */
+function getDashboardContentContainer(buttonId) {
+    const existingPanel = document.getElementById('active-panel-container');
+    if (existingPanel) {
+        existingPanel.remove();
+    }
+
+    const clickedCard = document.getElementById(buttonId);
+    if (!clickedCard) return document.getElementById('dashboard-content');
+
+    const panelContainer = document.createElement('div');
+    panelContainer.id = 'active-panel-container';
+    panelContainer.style.cssText = "grid-column: 1 / -1; width: 100%; margin-top: 1rem; margin-bottom: 1rem; transition: all 0.3s ease;";
+    
+    clickedCard.insertAdjacentElement('afterend', panelContainer);
+
+    document.querySelectorAll('.action-card').forEach(card => {
+        card.style.border = "none";
+        card.style.boxShadow = "none";
+    });
+    clickedCard.style.border = "2px solid var(--color-primary)";
+    clickedCard.style.boxShadow = "0 0 15px rgba(255, 215, 0, 0.2)";
+
+    setTimeout(() => {
+        panelContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+
+    return panelContainer;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const ui = {
         portalContainer: document.getElementById('portal-container'),
@@ -43,36 +75,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Contenedor dinámico configurado a nivel global.
+
     /**
-     * Crea u obtiene un contenedor dinámico posicionado inmediatamente debajo de la tarjeta clickeada.
+     * Renderiza el formulario de comunicados en línea para una plantilla del Arsenal.
      */
-    function getDashboardContentContainer(buttonId) {
-        const existingPanel = document.getElementById('active-panel-container');
-        if (existingPanel) {
-            existingPanel.remove();
-        }
+    function renderInlineBroadcastForm(type, label, company) {
+        const contentContainer = getDashboardContentContainer('btn-arsenal-' + type);
+        contentContainer.innerHTML = `
+            <div style="background: var(--color-light-dark); padding: 25px; border-radius: 10px; border-top: 3px solid var(--color-primary); margin-top: 15px; position: relative; text-align: left;">
+                <span id="close-inline-broadcast" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 1.5rem; color: #888;">&times;</span>
+                <h3>Nuevo Comunicado: ${label}</h3>
+                <form id="inline-broadcast-form" data-type="${type}" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+                    <input type="text" id="inline-broadcast-title" placeholder="Título del comunicado" required style="padding: 12px; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                    <textarea id="inline-broadcast-content" placeholder="Escribe tu mensaje aquí..." required rows="5" style="padding: 12px; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;"></textarea>
+                    <div><input type="checkbox" id="inline-broadcast-pinned" style="margin-right: 10px;"><label for="inline-broadcast-pinned">Fijar como aviso importante (Tablón)</label></div>
+                    <button type="submit" class="cta-button" style="background: var(--color-primary); color: var(--color-dark); border: none; padding: 12px; font-weight: bold;">Enviar Transmisión</button>
+                </form>
+            </div>
+        `;
 
-        const clickedCard = document.getElementById(buttonId);
-        if (!clickedCard) return document.getElementById('dashboard-content');
+        document.getElementById('close-inline-broadcast').onclick = () => {
+            contentContainer.remove();
+            document.querySelectorAll('.action-card').forEach(card => {
+                card.style.border = "none";
+                card.style.boxShadow = "none";
+            });
+        };
 
-        const panelContainer = document.createElement('div');
-        panelContainer.id = 'active-panel-container';
-        panelContainer.style.cssText = "grid-column: 1 / -1; width: 100%; margin-top: 1rem; margin-bottom: 1rem; transition: all 0.3s ease;";
-        
-        clickedCard.insertAdjacentElement('afterend', panelContainer);
+        document.getElementById('inline-broadcast-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const button = e.target.querySelector('button[type="submit"]');
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-paper-plane"></i> Enciendo...';
 
-        document.querySelectorAll('.action-card').forEach(card => {
-            card.style.border = "none";
-            card.style.boxShadow = "none";
-        });
-        clickedCard.style.border = "2px solid var(--color-primary)";
-        clickedCard.style.boxShadow = "0 0 15px rgba(255, 215, 0, 0.2)";
+            const payload = {
+                type: type,
+                title: document.getElementById('inline-broadcast-title').value,
+                content: document.getElementById('inline-broadcast-content').value,
+                isPinned: document.getElementById('inline-broadcast-pinned').checked
+            };
 
-        setTimeout(() => {
-            panelContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
-
-        return panelContainer;
+            try {
+                const createCompanyBroadcast = functions.httpsCallable('createCompanybroadcast');
+                await createCompanyBroadcast(payload);
+                alert('¡Comunicado enviado con éxito!');
+                contentContainer.remove();
+                document.querySelectorAll('.action-card').forEach(card => {
+                    card.style.border = "none";
+                    card.style.boxShadow = "none";
+                });
+            } catch (error) {
+                console.error("Error al enviar broadcast:", error);
+                alert(`Error: ${error.message}`);
+                button.disabled = false;
+                button.innerText = 'Enviar Transmisión';
+            }
+        };
     }
 
     /**
@@ -97,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderWelcomeAndSectorChoice(company);
                 } else {
                     console.log('[DEBUG] Sector válido. Renderizando dashboard.');
-                   renderArsenalHome(company, roster);
+                   renderArsenalHome(company, roster, powerUps);
             }
             })
             .catch(error => {
@@ -202,22 +261,122 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /**
+     * Renderiza la sub-pantalla dedicada al Arsenal de Comunicación.
+     */
+    function renderArsenalSubView(company, roster, powerUps) {
+        const templates = broadcastTemplates[company.sector] || [];
+        const arsenalItemsHTML = templates.map(t => `
+            <div class="kpi-card action-card" id="btn-arsenal-${t.type}" style="cursor: pointer; background: #1E1E1E; padding: 25px; transition: transform 0.2s;">
+                <div class="value" style="color: #00ecff; font-size: 2.2rem;"><i class="fas ${t.icon}"></i></div>
+                <div class="label" style="font-weight: bold; margin-top: 10px; font-size: 0.9rem;">${t.label}</div>
+            </div>
+        `).join('');
+
+        ui.portalContainer.innerHTML = `
+            <div style="max-width: 900px; margin: 0 auto; padding: 20px;">
+                <button id="btn-back-to-home" class="cta-button" style="background: transparent; color: #fff; border: 2px solid #555; margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px 20px;">
+                    <i class="fas fa-arrow-left"></i> REGRESAR AL CENTRO DE MANDO
+                </button>
+                
+                <h2 style="color: #00ecff; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; text-align: center;"><i class="fas fa-satellite-dish"></i> Arsenal de Comunicación</h2>
+                <p style="text-align: center; color: #aaa; margin-bottom: 2.5rem; font-size: 0.95rem;">Selecciona una de las plantillas de comunicación rápida para transmitir contenido directamente al celular de tu comunidad.</p>
+                
+                <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 2.5rem;">
+                    ${arsenalItemsHTML}
+                    <div class="kpi-card action-card" id="btn-arsenal-dm" style="cursor: pointer; background: #1E1E1E; padding: 25px; transition: transform 0.2s;">
+                        <div class="value" style="color: #00ecff; font-size: 2.2rem;"><i class="fas fa-envelope"></i></div>
+                        <div class="label" style="font-weight: bold; margin-top: 10px; font-size: 0.9rem;">Mensajes Directos</div>
+                    </div>
+                </div>
+                
+                <div id="dashboard-content" style="margin-top: 2rem;"></div>
+            </div>
+        `;
+
+        document.getElementById('btn-back-to-home').onclick = () => renderArsenalHome(company, roster, powerUps);
+
+        templates.forEach(t => {
+            const cardEl = document.getElementById(`btn-arsenal-${t.type}`);
+            if (cardEl) {
+                cardEl.onclick = () => renderInlineBroadcastForm(t.type, t.label, company);
+            }
+        });
+
+        const arsenalDmCard = document.getElementById('btn-arsenal-dm');
+        if (arsenalDmCard) {
+            arsenalDmCard.onclick = () => renderDirectMessagesConsole(roster, 'btn-arsenal-dm');
+        }
+    }
+
+    /**
+     * Renderiza la sub-pantalla dedicada a las Herramientas de Gestión.
+     */
+    function renderGestionSubView(company, roster, powerUps) {
+        ui.portalContainer.innerHTML = `
+            <div style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+                <button id="btn-back-to-home" class="cta-button" style="background: transparent; color: #fff; border: 2px solid #555; margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px 20px;">
+                    <i class="fas fa-arrow-left"></i> REGRESAR AL CENTRO DE MANDO
+                </button>
+                
+                <h2 style="color: #FFD700; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; text-align: center;"><i class="fas fa-tools"></i> Herramientas de Gestión</h2>
+                <p style="text-align: center; color: #aaa; margin-bottom: 2.5rem; font-size: 0.95rem;">Accede a tus tableros operativos de control de personal, visualización satelital de misiones y configuraciones técnicas.</p>
+                
+                <div id="dashboard-actions" class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 2.5rem;">
+                    <div class="kpi-card action-card" id="btn-show-broadcast" style="cursor: pointer; background: #1E1E1E; padding: 20px; transition: transform 0.2s;">
+                        <div class="value" style="color: #FFD700; font-size: 2rem;"><i class="fas fa-bullhorn"></i></div>
+                        <div class="label" style="font-weight: bold; margin-top: 10px; font-size: 0.85rem;">Consola de Comunicados</div>
+                    </div>
+                    <div class="kpi-card action-card" id="btn-show-direct-messages" style="cursor: pointer; background: #1E1E1E; padding: 20px; transition: transform 0.2s;">
+                        <div class="value" style="color: #FFD700; font-size: 2rem;"><i class="fas fa-envelope"></i></div>
+                        <div class="label" style="font-weight: bold; margin-top: 10px; font-size: 0.85rem;">Bandeja de Mensajes</div>
+                    </div>
+                    <div class="kpi-card action-card" id="btn-show-roster-management" style="cursor: pointer; background: #1E1E1E; padding: 20px; transition: transform 0.2s;">
+                        <div class="value" style="color: #FFD700; font-size: 2rem;"><i class="fas fa-users-cog"></i></div>
+                        <div class="label" style="font-weight: bold; margin-top: 10px; font-size: 0.85rem;">Gestión de Altas</div>
+                    </div>
+                    <div class="kpi-card action-card" id="btn-show-mission-map" style="cursor: pointer; background: #1E1E1E; padding: 20px; transition: transform 0.2s;">
+                        <div class="value" style="color: #FFD700; font-size: 2rem;"><i class="fas fa-map-marked-alt"></i></div>
+                        <div class="label" style="font-weight: bold; margin-top: 10px; font-size: 0.85rem;">Mapa de Misión</div>
+                    </div>
+                    <div class="kpi-card action-card" id="btn-show-premium-upgrades" style="cursor: pointer; background: #1E1E1E; padding: 20px; transition: transform 0.2s;">
+                        <div class="value" style="color: #FFD700; font-size: 2rem;"><i class="fas fa-rocket"></i></div>
+                        <div class="label" style="font-weight: bold; margin-top: 10px; font-size: 0.85rem;">Mejoras Premium</div>
+                    </div>
+                    <div class="kpi-card action-card" id="btn-show-content-manager" style="cursor: pointer; background: #1E1E1E; padding: 20px; transition: transform 0.2s;">
+                        <div class="value" style="color: #FFD700; font-size: 2rem;"><i class="fas fa-feather-alt"></i></div>
+                        <div class="label" style="font-weight: bold; margin-top: 10px; font-size: 0.85rem;">Gestor de Contenido</div>
+                    </div>
+                    <div class="kpi-card action-card" id="btn-show-security-settings" style="cursor: pointer; background: #1E1E1E; padding: 20px; transition: transform 0.2s;">
+                        <div class="value" style="color: #FFD700; font-size: 2rem;"><i class="fas fa-shield-alt"></i></div>
+                        <div class="label" style="font-weight: bold; margin-top: 10px; font-size: 0.85rem;">Cambiar Contraseña</div>
+                    </div>
+                </div>
+                
+                <div id="dashboard-content" style="margin-top: 2rem;"></div>
+            </div>
+        `;
+
+        document.getElementById('btn-back-to-home').onclick = () => renderArsenalHome(company, roster, powerUps);
+
+        document.getElementById('btn-show-broadcast').onclick = () => renderBroadcastConsole(company);
+        document.getElementById('btn-show-direct-messages').onclick = () => renderDirectMessagesConsole(roster);
+        document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
+        document.getElementById('btn-show-mission-map').onclick = renderMissionMapConsole;
+        document.getElementById('btn-show-premium-upgrades').onclick = () => renderPremiumUpgradesConsole(powerUps);
+        document.getElementById('btn-show-content-manager').onclick = renderContentManagerConsole;
+        document.getElementById('btn-show-security-settings').onclick = renderPasswordChangeModal;
+    }
+
+    /**
      * Renderiza el Arsenal Home, la nueva pantalla principal para gerentes configurados.
      */
-    function renderArsenalHome(company, roster) {
+    function renderArsenalHome(company, roster, powerUps) {
         const sectorNames = {
             corporate: 'Corporativo',
             fitness: 'Fitness',
             health: 'Salud y Bienestar'
         };
         const sectorName = sectorNames[company.sector] || 'General';
-        const templates = broadcastTemplates[company.sector] || [];
-        const arsenalItemsHTML = templates.map(t => `
-            <div class="kpi-card">
-                <div class="value"><i class="fas ${t.icon}"></i></div>
-                <div class="label">${t.label}</div>
-            </div>
-        `).join('');
 
         const arsenalHomeHTML = `
             <h1 id="portal-title">Centro de Mando: ${company.name}</h1>
@@ -235,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="plan-info-item" style="text-align: center;">
                     <span style="font-size: 0.75rem; opacity: 0.7; text-transform: uppercase;">Costo:</span>
-                    <strong style="font-size: 0.9rem; display: block;">$${company.planDetails.price} USD</strong>
+                    <strong style="font-size: 0.9rem; display: block;">${company.planDetails.price}</strong>
                 </div>
             </div>
             
@@ -250,59 +409,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="value" style="font-size: 2rem; letter-spacing: 3px;">${company.convenioCode}</div>
             </div>
 
-            <h3 style="margin-bottom: 1rem; border-bottom: 1px solid #444; padding-bottom: 0.5rem;">Tu Arsenal de Comunicación</h3>
-            <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 2.5rem;">
-                ${arsenalItemsHTML}
-                <div class="kpi-card">
-                    <div class="value"><i class="fas fa-envelope"></i></div>
-                    <div class="label">Mensajes Directos</div>
+            <!-- SECCIÓN DE ACCESO CON DOS GRANDES PANELES LLAMATIVOS EN COLORES DIFERENTES -->
+            <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 2rem; margin-bottom: 3rem;">
+                <!-- Botón Arsenal de Comunicación (Cian Táctico) -->
+                <div id="btn-open-arsenal-sub" class="action-card" style="background: linear-gradient(135deg, #00ecff 0%, #0072ff 100%); color: #000; padding: 35px 20px; border-radius: 12px; cursor: pointer; text-align: center; transition: transform 0.2s, box-shadow 0.2s; border: none;">
+                    <div style="font-size: 3.5rem; margin-bottom: 12px; color: #000;"><i class="fas fa-satellite-dish"></i></div>
+                    <h3 style="font-weight: 900; text-transform: uppercase; margin-bottom: 10px; font-size: 1.15rem; letter-spacing: 1px;">Arsenal de Comunicación</h3>
+                    <p style="font-size: 0.85rem; line-height: 1.5; opacity: 0.9; font-weight: 500;">Redacta saludos, transmite anuncios masivos, lanza retos interactivos y chatea con tu comunidad para elevar su participación.</p>
                 </div>
-            </div>
 
-            <h3 style="margin-bottom: 1rem; border-bottom: 1px solid #444; padding-bottom: 0.5rem;">Herramientas de Gestión</h3>
-            <div id="dashboard-actions" class="kpi-grid">
-                <div class="kpi-card action-card" id="btn-show-broadcast">
-                    <div class="value"><i class="fas fa-bullhorn"></i></div>
-                    <div class="label">Consola de Comunicados</div>
+                <!-- Botón Herramientas de Gestión (Oro Imperial) -->
+                <div id="btn-open-gestion-sub" class="action-card" style="background: linear-gradient(135deg, #FFD700 0%, #ffae00 100%); color: #000; padding: 35px 20px; border-radius: 12px; cursor: pointer; text-align: center; transition: transform 0.2s, box-shadow 0.2s; border: none;">
+                    <div style="font-size: 3.5rem; margin-bottom: 12px; color: #000;"><i class="fas fa-tools"></i></div>
+                    <h3 style="font-weight: 900; text-transform: uppercase; margin-bottom: 10px; font-size: 1.15rem; letter-spacing: 1px;">Herramientas de Gestión</h3>
+                    <p style="font-size: 0.85rem; line-height: 1.5; opacity: 0.9; font-weight: 500;">Administra el padrón de altas de miembros, visualiza el mapa de calor de asistencia, gestiona la seguridad y accede a mejoras premium.</p>
                 </div>
-                <div class="kpi-card action-card" id="btn-show-direct-messages">
-                    <div class="value"><i class="fas fa-envelope"></i></div>
-                    <div class="label">Bandeja de Mensajes</div>
-                </div>
-                <div class="kpi-card action-card" id="btn-show-roster-management">
-                    <div class="value"><i class="fas fa-users-cog"></i></div>
-                    <div class="label">Gestión de Altas</div>
-                </div>
-                <div class="kpi-card action-card" id="btn-show-mission-map">
-                    <div class="value"><i class="fas fa-map-marked-alt"></i></div>
-                    <div class="label">Mapa de Misión</div>
-                </div>
-                 <div class="kpi-card action-card" id="btn-show-premium-upgrades">
-                    <div class="value" style="color: #FFD700;"><i class="fas fa-rocket"></i></div>
-                    <div class="label">Mejoras Premium</div>
-                </div>
-                <div class="kpi-card action-card" id="btn-show-content-manager">
-                    <div class="value"><i class="fas fa-feather-alt"></i></div>
-                    <div class="label">Gestor de Contenido</div>
-                </div>
-                <div class="kpi-card action-card" id="btn-show-security-settings">
-                    <div class="value"><i class="fas fa-shield-alt"></i></div>
-                    <div class="label">Cambiar Contraseña</div>
-                </div>
-            </div>
-            <div id="dashboard-content" style="margin-top: 2rem;">
-                 <!-- Este espacio se usará para renderizar las consolas al hacer clic -->
             </div>
         `;
         ui.portalContainer.innerHTML = arsenalHomeHTML;
-        
-        document.getElementById('btn-show-broadcast').onclick = () => renderBroadcastConsole(company);
-        document.getElementById('btn-show-direct-messages').onclick = () => renderDirectMessagesConsole(roster);
-        document.getElementById('btn-show-roster-management').onclick = () => renderRosterManagementConsole();
-        document.getElementById('btn-show-mission-map').onclick = renderMissionMapConsole;
-        document.getElementById('btn-show-premium-upgrades').onclick = () => renderPremiumUpgradesConsole(powerUps);
-        document.getElementById('btn-show-content-manager').onclick = renderContentManagerConsole;
-        document.getElementById('btn-show-security-settings').onclick = renderPasswordChangeModal;
+
+        // Bindeos para abrir las sub-vistas dedicadas
+        document.getElementById('btn-open-arsenal-sub').onclick = () => renderArsenalSubView(company, roster, powerUps);
+        document.getElementById('btn-open-gestion-sub').onclick = () => renderGestionSubView(company, roster, powerUps);
+
         startCountdown('plan-countdown', company.planEndDate);
     }
 
@@ -458,8 +587,8 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Renderiza la consola de Mensajes Directos.
      */
-    function renderDirectMessagesConsole(roster) {
-        const contentContainer = getDashboardContentContainer('btn-show-direct-messages');
+    function renderDirectMessagesConsole(roster, anchorId = 'btn-show-direct-messages') {
+        const contentContainer = getDashboardContentContainer(anchorId);
         const memberListHTML = roster.map(member => `
             <div class="member-list-item" data-uid="${member.uid}" data-name="${member.name}">
                 ${member.name}
