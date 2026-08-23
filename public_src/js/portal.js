@@ -44,6 +44,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
+     * Crea u obtiene un contenedor dinámico posicionado inmediatamente debajo de la tarjeta clickeada.
+     */
+    function getDashboardContentContainer(buttonId) {
+        const existingPanel = document.getElementById('active-panel-container');
+        if (existingPanel) {
+            existingPanel.remove();
+        }
+
+        const clickedCard = document.getElementById(buttonId);
+        if (!clickedCard) return document.getElementById('dashboard-content');
+
+        const panelContainer = document.createElement('div');
+        panelContainer.id = 'active-panel-container';
+        panelContainer.style.cssText = "grid-column: 1 / -1; width: 100%; margin-top: 1rem; margin-bottom: 1rem; transition: all 0.3s ease;";
+        
+        clickedCard.insertAdjacentElement('afterend', panelContainer);
+
+        document.querySelectorAll('.action-card').forEach(card => {
+            card.style.border = "none";
+            card.style.boxShadow = "none";
+        });
+        clickedCard.style.border = "2px solid var(--color-primary)";
+        clickedCard.style.boxShadow = "0 0 15px rgba(255, 215, 0, 0.2)";
+
+        setTimeout(() => {
+            panelContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+
+        return panelContainer;
+    }
+
+    /**
      * Controlador principal: Llama al backend y decide qué vista renderizar.
      */
     function loadPortalData() {
@@ -338,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Renderiza la consola para la Gestión de Altas.
      */
     async function renderRosterManagementConsole() {
-        const contentContainer = document.querySelector('#dashboard-content');
+        const contentContainer = getDashboardContentContainer('btn-show-roster-management');
         contentContainer.innerHTML = `
             <style>
                 .master-list-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
@@ -427,6 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Renderiza la consola de Mensajes Directos.
      */
     function renderDirectMessagesConsole(roster) {
+        const contentContainer = getDashboardContentContainer('btn-show-direct-messages');
         const memberListHTML = roster.map(member => `
             <div class="member-list-item" data-uid="${member.uid}" data-name="${member.name}">
                 ${member.name}
@@ -452,9 +485,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `;
-        document.querySelector('#dashboard-content').innerHTML = consoleHTML;
+        contentContainer.innerHTML = consoleHTML;
 
-        document.querySelector('.member-list').addEventListener('click', (e) => {
+        contentContainer.querySelector('.member-list').addEventListener('click', (e) => {
             if (e.target.classList.contains('member-list-item')) {
                 document.querySelectorAll('.member-list-item').forEach(el => el.classList.remove('active'));
                 e.target.classList.add('active');
@@ -531,7 +564,8 @@ document.addEventListener('DOMContentLoaded', () => {
      * Renderiza la consola de comunicados.
      */
     function renderBroadcastConsole(company) {
-        document.querySelector('#dashboard-content').innerHTML = `
+        const contentContainer = getDashboardContentContainer('btn-show-broadcast');
+        contentContainer.innerHTML = `
             <div style="background-color: var(--color-light-dark); padding: 20px; border-radius: 8px;">
                 <h3>Consola de Transmisiones</h3>
                 <p>Envía comunicados a toda tu comunidad. Los avisos fijados aparecerán de forma destacada.</p>
@@ -648,12 +682,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Renderiza el modal para el cambio de contraseña con todas las mejoras.
      */
     function renderPasswordChangeModal() {
-        // 1. GUARDIA DE UNICIDAD: Si el modal ya existe, no hagas nada.
-        if (document.getElementById('password-change-modal')) {
-            // Opcional: enfocar el modal existente si ya está abierto
-            document.getElementById('password-change-modal').scrollIntoView({ behavior: 'smooth' });
-            return;
-        }
+        const contentContainer = getDashboardContentContainer('btn-show-security-settings');
 
         const modalHTML = `
             <style>
@@ -664,45 +693,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 .alert-error { background-color: #4d1a1a; color: #ffcccc; border-left: 4px solid var(--color-secondary); }
                 .alert-success { background-color: #1a4d2e; color: #ccffdd; border-left: 4px solid #28a745; }
             </style>
-            <div id="password-change-modal" class="modal-overlay visible">
-                <div class="modal-content" style="max-width: 500px;">
-                    <span id="close-password-modal" class="modal-close-btn">&times;</span>
-                    <h3>Cambio de Contraseña Segura</h3>
-                    <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Tu contraseña debe tener: Mínimo 8 caracteres, mayúsculas, minúsculas, números y un símbolo (@$!%*?&).</p>
-                    <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Solo puedes realizar esta acción una vez cada 30 días.</p>
-                    <div id="modal-alert-container" style="display: none; margin-top: 1rem;"></div>
-                    <form id="password-change-form" style="margin-top: 1rem;">
-                        <div class="password-input-wrapper" style="margin-bottom: 1rem;">
-                            <input type="password" id="new-password" placeholder="Nueva Contraseña" required style="width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
-                            <button type="button" class="toggle-password-btn" data-target="new-password"><i class="fas fa-eye"></i></button>
-                        </div>
-                        <div class="password-input-wrapper" style="margin-bottom: 1rem;">
-                            <input type="password" id="confirm-password" placeholder="Confirmar Nueva Contraseña" required style="width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
-                            <button type="button" class="toggle-password-btn" data-target="confirm-password"><i class="fas fa-eye"></i></button>
-                        </div>
-                        <input type="email" id="target-email" placeholder="Correo para enviar la notificación" required style="width: 100%; padding: 12px; margin-bottom: 1.5rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
-                        
-                        <button type="submit" class="cta-button" style="width: 100%; background: linear-gradient(145deg, var(--color-primary), #ffc107); color: var(--color-dark); font-weight: bold; border: none; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">
-                            <i class="fas fa-shield-alt"></i> Actualizar Contraseña y Notificar
-                        </button>
-                    </form>
-                </div>
+            <div id="password-change-modal" style="background: var(--color-light-dark); padding: 25px; border-radius: 10px; border-top: 3px solid var(--color-primary); margin-top: 15px; position: relative;">
+                <span id="close-password-modal" class="modal-close-btn" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 1.5rem;">&times;</span>
+                <h3>Cambio de Contraseña Segura</h3>
+                <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Tu contraseña debe tener: Mínimo 8 caracteres, mayúsculas, minúsculas, números y un símbolo (@$!%*?&).</p>
+                <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Solo puedes realizar esta acción una vez cada 30 días.</p>
+                <div id="modal-alert-container" style="display: none; margin-top: 1rem;"></div>
+                <form id="password-change-form" style="margin-top: 1rem;">
+                    <div class="password-input-wrapper" style="margin-bottom: 1rem;">
+                        <input type="password" id="new-password" placeholder="Nueva Contraseña" required style="width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                        <button type="button" class="toggle-password-btn" data-target="new-password"><i class="fas fa-eye"></i></button>
+                    </div>
+                    <div class="password-input-wrapper" style="margin-bottom: 1rem;">
+                        <input type="password" id="confirm-password" placeholder="Confirmar Nueva Contraseña" required style="width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                        <button type="button" class="toggle-password-btn" data-target="confirm-password"><i class="fas fa-eye"></i></button>
+                    </div>
+                    <input type="email" id="target-email" placeholder="Correo para enviar la notificación" required style="width: 100%; padding: 12px; margin-bottom: 1.5rem; border-radius: 5px; border: 1px solid #444; background: #333; color: white; font-size: 1rem;">
+                    
+                    <button type="submit" class="cta-button" style="width: 100%; background: linear-gradient(145deg, var(--color-primary), #ffc107); color: var(--color-dark); font-weight: bold; border: none; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">
+                        <i class="fas fa-shield-alt"></i> Actualizar Contraseña y Notificar
+                    </button>
+                </form>
             </div>`;
-        // ANTES se usaba document.body.insertAdjacentHTML. Ahora lo adjuntamos al contenido del dashboard.
-        const dashboardContent = document.getElementById('dashboard-content');
-        if (dashboardContent) {
-            dashboardContent.innerHTML = ''; // Limpiar cualquier consola abierta
-            dashboardContent.insertAdjacentHTML('beforeend', modalHTML);
-        } else {
-            // Fallback si #dashboard-content no existe, aunque no debería pasar en este flujo.
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-        }
+        
+        contentContainer.innerHTML = modalHTML;
 
         const modal = document.getElementById('password-change-modal');
-        document.getElementById('close-password-modal').onclick = () => modal.remove();
-        document.getElementById('password-change-form').onsubmit = handlePasswordChangeSubmit;
+        document.getElementById('close-password-modal').onclick = () => {
+            contentContainer.innerHTML = '';
+            document.querySelectorAll('.action-card').forEach(card => {
+                card.style.border = "none";
+                card.style.boxShadow = "none";
+            });
+        };
 
-        // Listeners para los visores de contraseña
         modal.querySelectorAll('.toggle-password-btn').forEach(btn => {
             btn.onclick = () => {
                 const targetInput = document.getElementById(btn.dataset.target);
@@ -716,9 +740,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
         });
-
-        // 2. SCROLL INTELIGENTE: Desplazar la vista hacia el modal recién creado.
-        modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     /**
@@ -769,7 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * [NUEVO] Renderiza la consola de "Mejoras Premium" (Power-Ups).
      */
     function renderPremiumUpgradesConsole(powerUps) {
-        const contentContainer = document.querySelector('#dashboard-content');
+        const contentContainer = getDashboardContentContainer('btn-show-premium-upgrades');
         contentContainer.innerHTML = `
             <style>
                 .powerup-grid {
@@ -885,7 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * [NUEVO] Renderiza la consola del "Mapa de Misión" y carga los datos.
      */
     async function renderMissionMapConsole() {
-        const contentContainer = document.querySelector('#dashboard-content');
+        const contentContainer = getDashboardContentContainer('btn-show-mission-map');
         contentContainer.innerHTML = `
             <style>
                 #mission-map { height: 60vh; width: 100%; border-radius: 8px; background-color: #333; }
@@ -954,7 +975,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * [NUEVO] Renderiza la consola para gestionar el contenido premium.
      */
     async function renderContentManagerConsole() {
-        const contentContainer = document.querySelector('#dashboard-content');
+        const contentContainer = getDashboardContentContainer('btn-show-content-manager');
         contentContainer.innerHTML = `
             <style>
                 .content-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
