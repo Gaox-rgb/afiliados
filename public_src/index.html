@@ -1113,27 +1113,13 @@ function initializeAuthHandlers() {
                 // Si no contiene un "@", asumimos que es un código de convenio
                 if (!inputVal.includes('@')) {
                     console.log("Detectado código de convenio. Obteniendo email asociado...");
-                    
                     try {
-                        // 1. Intento primario por Same-Origin Endpoint (Bypass absoluto de CORS)
-                        const response = await fetch('/api/getManagerEmailByCode', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ convenioCode: inputVal })
-                        });
-                        
-                        if (response.ok) {
-                            const resData = await response.json();
-                            email = resData.email || resData.data?.email;
-                        } else {
-                            throw new Error("Fallo en endpoint de Hosting rewrite.");
-                        }
-                    } catch (fetchErr) {
-                        console.warn("Fallo endpoint de Hosting, usando fallback Callable...", fetchErr);
-                        // 2. Fallback al SDK Callable tradicional (se conserva como respaldo secundario)
                         const getManagerEmail = window.app.functions.httpsCallable('resolveManagerEmailByCode');
                         const result = await getManagerEmail({ convenioCode: inputVal });
                         email = result.data.email;
+                    } catch (err) {
+                        console.error("Error al resolver código de convenio:", err);
+                        throw new Error("Código de convenio no válido o no encontrado.");
                     }
                 }
 

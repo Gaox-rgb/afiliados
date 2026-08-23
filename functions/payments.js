@@ -426,29 +426,15 @@ exports.finalizeAffiliatePurchase = onRequest(paymentOpts, async (req, res) => {
     }
 });
 
-exports.resolveManagerEmailByCode = onRequest({
-    cors: true,
+exports.resolveManagerEmailByCode = onCall({
     region: "us-central1",
     memory: "128MiB",
     invoker: "public"
-}, async (req, res) => {
-    // Permitir CORS de manera explícita por seguridad ante peticiones directas
-    res.set('Access-Control-Allow-Origin', '*');
-    if (req.method === 'OPTIONS') {
-        res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-        res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-        return res.status(204).send('');
-    }
-
-    let convenioCode = req.body?.convenioCode || req.query?.convenioCode;
-    
-    // Soporte para peticiones empaquetadas de SDK antiguos (.data)
-    if (req.body?.data?.convenioCode) {
-        convenioCode = req.body.data.convenioCode;
-    }
+}, async (request) => {
+    const { convenioCode } = request.data || {};
 
     if (!convenioCode) {
-        return res.status(400).json({ error: "Falta el código de convenio." });
+        throw new HttpsError("invalid-argument", "Falta el código de convenio.");
     }
 
     try {
@@ -458,7 +444,7 @@ exports.resolveManagerEmailByCode = onRequest({
             .get();
 
         if (companySnapshot.empty) {
-            return res.status(404).json({ error: "Código de convenio no válido o no encontrado." });
+            throw new HttpsError("not-found", "Código de convenio no válido o no encontrado.");
         }
 
         const companyId = companySnapshot.docs[0].id;
@@ -469,20 +455,16 @@ exports.resolveManagerEmailByCode = onRequest({
             .get();
 
         if (userSnapshot.empty) {
-            return res.status(404).json({ error: "No se pudo encontrar un gerente para este código." });
+            throw new HttpsError("not-found", "No se pudo encontrar un gerente para este código.");
         }
 
         const userData = userSnapshot.docs[0].data();
-        
-        // Retorna respuestas estructuradas compatibles con fetch y con SDK Callable (.data)
-        return res.status(200).json({ 
-            data: { email: userData.email },
-            email: userData.email 
-        });
+        return { email: userData.email };
 
     } catch (error) {
-        logger.error("Error en getManagerEmailByCode:", error);
-        return res.status(500).json({ error: "Error interno del servidor." });
+        logger.error("Error en resolveManagerEmailByCode:", error);
+        if (error instanceof HttpsError) throw error;
+        throw new HttpsError("internal", "Error interno del servidor.");
     }
 });
 

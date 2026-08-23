@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutButton: document.getElementById('btn-logout-footer'),
     };
 
+    const functions = firebase.app().functions("us-central1");
+
     const broadcastTemplates = {
         corporate: [
             { type: 'greeting', label: 'Saludo / Despedida', icon: 'fa-hand-sparkles' },
@@ -48,9 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.portalContainer.innerHTML = `<p class="loader-text" style="text-align: center; padding: 40px 0;"><i class="fas fa-spinner fa-spin"></i> Cargando Centro de Mando...</p>`;
         
         console.log('[DEBUG] Preparando la llamada a getPortalData...');
-        const getPortalData = firebase.functions().httpsCallable('getPortalData');
+        const getPortalData = functions.httpsCallable('getPortalData');
 
-        getPortalData()
+    getPortalData()
             .then(result => {
                 console.log('[DEBUG] ¡Llamada completada! Resultado recibido:', result);
                 const { company, roster, powerUps } = result.data;
@@ -125,8 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.portalContainer.innerHTML = `<p class="loader-text" style="text-align: center; padding: 40px 0;"><i class="fas fa-save"></i> Guardando tu elección como punto de no retorno...</p>`;
 
         try {
-            const setCompanySector = firebase.functions().httpsCallable('setCompanySector');
-            await setCompanySector({ sector: sector });
+            const setCompanySector = functions.httpsCallable('setCompanySector');
+        await setCompanySector({ sector: sector });
 
             // ¡Éxito! En lugar de recargar, llamamos a la nueva pantalla.
             renderInitialArsenalSetup(sector);
@@ -364,8 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('add-member-form').onsubmit = handleAddMemberSubmit;
         
         try {
-            const getCompanyMasterList = firebase.functions().httpsCallable('getCompanyMasterList');
-            const result = await getCompanyMasterList();
+            const getCompanyMasterList = functions.httpsCallable('getCompanyMasterList');
+        const result = await getCompanyMasterList();
             const masterList = result.data;
             
             const listContent = document.getElementById('master-list-content');
@@ -410,8 +412,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const addMemberToMasterList = firebase.functions().httpsCallable('addMemberToMasterList');
-            await addMemberToMasterList(payload);
+            const addMemberToMasterList = functions.httpsCallable('addMemberToMasterList');
+        await addMemberToMasterList(payload);
             event.target.reset(); // Limpiar el formulario
             renderRosterManagementConsole(); // Recargar la vista para mostrar el nuevo miembro
         } catch (error) {
@@ -471,8 +473,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chatContainer.innerHTML = `<p class="loader-text"><i class="fas fa-spinner fa-spin"></i> Cargando historial...</p>`;
         
         try {
-            const getDirectMessageHistory = firebase.functions().httpsCallable('getDirectMessageHistory');
-            const result = await getDirectMessageHistory({ targetUid });
+            const getDirectMessageHistory = functions.httpsCallable('getDirectMessageHistory');
+        const result = await getDirectMessageHistory({ targetUid });
             const history = result.data;
 
             const historyHTML = history.length > 0
@@ -514,8 +516,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const sendDirectMessage = firebase.functions().httpsCallable('sendDirectMessage');
-            await sendDirectMessage(payload);
+            const sendDirectMessage = functions.httpsCallable('sendDirectMessage');
+        await sendDirectMessage(payload);
             // Refrescar la vista de chat para mostrar el nuevo mensaje
             renderChatView(targetUid, targetName);
         } catch (error) {
@@ -610,8 +612,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const createCompanyBroadcast = firebase.functions().httpsCallable('createCompanybroadcast');
-            await createCompanyBroadcast(payload);
+            const createCompanyBroadcast = functions.httpsCallable('createCompanybroadcast');
+        await createCompanyBroadcast(payload);
             alert('¡Comunicado enviado a tu comunidad!');
             document.getElementById('broadcast-modal').remove();
             renderBroadcastConsole(company); // Re-renderiza la consola
@@ -745,8 +747,8 @@ document.addEventListener('DOMContentLoaded', () => {
         button.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Actualizando...';
 
         try {
-            const changeManagerPassword = firebase.functions().httpsCallable('changeManagerPassword');
-            await changeManagerPassword({ newPassword: newPass, targetEmail: targetEmail });
+            const changeManagerPassword = functions.httpsCallable('changeManagerPassword');
+        await changeManagerPassword({ newPassword: newPass, targetEmail: targetEmail });
 
             showModalAlert('¡Contraseña actualizada con éxito! Se ha enviado una notificación.', 'success');
             setTimeout(() => {
@@ -861,8 +863,8 @@ document.addEventListener('DOMContentLoaded', () => {
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
 
         try {
-            const createPowerUpPurchaseOrder = firebase.functions().httpsCallable('createPowerUpPurchaseOrder');
-            const result = await createPowerUpPurchaseOrder({ powerUpId });
+            const createPowerUpPurchaseOrder = functions.httpsCallable('createPowerUpPurchaseOrder');
+        const result = await createPowerUpPurchaseOrder({ powerUpId });
             
             const approveUrl = result.data.approveUrl;
             if (approveUrl) {
@@ -913,8 +915,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }).addTo(map);
 
             // Llamar al backend para obtener los check-ins
-            const getMissionCheckIns = firebase.functions().httpsCallable('getMissionCheckIns');
-            const result = await getMissionCheckIns();
+            const getMissionCheckIns = functions.httpsCallable('getMissionCheckIns');
+        const result = await getMissionCheckIns();
             const checkIns = result.data;
 
             if (checkIns.length === 0) {
@@ -975,8 +977,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-create-content').onclick = () => renderContentFormModal();
 
         try {
-            const getPremiumContent = firebase.functions().httpsCallable('getPremiumContent');
-            const result = await getPremiumContent();
+            const getPremiumContent = functions.httpsCallable('getPremiumContent');
+        const result = await getPremiumContent();
             const contentList = result.data;
             const listContainer = document.getElementById('content-list-content');
 
@@ -1014,8 +1016,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 deleteContent: async (id) => {
                     if (!confirm('¿Estás seguro de que quieres eliminar este contenido de forma permanente?')) return;
                     try {
-                        const managePremiumContent = firebase.functions().httpsCallable('managePremiumContent');
-                        await managePremiumContent({ mode: 'delete', payload: { id } });
+                        const managePremiumContent = functions.httpsCallable('managePremiumContent');
+                await managePremiumContent({ mode: 'delete', payload: { id } });
                         alert('Contenido eliminado.');
                         renderContentManagerConsole(); // Recargar la lista
                     } catch (error) {
@@ -1109,11 +1111,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const managePremiumContent = firebase.functions().httpsCallable('managePremiumContent');
-            const result = await managePremiumContent({
-                mode: isEditing ? 'update' : 'create',
-                payload: payload
-            });
+            const managePremiumContent = functions.httpsCallable('managePremiumContent');
+        const result = await managePremiumContent({
+            mode: isEditing ? 'update' : 'create',
+            payload: payload
+        });
             alert(result.data.message);
             document.getElementById('content-modal').remove();
             renderContentManagerConsole(); // Recargar la lista de contenido
