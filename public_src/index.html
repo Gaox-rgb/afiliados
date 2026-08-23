@@ -1083,9 +1083,8 @@ window.app.functions = firebaseApp.functions("us-central1");
 
 if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
     console.log("Makumoto DEBUG: Entorno local detectado. Conectando a los emuladores locales...");
-    // Comentamos los emuladores para que el frontend local consuma las funciones reales del servidor B2B
-    // firebase.auth().useEmulator("http://127.0.0.1:9099/");
-    // window.app.functions.useEmulator("127.0.0.1", 5001);
+    firebase.auth().useEmulator("http://127.0.0.1:9099/");
+    window.app.functions.useEmulator("127.0.0.1", 5001);
 }
 // ===== END: NÚCLEO DE INICIALIZACIÓN =====
 
@@ -1567,24 +1566,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.app.ui.showLoader('Redirigiendo a pasarela PayPal...');
 
                 // Llamar al backend pasando los datos del usuario y el código de convenio pre-aprobado junto con su contraseña
-                const createOrder = window.app.functions.httpsCallable('createAffiliatePaypalOrder');
-                const result = await createOrder({ 
-                    planId: planId, 
-                    uid: user.uid, 
-                    name: name, 
-                    email: email,
-                    convenioCode: convenioCode,
-                    password: password
+                const response = await fetch('/api/createAffiliatePaypalOrder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        data: {
+                            planId: planId, 
+                            uid: user.uid, 
+                            name: name, 
+                            email: email,
+                            convenioCode: convenioCode,
+                            password: password
+                        }
+                    })
                 });
 
-                if (result.data && result.data.approveUrl) {
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error?.message || "Error al conectar con el servidor.");
+                }
+
+                const resData = await response.json();
+                const result = resData.result || resData.data;
+
+                if (result && result.approveUrl) {
                     // Enlazar los datos del convenio al token de PayPal temporalmente
-                    const urlParams = new URL(result.data.approveUrl);
+                    const urlParams = new URL(result.approveUrl);
                     const payToken = urlParams.searchParams.get('token');
                     if (payToken) {
                         sessionStorage.setItem(`credentials_${payToken}`, JSON.stringify(pendingCredentials));
                     }
-                    window.location.href = result.data.approveUrl;
+                    window.location.href = result.approveUrl;
                 } else {
                     throw new Error("No se pudo obtener la URL de aprobación segura.");
                 }

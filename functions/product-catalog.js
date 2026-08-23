@@ -36,7 +36,7 @@ exports.PRODUCT_CATALOG = {
   "growth_50": { name: "Plan Núcleo", price: 10.00, type: "affiliate_plan", affiliateLimit: 50 },
   "business_200": { name: "Plan Zenith", price: 15.00, type: "affiliate_plan", isRecommended: true, affiliateLimit: 200 },
   "enterprise_500": { name: "Plan Master", price: 25.00, type: "affiliate_plan", affiliateLimit: 500 }
-},
+,
   "plan_plus": {
     name: "Plan Plus Individual (Emprendedores)",
     price: 2.50,

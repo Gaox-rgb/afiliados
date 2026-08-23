@@ -28,6 +28,13 @@
     ],
     "rewrites": [
       {
+        "source": "/api/createAffiliatePaypalOrder",
+        "function": {
+          "id": "createAffiliatePaypalOrder",
+          "region": "us-central1"
+        }
+      },
+      {
         "source": "/api/finalizeAffiliatePurchase",
         "function": {
           "id": "finalizeAffiliatePurchase",
@@ -54,7 +61,39 @@
           "id": "sendRecoveryCredentials",
           "region": "us-central1"
         }
+      },
+      {
+        "source": "/api/activateAffiliateAccount",
+        "function": {
+          "id": "activateAffiliateAccount",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/getPayPalConfig",
+        "function": {
+          "id": "getPayPalConfig",
+          "region": "us-central1"
+        }
       }
     ]
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
   }
 }

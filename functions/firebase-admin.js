@@ -14,13 +14,15 @@ const db = getFirestore();
 const auth = admin.auth();
 const storage = admin.storage();
 
+const { defineString } = require("firebase-functions/params");
+
 // CENTRALIZACIÓN DE SECRETOS CORPORATIVOS B2B
 const paypalClientId = defineSecret("PAYPAL_CLIENT_ID");
 const paypalClientSecret = defineSecret("PAYPAL_CLIENT_SECRET");
 const paypalWebhookId = defineSecret("PAYPAL_WEBHOOK_ID");
-const paypalMode = defineSecret("PAYPAL_MODE");
+const paypalMode = defineString("PAYPAL_MODE", { default: "sandbox" });
 const resendApiKey = defineSecret("RESEND_API_KEY");
-const adminEmail = defineSecret("ADMIN_EMAIL");
+const adminEmail = defineString("ADMIN_EMAIL", { default: "soporte@makumoto.com" });
 
 module.exports = { 
     db, 

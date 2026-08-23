@@ -2,6 +2,12 @@
 // ARCHIVO: functions/utils.js - HELPER CENTRALIZADO EXCLUSIVO B2B
 // ==================================================================================
 
+const dns = require('node:dns');
+if (typeof dns.setDefaultResultOrder === 'function') {
+  dns.setDefaultResultOrder('ipv4first');
+}
+
+const https = require('https');
 const { HttpsError } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 
@@ -17,14 +23,15 @@ const {
 let resend = null;
 
 function getSecret(secretObj, fallbackEnv = "") {
+  const envVar = (typeof secretObj === 'object' ? secretObj.name : secretObj) || fallbackEnv;
+  if (process.env[envVar]) {
+    return process.env[envVar];
+  }
   try {
     if (typeof secretObj === 'object' && secretObj.value) {
       return secretObj.value();
     }
-  } catch (e) {
-    const envVar = (typeof secretObj === 'object' ? secretObj.name : secretObj) || fallbackEnv;
-    return process.env[envVar] || "";
-  }
+  } catch (e) {}
   return "";
 }
 
@@ -56,56 +63,117 @@ function handleError(error, context) {
 }
 
 // --- 2. COMUNICADOS DE EMAIL (RESEND) ---
-function ensureResendInitialized() {
-  if (resend) return true;
-  try {
-    const { Resend } = require("resend");
-    const apiKey = getSecret(resendApiKey, "RESEND_API_KEY");
-    if (apiKey) {
-      resend = new Resend(apiKey);
-      return true;
-    }
-  } catch (err) {
-    logger.error("Error al instanciar el cliente de Resend:", err);
-  }
-  logger.warn("⚠️ FALTA RESEND_API_KEY o módulo 'resend': Los correos se simularán en logs.");
-  return false;
+function sendEmailViaHttps(apiKey, payload) {
+    return new Promise((resolve, reject) => {
+        const cleanApiKey = apiKey.trim().replace(/^["']|["']$/g, '');
+        const postData = JSON.stringify(payload);
+
+        const options = {
+            hostname: 'api.resend.com',
+            port: 443,
+            path: '/emails',
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${cleanApiKey}`,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(postData)
+            }
+        };
+
+        const req = https.request(options, (res) => {
+            let data = '';
+            res.on('data', (chunk) => { data += chunk; });
+            res.on('end', () => {
+                resolve({ statusCode: res.statusCode, body: data });
+            });
+        });
+
+        req.on('error', (e) => { reject(e); });
+        req.write(postData);
+        req.end();
+    });
 }
 
 async function sendConfirmationEmail(to, emailOptions) {
-  const isReady = ensureResendInitialized();
-  if (!isReady) {
-    logger.log(`📧 [EMAIL SIMULADO B2B] Para: ${to} | Asunto: ${emailOptions.subject}`);
-    return;
-  }
-
   try {
-    const response = await resend.emails.send({
-      from: "Makumoto Afiliados <soporte@makumoto.com>",
-      to: [to],
-      subject: emailOptions.subject,
-      html: emailOptions.html,
-    });
-    
-    if (response.error) {
-      logger.error(`❌ [RESEND ERROR API] Error enviando correo a ${to}:`, response.error);
-    } else {
-      logger.info(`✅ Email corporativo enviado a ${to}. ID: ${response.data?.id}`);
+    let apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      apiKey = getSecret(resendApiKey, "RESEND_API_KEY");
     }
+
+    if (!apiKey) {
+      logger.error("❌ [REST RESEND] Falla crítica: No se detectó ninguna clave RESEND_API_KEY.");
+      return;
+    }
+
+    let fromSender = "Makumoto Afiliados <soporte@makumoto.com>";
+    let attempt = 1;
+    let success = false;
+
+    while (attempt <= 2 && !success) {
+      logger.info(`📧 [REST RESEND] Intento ${attempt} con remitente: ${fromSender}`);
+      
+      const payload = {
+        from: fromSender,
+        to: [to],
+        subject: emailOptions.subject,
+        html: emailOptions.html
+      };
+
+      try {
+        const result = await sendEmailViaHttps(apiKey, payload);
+        let responseData;
+        try {
+          responseData = JSON.parse(result.body);
+        } catch (e) {
+          responseData = { rawResponse: result.body };
+        }
+
+        if (result.statusCode >= 200 && result.statusCode < 300) {
+          success = true;
+          logger.info(`✅ [REST RESEND EXITO] Correo enviado en intento ${attempt}. ID: ${responseData.id}`);
+        } else {
+          logger.warn(`⚠️ [REST RESEND INTENTO ${attempt} FALLIDO - HTTP ${result.statusCode}]:`, JSON.stringify(responseData));
+          if (attempt === 1) {
+            fromSender = "Makumoto Onboarding <onboarding@resend.dev>";
+            attempt++;
+          } else {
+            break;
+          }
+        }
+      } catch (reqErr) {
+        logger.error(`❌ [REST RESEND REQ ERROR] Intento ${attempt} falló por red:`, reqErr.message || reqErr);
+        if (attempt === 1) {
+          fromSender = "Makumoto Onboarding <onboarding@resend.dev>";
+          attempt++;
+        } else {
+          break;
+        }
+      }
+    }
+
+    if (!success) {
+      logger.error(`❌ [REST RESEND ERROR DEFINITIVO] Todos los intentos de envío fallaron.`);
+    }
+
   } catch (error) {
-    logger.error(`❌ [RESEND EXCEPTION] Error enviando correo a ${to}:`, error);
+    logger.error(`❌ [REST RESEND EXCEPCIÓN] Error crítico en el flujo de envío hacia ${to}:`, error.message || error);
   }
 }
 
 // --- 3. PROCESADOR DE PAGOS DE PAYPAL ---
 async function getPayPalAccessToken() {
+    console.log("[DIAGNOSTICO] 1. Obteniendo Client ID...");
     let clientId = getSecret(paypalClientId);
+    console.log("[DIAGNOSTICO] 2. Obteniendo Client Secret...");
     let clientSecret = getSecret(paypalClientSecret);
     const mode = getSecret(paypalMode) || "sandbox";
 
+    console.log("[DIAGNOSTICO] 3. Credenciales cargadas localmente. Modo:", mode);
     const baseUrl = mode === "live" ? "https://api-m.paypal.com" : "https://api-m.sandbox.paypal.com";
 
     const authKey = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    console.log("[DIAGNOSTICO] 4. Intentando conectar y hacer fetch a PayPal:", `${baseUrl}/v1/oauth2/token`);
 
     try {
         const response = await fetch(`${baseUrl}/v1/oauth2/token`, {
@@ -117,6 +185,7 @@ async function getPayPalAccessToken() {
             body: new URLSearchParams({ "grant_type": "client_credentials" })
         });
 
+        console.log("[DIAGNOSTICO] 5. ¡Respuesta de red recibida de PayPal! Status:", response.status);
         const text = await response.text();
         if (!response.ok) {
             throw new Error(`Error de autenticación de PayPal: ${response.status} - ${text}`);

@@ -8,9 +8,17 @@
     // Invocación segura mediante Firebase SDK Callable, eliminando dependencias de rutas de Hosting
     async function callCallableFunction(functionName, data) {
         try {
-            const callable = firebase.app().functions("us-central1").httpsCallable(functionName);
-            const result = await callable(data);
-            return result.data;
+            const response = await fetch(`/api/${functionName}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: data })
+            });
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error?.message || "Fallo en la comunicación con el servidor.");
+            }
+            const resData = await response.json();
+            return resData.result || resData.data;
         } catch (error) {
             throw new Error(error.message || "Fallo en la comunicación con el servidor.");
         }

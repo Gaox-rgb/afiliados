@@ -12,23 +12,18 @@ const {
 } = adminProps;
 
 const paymentOpts = {
+  cors: true,
   region: "us-central1",
   memory: "512MiB",
   maxInstances: 10,
   timeoutSeconds: 60,
   invoker: "public",
-  secrets: [
-    paypalClientId, 
-    paypalClientSecret, 
-    paypalMode, 
-    resendApiKey, 
-    adminEmail,
-    paypalWebhookId
-  ],
+  secrets: [paypalClientId, paypalClientSecret, paypalWebhookId, resendApiKey],
 };
 
 // Configuración optimizada exclusiva para correo y autenticación (Cura definitiva a CORS por preflight)
 const emailOpts = {
+  cors: true,
   region: "us-central1",
   memory: "256MiB",
   maxInstances: 10,
@@ -48,22 +43,51 @@ exports.getPayPalConfig = onCall({
   return { clientId: paypalClientId.value() };
 });
 
-exports.createAffiliatePaypalOrder = onCall(paymentOpts, async (request) => {
+exports.createAffiliatePaypalOrder = onRequest(paymentOpts, async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+        return res.status(204).send('');
+    }
+
     try {
-        const { planId, uid, name, email, convenioCode, password } = request.data || {};
+        let params = req.body || {};
+        if (req.body?.data) params = req.body.data;
+
+        const { planId, uid, name, email, convenioCode, password } = params;
         if (!planId || !uid) {
-            throw new HttpsError("invalid-argument", "Faltan parámetros indispensables de compra.");
+            return res.status(400).json({ error: { message: "Faltan parámetros indispensables de compra." } });
         }
 
         const { PRODUCT_CATALOG } = require("./product-catalog.js");
         const plan = PRODUCT_CATALOG[planId];
         if (!plan) {
-            throw new HttpsError("not-found", "Plan o membresía no encontrada.");
+            return res.status(404).json({ error: { message: "Plan o membresía no encontrada." } });
         }
 
         const customIdPayload = `${planId}|${uid}|${encodeURIComponent(name || "")}|${encodeURIComponent(email || "")}|${convenioCode || ""}|${encodeURIComponent(password || "")}`;
         const isIndividual = plan.type === "individual_plan";
         const returnPage = isIndividual ? "makumoto-app.html?purchase=success" : "success.html";
+
+        if (process.env.FUNCTIONS_EMULATOR === "true") {
+            logger.info("[EMULATOR] Generando compra simulada local para desarrollo.");
+            const mockToken = "EC-MOCKTOKEN" + Math.floor(100000 + Math.random() * 900000);
+            const mockApproveUrl = `http://127.0.0.1:5000/${returnPage}?planId=${planId}&amount=${plan.price}&currency=USD&token=${mockToken}`;
+            
+            await db.collection("pendingB2BOrders").doc(mockToken).set({
+                planId,
+                uid,
+                name,
+                email,
+                convenioCode,
+                password,
+                customIdPayload,
+                createdAt: new Date()
+            });
+
+            return res.status(200).json({ data: { approveUrl: mockApproveUrl } });
+        }
 
         const orderData = {
             intent: "CAPTURE",
@@ -85,15 +109,25 @@ exports.createAffiliatePaypalOrder = onCall(paymentOpts, async (request) => {
         const approveUrl = order.links?.find(link => link.rel === "approve")?.href;
         
         if (!approveUrl) {
-            throw new HttpsError("internal", "No se pudo obtener la URL de aprobación de PayPal.");
+            return res.status(500).json({ error: { message: "No se pudo obtener la URL de aprobación de PayPal." } });
         }
+
+        await db.collection("pendingB2BOrders").doc(order.id).set({
+            planId,
+            uid,
+            name,
+            email,
+            convenioCode,
+            password,
+            customIdPayload,
+            createdAt: new Date()
+        });
         
-        return { approveUrl };
+        return res.status(200).json({ data: { approveUrl } });
 
     } catch (error) {
         logger.error("Error catastrófico creando orden B2B:", error);
-        if (error instanceof HttpsError) throw error;
-        throw new HttpsError("internal", "No se pudo procesar la orden.");
+        return res.status(500).json({ error: { message: error.message || "No se pudo procesar la orden." } });
     }
 });
 
@@ -267,10 +301,22 @@ async function createAffiliateManager(orderID, email, name, planId, uid = null, 
     return { email, tempPassword: finalTempPassword, convenioCode };
 }
 
-exports.finalizeAffiliatePurchase = onCall(paymentOpts, async (request) => {
+exports.finalizeAffiliatePurchase = onRequest(paymentOpts, async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+        return res.status(204).send('');
+    }
+
     try {
-        const { orderID } = request.data || {};
-        if (!orderID) return { success: false, error: "Falta el ID de la orden en la petición." };
+        let params = req.body || {};
+        if (req.body?.data) params = req.body.data;
+
+        const { orderID } = params;
+        if (!orderID) {
+            return res.status(200).json({ data: { success: false, error: "Falta el ID de la orden en la petición." } });
+        }
 
         const processedDoc = await db.collection("processedB2BOrders").doc(orderID).get();
         if (processedDoc.exists) {
@@ -278,33 +324,56 @@ exports.finalizeAffiliatePurchase = onCall(paymentOpts, async (request) => {
             const userId = processedData?.userId;
             
             if (!userId) {
-                return { success: false, error: "La orden fue procesada pero no contiene ID de usuario asociado." };
+                return res.status(200).json({ data: { success: false, error: "La orden fue procesada pero no contiene ID de usuario." } });
             }
 
             const userDoc = await db.collection("users").doc(userId).get();
             if (!userDoc.exists) {
-                return { success: false, error: "No se encontró el registro del gerente asociado en users." };
+                return res.status(200).json({ data: { success: false, error: "No se encontró el registro del gerente." } });
             }
 
             const userData = userDoc.data();
             const companyId = userData?.corporateData?.companyId;
             if (!companyId) {
-                return { success: false, error: "El usuario recuperado no tiene una compañía asociada en Firestore." };
+                return res.status(200).json({ data: { success: false, error: "El usuario no tiene una compañía asociada." } });
             }
 
             const companyDoc = await db.collection("companies").doc(companyId).get();
             if (!companyDoc.exists) {
-                return { success: false, error: "La compañía asociada a esta cuenta no fue encontrada." };
+                return res.status(200).json({ data: { success: false, error: "La compañía asociada no fue encontrada." } });
             }
 
-            return {
-                success: true,
-                credentials: {
-                    email: userData.email,
-                    tempPassword: "La que elegiste al registrarte",
-                    convenioCode: companyDoc.data().convenioCode
+            return res.status(200).json({
+                data: {
+                    success: true,
+                    credentials: {
+                        email: userData.email,
+                        tempPassword: "La que elegiste al registrarte",
+                        convenioCode: companyDoc.data().convenioCode
+                    }
                 }
-            };
+            });
+        }
+
+        let planId, uid, finalName, finalEmail, preApprovedConvenio, chosenPassword;
+        const pendingDoc = await db.collection("pendingB2BOrders").doc(orderID).get();
+        if (pendingDoc.exists) {
+            const pData = pendingDoc.data();
+            planId = pData.planId;
+            uid = pData.uid;
+            finalName = pData.name;
+            finalEmail = pData.email;
+            preApprovedConvenio = pData.convenioCode;
+            chosenPassword = pData.password;
+        }
+
+        if (process.env.FUNCTIONS_EMULATOR === "true" || orderID.startsWith("EC-MOCKTOKEN")) {
+            logger.info("[EMULATOR] Procesando finalización local de compra ficticia.");
+            if (!finalEmail) {
+                return res.status(200).json({ data: { success: false, error: "No se pudieron recuperar las credenciales locales." } });
+            }
+            const creds = await createAffiliateManager(orderID, finalEmail, finalName, planId, uid, preApprovedConvenio, chosenPassword);
+            return res.status(200).json({ data: { success: true, credentials: creds } });
         }
 
         let orderDetails;
@@ -312,7 +381,7 @@ exports.finalizeAffiliatePurchase = onCall(paymentOpts, async (request) => {
             orderDetails = await utils.capturePayPalOrder(orderID);
         } catch (error) {
             logger.error("[FINALIZE_CAPTURE_FAIL] Error capturando orden PayPal:", error);
-            return { success: false, error: `Fallo de pasarela PayPal al intentar capturar la transacción: ${error.message}` };
+            return res.status(200).json({ data: { success: false, error: `Fallo de pasarela PayPal al capturar: ${error.message}` } });
         }
 
         if (orderDetails.status === "COMPLETED" || orderDetails.alreadyProcessed) {
@@ -343,21 +412,22 @@ exports.finalizeAffiliatePurchase = onCall(paymentOpts, async (request) => {
             }
 
             if (!finalEmail) {
-                return { success: false, error: "El email del comprador no pudo ser recuperado desde la orden de PayPal." };
+                return res.status(200).json({ data: { success: false, error: "El email del comprador no pudo ser recuperado." } });
             }
 
             const creds = await createAffiliateManager(orderID, finalEmail, finalName, planId, uid, preApprovedConvenio, chosenPassword);
-            return { success: true, credentials: creds };
+            return res.status(200).json({ data: { success: true, credentials: creds } });
         }
 
-        return { success: false, error: `Estado de orden PayPal inválido para la finalización: ${orderDetails.status}` };
+        return res.status(200).json({ data: { success: false, error: `Estado de orden PayPal inválido: ${orderDetails.status}` } });
     } catch (error) {
         logger.error("[FATAL_FINALIZE_PURCHASE]", error);
-        return { success: false, error: `Excepción interna de Node.js en backend: ${error.message}`, stack: error.stack };
+        return res.status(500).json({ error: { message: error.message || "Excepción interna del servidor." } });
     }
 });
 
 exports.resolveManagerEmailByCode = onRequest({
+    cors: true,
     region: "us-central1",
     memory: "128MiB",
     invoker: "public"
