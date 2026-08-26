@@ -288,6 +288,42 @@ async function createAffiliateManager(orderID, email, name, planId, uid = null, 
     const purchaseDate = new Date().toLocaleString("es-MX", { timeZone: "America/Mexico_City" });
 
     // 1. INTENTAR ENVIAR NOTIFICACIÓN ADMINISTRATIVA DE FORMA AISLADA (try/catch autocontenido)
+    const subtotalUSD = plan.price.toFixed(2);
+    const ivaUSD = (plan.price * 0.16).toFixed(2);
+    const totalUSD = priceWithIva;
+
+    const subtotalMXN = baseMXN.toFixed(2);
+    const ivaMXN = (baseMXN * 0.16).toFixed(2);
+    const totalMXN = mxnWithIva;
+
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 30);
+    const expirationString = expirationDate.toLocaleDateString("es-MX", { timeZone: "America/Mexico_City", day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    const tableB2C = `
+        <div style="background-color: rgba(0, 236, 255, 0.05); border: 1px solid rgba(0, 236, 255, 0.3); padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 0.9rem; line-height: 1.5; text-align: left;">
+            <h3 style="color: #00ecff; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid rgba(0, 236, 255, 0.3); padding-bottom: 5px;">Detalles de Compra (Individual):</h3>
+            <p style="margin: 4px 0;"><strong>Concepto:</strong> Membresía ${plan.name || planId} (Vigencia 30 Días)</p>
+            <p style="margin: 4px 0;"><strong>Vigencia hasta:</strong> ${expirationString}</p>
+            <p style="margin: 4px 0;"><strong>Subtotal:</strong> $${subtotalUSD} USD / $${subtotalMXN} MXN</p>
+            <p style="margin: 4px 0;"><strong>IVA (16%):</strong> $${ivaUSD} USD / $${ivaMXN} MXN</p>
+            <p style="margin: 4px 0;"><strong>Total Cobrado:</strong> <span style="color: #2ecc71; font-weight: bold;">$${totalUSD} USD / $${totalMXN} MXN</span></p>
+            <p style="margin: 10px 0 0 0; font-size: 0.8rem; color: #888; font-style: italic;">Nota: Su comprobante fiscal oficial corresponde al recibo de pago expedido por PayPal.</p>
+        </div>
+    `;
+
+    const tableB2B = `
+        <div style="background-color: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.3); padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 0.9rem; line-height: 1.5; text-align: left;">
+            <h3 style="color: #FFD700; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 5px;">Detalles de Compra (Gerente):</h3>
+            <p style="margin: 4px 0;"><strong>Concepto:</strong> Licencia Corporativa ${plan.name || planId} (Vigencia 30 Días)</p>
+            <p style="margin: 4px 0;"><strong>Vigencia hasta:</strong> ${expirationString}</p>
+            <p style="margin: 4px 0;"><strong>Subtotal:</strong> $${subtotalUSD} USD / $${subtotalMXN} MXN</p>
+            <p style="margin: 4px 0;"><strong>IVA (16%):</strong> $${ivaUSD} USD / $${ivaMXN} MXN</p>
+            <p style="margin: 4px 0;"><strong>Total Cobrado:</strong> <span style="color: #2ecc71; font-weight: bold;">$${totalUSD} USD / $${totalMXN} MXN</span></p>
+            <p style="margin: 10px 0 0 0; font-size: 0.8rem; color: #888; font-style: italic;">Nota: Su comprobante fiscal oficial corresponde al recibo de pago expedido por PayPal.</p>
+        </div>
+    `;
+
     try {
         logger.info(`[MAIL_B2B] Preparando notificación de venta para soporte@makumoto.com...`);
         const supportSubject = isIndividual ? `✅ Nueva Compra Individual (Cliente): ${name}` : `✅ Nuevo Gerente (Cliente): ${name}`;
@@ -335,7 +371,6 @@ async function createAffiliateManager(orderID, email, name, planId, uid = null, 
         logger.error(`❌ [MAIL_B2B_FAIL] Error crítico al notificar a administración:`, adminMailErr);
     }
 
-    // 2. INTENTAR ENVIAR CORREO AL COMPRADOR DE FORMA AISLADA (Cualquier error de arriba no bloquea este paso)
     try {
         if (isIndividual) {
             logger.info(`[MAIL_B2C] Preparando envío de credenciales B2C directas para: ${email}...`);
@@ -349,9 +384,10 @@ async function createAffiliateManager(orderID, email, name, planId, uid = null, 
                         <p style="margin: 5px 0; font-size: 1.15rem;"><strong>Código de Afiliado Plus:</strong> <span style="color: #00ecff; font-size: 1.3rem; letter-spacing: 2px; font-family: monospace; font-weight: bold;">${convenioCode}</span></p>
                         <p style="margin: 5px 0; font-size: 1.15rem;"><strong>Tu Email Registrado:</strong> <span style="color: #00ecff; font-size: 1.2rem;">${email}</span></p>
                     </div>
+                    ${tableB2C}
                     <h3 style="color: #00ecff; margin-top: 30px;">Instrucciones de Entrada:</h3>
                     <ol style="line-height: 1.6; padding-left: 20px; font-size: 0.95rem;">
-                        <li>Haz clic en el siguiente enlace de acceso directo para ingresar: <br><a href="https://makumoto.com/?view=portal" target="_blank" style="color: #00ecff; text-decoration: underline; font-weight: bold;">https://makumoto.com/?view=portal</a></li>
+                        <li>Haz clic en el siguiente enlace de acceso directo para ingresar: <br><a href="https://makumoto.com/?view=portal&affiliate=true" target="_blank" style="color: #00ecff; text-decoration: underline; font-weight: bold;">https://makumoto.com/?view=portal&affiliate=true</a></li>
                         <li>Busca la letra <b>"A"</b> que se encuentra en la barra de navegación inferior de tu pantalla y púlsala de inmediato.</li>
                         <li>Esto te llevará al formulario de inicio de sesión. Ahí, pulsa sobre la pestaña o botón de <b>"Plan Individual"</b> o <b>"Plus"</b>.</li>
                         <li>Introduce tu <b>Código de Afiliado Plus</b> (<span style="font-family: monospace;">${convenioCode}</span>) junto a tu <b>Email Registrado</b> (${email}).</li>
@@ -374,6 +410,7 @@ async function createAffiliateManager(orderID, email, name, planId, uid = null, 
                     <div style="background-color: rgba(255, 215, 0, 0.1); border: 1px solid #FFD700; padding: 15px; border-radius: 8px; font-size: 2.2rem; font-weight: bold; text-align: center; color: #FFD700; letter-spacing: 5px; margin: 25px 0;">
                         ${activationCode}
                     </div>
+                    ${tableB2B}
                     <p>Una vez verificado el código en el portal, recibirás un segundo correo con tus datos oficiales de acceso e instructivos para ingresar a tu Centro de Mando.</p>
                 </div>
             `;
@@ -663,6 +700,62 @@ exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
     
     const planId = userData.plan?.planId || "plan_plus";
     const isIndividual = planId === "plan_plus" || planId === "arsenal_plus";
+
+    const { PRODUCT_CATALOG } = require("./product-catalog.js");
+    const plan = PRODUCT_CATALOG[planId] || { name: planId, price: 0.00 };
+    const priceWithIva = (plan.price * 1.16).toFixed(2);
+
+    const mxnPrices = {
+        "opus_10": 99.00,
+        "starter_10": 99.00,
+        "nucleo_50": 199.00,
+        "growth_50": 199.00,
+        "zenith_200": 299.00,
+        "business_200": 299.00,
+        "master_500": 499.00,
+        "enterprise_500": 499.00,
+        "plan_plus": 50.00,
+        "arsenal_plus": 50.00
+    };
+    const baseMXN = mxnPrices[planId] || (plan.price * 20.00);
+    const mxnWithIva = (baseMXN * 1.16).toFixed(2);
+
+    const subtotalUSD = plan.price.toFixed(2);
+    const ivaUSD = (plan.price * 0.16).toFixed(2);
+    const totalUSD = priceWithIva;
+
+    const subtotalMXN = baseMXN.toFixed(2);
+    const ivaMXN = (baseMXN * 0.16).toFixed(2);
+    const totalMXN = mxnWithIva;
+
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 30);
+    const expirationString = expirationDate.toLocaleDateString("es-MX", { timeZone: "America/Mexico_City", day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    const tableB2C = `
+        <div style="background-color: rgba(0, 236, 255, 0.05); border: 1px solid rgba(0, 236, 255, 0.3); padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 0.9rem; line-height: 1.5; text-align: left;">
+            <h3 style="color: #00ecff; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid rgba(0, 236, 255, 0.3); padding-bottom: 5px;">Detalles de Compra (Individual):</h3>
+            <p style="margin: 4px 0;"><strong>Concepto:</strong> Membresía ${plan.name || planId} (Vigencia 30 Días)</p>
+            <p style="margin: 4px 0;"><strong>Vigencia hasta:</strong> ${expirationString}</p>
+            <p style="margin: 4px 0;"><strong>Subtotal:</strong> $${subtotalUSD} USD / $${subtotalMXN} MXN</p>
+            <p style="margin: 4px 0;"><strong>IVA (16%):</strong> $${ivaUSD} USD / $${ivaMXN} MXN</p>
+            <p style="margin: 4px 0;"><strong>Total Cobrado:</strong> <span style="color: #2ecc71; font-weight: bold;">$${totalUSD} USD / $${totalMXN} MXN</span></p>
+            <p style="margin: 10px 0 0 0; font-size: 0.8rem; color: #888; font-style: italic;">Nota: Su comprobante fiscal oficial corresponde al recibo de pago expedido por PayPal.</p>
+        </div>
+    `;
+
+    const tableB2B = `
+        <div style="background-color: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.3); padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 0.9rem; line-height: 1.5; text-align: left;">
+            <h3 style="color: #FFD700; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 5px;">Detalles de Compra (Gerente):</h3>
+            <p style="margin: 4px 0;"><strong>Concepto:</strong> Licencia Corporativa ${plan.name || planId} (Vigencia 30 Días)</p>
+            <p style="margin: 4px 0;"><strong>Vigencia hasta:</strong> ${expirationString}</p>
+            <p style="margin: 4px 0;"><strong>Subtotal:</strong> $${subtotalUSD} USD / $${subtotalMXN} MXN</p>
+            <p style="margin: 4px 0;"><strong>IVA (16%):</strong> $${ivaUSD} USD / $${ivaMXN} MXN</p>
+            <p style="margin: 4px 0;"><strong>Total Cobrado:</strong> <span style="color: #2ecc71; font-weight: bold;">$${totalUSD} USD / $${totalMXN} MXN</span></p>
+            <p style="margin: 10px 0 0 0; font-size: 0.8rem; color: #888; font-style: italic;">Nota: Su comprobante fiscal oficial corresponde al recibo de pago expedido por PayPal.</p>
+        </div>
+    `;
+
     let mailSubject = "🔑 Tus Datos de Acceso Oficiales - Centro de Mando MAKUMOTO";
     let mailHtml = `
         <div style="font-family: sans-serif; background-color: #1E1E1E; color: #E0E0E0; padding: 30px; border-radius: 10px; border-top: 5px solid #FFD700; max-width: 600px; margin: 0 auto;">
@@ -673,6 +766,7 @@ exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
                 <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Código de Convenio:</strong> <span style="color: #FFD700; font-size: 1.3rem; letter-spacing: 2px;">${convenioCode}</span></p>
                 <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Contraseña:</strong> <span style="color: #FFD700; font-size: 1.3rem;">${password}</span></p>
             </div>
+            ${tableB2B}
             <h3 style="color: #FFD700; margin-top: 30px;">Instrucciones de Entrada:</h3>
             <ol style="line-height: 1.6; padding-left: 20px;">
                 <li>Visita la web principal: <a href="https://afiliados.makumoto.com" style="color: #FFD700; text-decoration: underline;">afiliados.makumoto.com</a></li>
@@ -695,9 +789,10 @@ exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
                     <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Código de Afiliado Plus:</strong> <span style="color: #00ecff; font-size: 1.3rem; letter-spacing: 2px; font-family: monospace; font-weight: bold;">${convenioCode}</span></p>
                     <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Tu Email Registrado:</strong> <span style="color: #00ecff; font-size: 1.2rem;">${email}</span></p>
                 </div>
+                ${tableB2C}
                 <h3 style="color: #00ecff; margin-top: 30px;">Instrucciones de Entrada:</h3>
                 <ol style="line-height: 1.6; padding-left: 20px;">
-                    <li>Haz clic en el siguiente enlace de acceso directo para ingresar o cópialo en tu navegador: <br><a href="https://makumoto.com/?view=portal" target="_blank" style="color: #00ecff; text-decoration: underline; font-weight: bold;">https://makumoto.com/?view=portal</a></li>
+                    <li>Haz clic en el siguiente enlace de acceso directo para ingresar o cópialo en tu navegador: <br><a href="https://makumoto.com/?view=portal&affiliate=true" target="_blank" style="color: #00ecff; text-decoration: underline; font-weight: bold;">https://makumoto.com/?view=portal&affiliate=true</a></li>
                     <li>Busca la letra <b>"A"</b> que se encuentra en la barra de navegación inferior de tu pantalla y púlsala de inmediato.</li>
                     <li>Esto te llevará al formulario de inicio de sesión. Ahí, pulsa sobre la pestaña o botón de <b>"Plan Individual"</b> o <b>"Plus"</b>.</li>
                     <li>Introduce tu <b>Código de Afiliado Plus</b> (<span style="font-family: monospace;">${convenioCode}</span>) junto a tu <b>Email Registrado</b> (${email}).</li>
