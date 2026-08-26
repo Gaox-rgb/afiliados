@@ -4,11 +4,24 @@
 // =======================================================================
 /**
  * Crea u obtiene un contenedor dinámico posicionado inmediatamente debajo de la tarjeta clickeada (Ámbito Global).
+ * Soporta conmutación (Toggle): Si se presiona el bloque activo, se cierra.
  */
 function getDashboardContentContainer(buttonId) {
     const existingPanel = document.getElementById('active-panel-container');
     if (existingPanel) {
+        const openedUnder = existingPanel.dataset.activeButton;
         existingPanel.remove();
+
+        // Limpiar el enfoque visual de todos los botones
+        document.querySelectorAll('.action-card').forEach(card => {
+            card.style.border = "none";
+            card.style.boxShadow = "none";
+        });
+
+        // Si se presionó el mismo botón, se cierra y retorna un contenedor huérfano para evitar colisiones
+        if (openedUnder === buttonId) {
+            return document.createElement('div');
+        }
     }
 
     const clickedCard = document.getElementById(buttonId);
@@ -16,14 +29,11 @@ function getDashboardContentContainer(buttonId) {
 
     const panelContainer = document.createElement('div');
     panelContainer.id = 'active-panel-container';
+    panelContainer.dataset.activeButton = buttonId; // Almacenar el ID del botón activo
     panelContainer.style.cssText = "grid-column: 1 / -1; width: 100%; margin-top: 1rem; margin-bottom: 1rem; transition: all 0.3s ease;";
     
     clickedCard.insertAdjacentElement('afterend', panelContainer);
 
-    document.querySelectorAll('.action-card').forEach(card => {
-        card.style.border = "none";
-        card.style.boxShadow = "none";
-    });
     clickedCard.style.border = "2px solid var(--color-primary)";
     clickedCard.style.boxShadow = "0 0 15px rgba(255, 215, 0, 0.2)";
 

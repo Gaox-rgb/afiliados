@@ -1374,6 +1374,11 @@ window.app.ui = {
     },
 
     initFomoBubbles: function() {
+        // Validar de forma estricta que solo se ejecute en el inicio / index.html
+        const path = window.location.pathname;
+        const isIndex = path === '/' || path.endsWith('index.html') || path === '';
+        if (!isIndex) return;
+
         const container = document.getElementById('fomo-container');
         if (!container || !window.app.state.fomoData) return;
 
@@ -1420,13 +1425,12 @@ window.app.ui = {
             }, 6000);
         };
         
-        // Estrategia de temporizador robusta:
-        // 1. Muestra la primera burbuja a los 5 segundos para un feedback rápido.
+        // 1. Muestra la primera burbuja de feedback a los 10 segundos del ingreso
         setTimeout(() => {
             showBubble();
-            // 2. Después de la primera, inicia el ciclo infinito cada 30 segundos.
-            setInterval(showBubble, 30000);
-        }, 5000);
+            // 2. Después del inicio, repite de forma secuencial cada 10 minutos exactos (600,000 ms)
+            setInterval(showBubble, 600000);
+        }, 10000);
     },
 
     initOfferCounter: function() {
@@ -1462,24 +1466,43 @@ window.app.events = {
         }
         window.app.selectedPlanId = planId;
         
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let generatedCode = 'MK';
-        for (let i = 0; i < 5; i++) {
-            generatedCode += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        window.app.generatedConvenioCode = generatedCode;
-        
-        const display = document.getElementById('signup-convenio-display');
-        if (display) {
-            display.textContent = generatedCode;
+        const signupModal = document.getElementById('signup-modal');
+        if (!signupModal) {
+            console.error("Error: No se encontró el modal de registro.");
+            return;
         }
 
-        const signupModal = document.getElementById('signup-modal');
-        if (signupModal) {
-            signupModal.classList.add('visible');
+        const title = signupModal.querySelector('h3');
+        const desc = signupModal.querySelector('p');
+        const emailInput = document.getElementById('signup-email');
+        const convenioContainer = document.getElementById('pre-generated-convenio-container');
+
+        if (planId === 'plan_plus') {
+            if (title) title.textContent = "Registro Individual";
+            if (desc) desc.textContent = "Crea tu cuenta individual de acceso para activar tus 25 herramientas tácticas antes de completar tu suscripción en PayPal.";
+            if (convenioContainer) convenioContainer.style.display = 'none';
+            if (emailInput) emailInput.placeholder = "TU EMAIL PERSONAL";
+            window.app.generatedConvenioCode = "PLUS50";
         } else {
-            console.error("Error: No se encontró el modal de registro.");
+            if (title) title.textContent = "Registro de Gerente";
+            if (desc) desc.textContent = "Crea tu cuenta de acceso corporativo antes de completar tu suscripción en PayPal.";
+            if (convenioContainer) convenioContainer.style.display = 'block';
+            if (emailInput) emailInput.placeholder = "TU EMAIL CORPORATIVO";
+
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let generatedCode = 'MK';
+            for (let i = 0; i < 5; i++) {
+                generatedCode += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            window.app.generatedConvenioCode = generatedCode;
+            
+            const display = document.getElementById('signup-convenio-display');
+            if (display) {
+                display.textContent = generatedCode;
+            }
         }
+
+        signupModal.classList.add('visible');
     }
 };
 console.log("Makumoto DEBUG: app.events.js finalizado.");
@@ -1532,7 +1555,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            window.app.ui.showLoader('Creando tu cuenta de Gerente...');
+            const loaderMsg = planId === 'plan_plus' ? 'Creando tu cuenta de Emprendedor(a)...' : 'Creando tu cuenta de Gerente...';
+            window.app.ui.showLoader(loaderMsg);
 
             try {
                 // Almacenamiento local preventivo (Zero-Latency Bridge)
@@ -1552,20 +1576,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.app.ui.showLoader('Redirigiendo a pasarela PayPal...');
 
                 // Llamar al backend pasando los datos del usuario y el código de convenio pre-aprobado junto con su contraseña
-                const response = await fetch('/api/createAffiliatePaypalOrder', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        data: {
-                            planId: planId, 
-                            uid: user.uid, 
-                            name: name, 
-                            email: email,
-                            convenioCode: convenioCode,
-                            password: password
-                        }
-                    })
-                });
+               const response = await fetch('https://us-central1-afiliados-makumoto.cloudfunctions.net/createAffiliatePaypalOrder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    data: {
+                        planId: planId, 
+                        uid: user.uid, 
+                        name: name, 
+                        email: email,
+                        convenioCode: convenioCode,
+                        password: password
+                    }
+                })
+            });
 
                 if (!response.ok) {
                     const errData = await response.json();

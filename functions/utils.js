@@ -63,87 +63,73 @@ function handleError(error, context) {
 }
 
 // --- 2. COMUNICADOS DE EMAIL (RESEND) ---
-function sendEmailViaHttps(apiKey, payload) {
-    return new Promise((resolve, reject) => {
-        const cleanApiKey = apiKey.trim().replace(/^["']|["']$/g, '');
-        const postData = JSON.stringify(payload);
-
-        const options = {
-            hostname: 'api.resend.com',
-            port: 443,
-            path: '/emails',
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${cleanApiKey}`,
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(postData)
-            }
-        };
-
-        const req = https.request(options, (res) => {
-            let data = '';
-            res.on('data', (chunk) => { data += chunk; });
-            res.on('end', () => {
-                resolve({ statusCode: res.statusCode, body: data });
-            });
-        });
-
-        req.on('error', (e) => { reject(e); });
-        req.write(postData);
-        req.end();
-    });
-}
-
 async function sendConfirmationEmail(to, emailOptions) {
   try {
     let apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey && typeof resendApiKey === 'object' && typeof resendApiKey.value === 'function') {
+      try {
+        apiKey = resendApiKey.value();
+      } catch (e) {}
+    }
     if (!apiKey) {
-      apiKey = getSecret(resendApiKey, "RESEND_API_KEY");
+      apiKey = process.env.resendApiKey;
     }
 
     if (!apiKey) {
       logger.error("❌ [REST RESEND] Falla crítica: No se detectó ninguna clave RESEND_API_KEY.");
+      logger.warn(`📧 [SIMULACIÓN LOG] Para: ${to} | Asunto: ${emailOptions.subject}`);
       return;
     }
 
-    let fromSender = "Makumoto Afiliados <soporte@makumoto.com>";
+    const cleanApiKey = String(apiKey).trim().replace(/^["']|["']$/g, '');
+    
+    if (!cleanApiKey.startsWith("re_")) {
+      logger.warn(`⚠️ [RESEND_DEBUG] Atención: La clave no inicia con 're_'. Longitud: ${cleanApiKey.length} caracteres.`);
+    } else {
+      logger.info(`📧 [REST RESEND] Clave de Resend detectada de forma segura.`);
+    }
+    
+    logger.info(`📧 [REST RESEND] Iniciando transmisión REST para: ${to}`);
+
+    let fromSender = process.env.SENDER_EMAIL || "Makumoto Afiliados <soporte@makumoto.com>";
     let attempt = 1;
     let success = false;
+    let responseData;
+    let apiResponse;
 
     while (attempt <= 2 && !success) {
       logger.info(`📧 [REST RESEND] Intento ${attempt} con remitente: ${fromSender}`);
-      
-      const payload = {
-        from: fromSender,
-        to: [to],
-        subject: emailOptions.subject,
-        html: emailOptions.html
-      };
+      apiResponse = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${cleanApiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          from: fromSender,
+          to: [to],
+          subject: emailOptions.subject,
+          html: emailOptions.html
+        })
+      });
 
+      const responseText = await apiResponse.text();
       try {
-        const result = await sendEmailViaHttps(apiKey, payload);
-        let responseData;
-        try {
-          responseData = JSON.parse(result.body);
-        } catch (e) {
-          responseData = { rawResponse: result.body };
-        }
+        responseData = JSON.parse(responseText);
+      } catch (e) {
+        responseData = { rawResponse: responseText };
+      }
 
-        if (result.statusCode >= 200 && result.statusCode < 300) {
-          success = true;
-          logger.info(`✅ [REST RESEND EXITO] Correo enviado en intento ${attempt}. ID: ${responseData.id}`);
-        } else {
-          logger.warn(`⚠️ [REST RESEND INTENTO ${attempt} FALLIDO - HTTP ${result.statusCode}]:`, JSON.stringify(responseData));
-          if (attempt === 1) {
-            fromSender = "Makumoto Onboarding <onboarding@resend.dev>";
-            attempt++;
-          } else {
-            break;
-          }
+      if (apiResponse.ok) {
+        success = true;
+        logger.info(`✅ [REST RESEND EXITO] Correo enviado en intento ${attempt}. ID: ${responseData.id}`);
+      } else {
+        logger.error(`❌ [REST RESEND ERROR INTENTO ${attempt} - HTTP ${apiResponse.status}]:`, JSON.stringify(responseData));
+        if (apiResponse.status === 403 || apiResponse.status === 422) {
+          logger.warn(`💡 [DIAGNÓSTICO] El código HTTP ${apiResponse.status} indica comúnmente que el dominio '${fromSender}' no está verificado en Resend o que se están realizando envíos fuera del Sandbox permitido.`);
         }
-      } catch (reqErr) {
-        logger.error(`❌ [REST RESEND REQ ERROR] Intento ${attempt} falló por red:`, reqErr.message || reqErr);
         if (attempt === 1) {
+          logger.warn(`⚠️ Primer intento fallido. Probando fallback con remitente de onboarding (onboarding@resend.dev sólo enviará correos al propietario de la cuenta de Resend)...`);
           fromSender = "Makumoto Onboarding <onboarding@resend.dev>";
           attempt++;
         } else {
@@ -157,7 +143,7 @@ async function sendConfirmationEmail(to, emailOptions) {
     }
 
   } catch (error) {
-    logger.error(`❌ [REST RESEND EXCEPCIÓN] Error crítico en el flujo de envío hacia ${to}:`, error.message || error);
+    logger.error(`❌ [REST RESEND EXCEPCIÓN] Error de red o ejecución en el envío hacia ${to}:`, error.message || error);
   }
 }
 

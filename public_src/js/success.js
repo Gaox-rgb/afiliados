@@ -8,7 +8,7 @@
     // Invocación segura mediante Firebase SDK Callable, eliminando dependencias de rutas de Hosting
     async function callCallableFunction(functionName, data) {
         try {
-            const response = await fetch(`/api/${functionName}`, {
+            const response = await fetch(`https://us-central1-afiliados-makumoto.cloudfunctions.net/${functionName}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data: data })
@@ -47,12 +47,36 @@
     }
 
     function showCredentials(credentials) {
+    const params = new URLSearchParams(window.location.search);
+    const planId = params.get('planId');
+    const isIndividual = planId === 'plan_plus' || planId === 'arsenal_plus';
+
+    ui.processingMessage.style.display = 'none';
+
+    if (isIndividual) {
+        ui.welcomeMessage.innerHTML = `
+            <h1 style="color: #00ecff;"><i class="fas fa-check-circle"></i> ¡Operación Exitosa!</h1>
+            <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;">Hemos enviado tus instrucciones y datos de acceso oficiales de tu membresía a tu correo electrónico. Úsalos para entrar directamente en makumoto.com</p>
+        `;
+
+        ui.mainContent.innerHTML = `
+            <div style="background: rgba(0,236,255,0.05); border: 1px solid rgba(0,236,255,0.3); padding: 25px; border-radius: 10px; margin-bottom: 25px; text-align: left;">
+                <p style="margin: 0 0 10px 0; font-size: 0.8rem; color: #00ecff; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Membresía Individual Plus</p>
+                <p style="margin: 5px 0; font-size: 0.95rem; line-height: 1.4;">Tus datos de acceso para activar tus 25 herramientas tácticas en <b>makumoto.com</b> ya están listos y han sido transmitidos a tu buzón.</p>
+            </div>
+            <button id="btn-understood-b2c" class="cta-button" style="width: 100%; padding: 15px; background-color: #00ecff; color: #000; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; font-size: 1.1rem; text-transform: uppercase; box-shadow: 0 0 15px rgba(0,236,255,0.4);">ENTENDIDO</button>
+        `;
+
+        document.getElementById('btn-understood-b2c').onclick = () => {
+            window.location.replace('index.html');
+        };
+    } else {
         ui.convenioCode.textContent = credentials.convenioCode;
         ui.password.textContent = credentials.tempPassword;
-        ui.processingMessage.style.display = 'none';
         ui.credentialsContainer.style.display = 'block';
         ui.activationFormContainer.style.display = 'block';
     }
+}
 
     async function handlePageLoad() {
         const params = new URLSearchParams(window.location.search);
