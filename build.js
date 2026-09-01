@@ -95,7 +95,7 @@ function processJsFiles(dir = 'js') {
     }
 }
 
-// 5. Minificación de HTML y CSS embebido/standalone
+// 5. Copia y Minificación Inteligente de HTML y CSS embebido
 async function processHtmlFiles() {
     const cleanCss = new CleanCSS({ level: 2 });
     const files = fs.readdirSync(SRC_DIR);
@@ -105,26 +105,26 @@ async function processHtmlFiles() {
             const srcPath = path.join(SRC_DIR, file);
             let content = fs.readFileSync(srcPath, 'utf8');
 
-            // Minificar bloques de estilo <style> dentro de los HTML
+            // Minificar bloques de estilo <style> de forma segura
             content = content.replace(/<style[\s\S]*?>([\s\S]*?)<\/style>/gi, (match, cssContent) => {
                 const minifiedCss = cleanCss.minify(cssContent).styles;
                 return `<style>${minifiedCss}</style>`;
             });
 
-            // Minificar la estructura HTML completa y scripts JS en línea
+            // Minificación conservadora para preservar todos los inputs y modales del DOM
             const minifiedHtml = await HTMLMinifier.minify(content, {
                 collapseWhitespace: true,
                 removeComments: true,
                 minifyJS: true,
                 minifyCSS: true,
-                removeRedundantAttributes: true,
+                removeRedundantAttributes: false, // CLAVE: Evita borrar atributos requeridos por formularios
                 removeScriptTypeAttributes: true,
                 removeStyleLinkTypeAttributes: true,
                 useShortDoctype: true
             });
 
             fs.writeFileSync(path.join(DIST_DIR, file), minifiedHtml, 'utf8');
-            console.log(`⚡ HTML y CSS embebido minificado: ${file}`);
+            console.log(`⚡ HTML compilado y sincronizado desde public_src/${file} -> public/${file}`);
         }
     }
 }

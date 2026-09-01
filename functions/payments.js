@@ -55,7 +55,7 @@ exports.createAffiliatePaypalOrder = onRequest(paymentOpts, async (req, res) => 
         let params = req.body || {};
         if (req.body?.data) params = req.body.data;
 
-        const { planId, uid, name, email, convenioCode, password } = params;
+        const { planId, uid, name, email, companyName, convenioCode, password } = params;
         if (!planId || !uid) {
             return res.status(400).json({ error: { message: "Faltan parámetros indispensables de compra." } });
         }
@@ -217,12 +217,40 @@ async function createAffiliateManager(orderID, email, name, planId, uid = null, 
         }
     }
 
+    const { PRODUCT_CATALOG } = require("./product-catalog.js");
+    const catalogItem = PRODUCT_CATALOG[planId] || { name: planId, price: 0.00 };
+    const baseUSD = catalogItem.price || 0.00;
+    const priceWithIvaUSD = (baseUSD * 1.16).toFixed(2);
+    const mxnPrices = {
+        "opus_10": 99.00, "starter_10": 99.00,
+        "nucleo_50": 199.00, "growth_50": 199.00,
+        "zenith_200": 299.00, "business_200": 299.00,
+        "master_500": 499.00, "enterprise_500": 499.00,
+        "master_500_annual": 5800.00,
+        "plan_plus": 50.00, "arsenal_plus": 50.00
+    };
+    const baseMXN = mxnPrices[planId] || (baseUSD * 20.00);
+    const priceWithIvaMXN = (baseMXN * 1.16).toFixed(2);
+    const mxnWithIva = priceWithIvaMXN;
+    const priceWithIva = priceWithIvaUSD;
+
+    // Garantizamos que si se proporcionó companyName desde el formulario, se guarde en Firestore
+    const finalCompanyName = params?.companyName || name;
+
     await companyRef.set({
-        companyName: name, 
+        companyName: finalCompanyName, 
         activePlan: planId,
         powerUps: {}, 
         convenioCode: convenioCode, 
         createdAt: new Date(),
+        pricingDetails: {
+            subtotalUSD: baseUSD.toFixed(2),
+            totalUSD: priceWithIvaUSD,
+            subtotalMXN: baseMXN.toFixed(2),
+            totalMXN: priceWithIvaMXN,
+            currency: "USD/MXN",
+            taxRate: "16% IVA"
+        }
     });
     
     const managerPlanData = {
@@ -267,38 +295,20 @@ async function createAffiliateManager(orderID, email, name, planId, uid = null, 
         logger.error("[SYNC_CRASH] Excepción en disparo síncrono de sincronización:", syncErr);
     }
 
-   const { PRODUCT_CATALOG } = require("./product-catalog.js");
-    const plan = PRODUCT_CATALOG[planId] || { name: planId, price: 0.00 };
-    const priceWithIva = (plan.price * 1.16).toFixed(2);
-    
-    const mxnPrices = {
-        "opus_10": 99.00,
-        "starter_10": 99.00,
-        "nucleo_50": 199.00,
-        "growth_50": 199.00,
-        "zenith_200": 299.00,
-        "business_200": 299.00,
-        "master_500": 499.00,
-        "enterprise_500": 499.00,
-        "plan_plus": 50.00,
-        "arsenal_plus": 50.00
-    };
-    const baseMXN = mxnPrices[planId] || (plan.price * 20.00);
-    const mxnWithIva = (baseMXN * 1.16).toFixed(2);
     const purchaseDate = new Date().toLocaleString("es-MX", { timeZone: "America/Mexico_City" });
 
     // 1. INTENTAR ENVIAR NOTIFICACIÓN ADMINISTRATIVA DE FORMA AISLADA (try/catch autocontenido)
-    const subtotalUSD = plan.price.toFixed(2);
-    const ivaUSD = (plan.price * 0.16).toFixed(2);
-    const totalUSD = priceWithIva;
-
-    const subtotalMXN = baseMXN.toFixed(2);
-    const ivaMXN = (baseMXN * 0.16).toFixed(2);
-    const totalMXN = mxnWithIva;
-
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 30);
     const expirationString = expirationDate.toLocaleDateString("es-MX", { timeZone: "America/Mexico_City", day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    const subtotalUSD = baseUSD.toFixed(2);
+    const ivaUSD = (baseUSD * 0.16).toFixed(2);
+    const totalUSD = priceWithIvaUSD;
+
+    const subtotalMXN = baseMXN.toFixed(2);
+    const ivaMXN = (baseMXN * 0.16).toFixed(2);
+    const totalMXN = priceWithIvaMXN;
 
     const tableB2C = `
         <div style="background-color: rgba(0, 236, 255, 0.05); border: 1px solid rgba(0, 236, 255, 0.3); padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 0.9rem; line-height: 1.5; text-align: left;">
@@ -661,27 +671,54 @@ exports.sendRecoveryCredentials = onCall(emailOpts, async (request) => {
     await utils.sendConfirmationEmail(email, clientMail).catch(e => logger.error("Fallo envío recovery", e));
     return { success: true };
 });
-
-// NUEVA FUNCIÓN: Verifica el código de activación y envía el Email 2 con las credenciales finales
+    
+   // NUEVA FUNCIÓN: Verifica el código de activación y envía el Email 2 con las credenciales finales
 exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
     const { email, code } = request.data || {};
     if (!email || !code) {
         throw new HttpsError("invalid-argument", "Faltan parámetros indispensables.");
     }
     
-    const userSnapshot = await db.collection("users").where("email", "==", email).limit(1).get();
+    const cleanEmail = email.trim().toLowerCase();
+    logger.info(`[ACTIVATE] Intentando activar cuenta para el correo: ${cleanEmail} con código: ${code}`);
+
+    let userDoc = null;
+    let userSnapshot = await db.collection("users").where("email", "==", cleanEmail).limit(1).get();
+    
     if (userSnapshot.empty) {
-        throw new HttpsError("not-found", "No se encontró ningún usuario con ese correo electrónico.");
+        userSnapshot = await db.collection("users").where("email", "==", email.trim()).limit(1).get();
     }
-    
-    const userDoc = userSnapshot.docs[0];
+
+    if (!userSnapshot.empty) {
+        userDoc = userSnapshot.docs[0];
+    } else {
+        const ordersSnap = await db.collection("processedB2BOrders").where("email", "==", cleanEmail).limit(1).get();
+        if (!ordersSnap.empty) {
+            const userId = ordersSnap.docs[0].data().userId;
+            if (userId) {
+                const uDoc = await db.collection("users").doc(userId).get();
+                if (uDoc.exists) userDoc = uDoc;
+            }
+        }
+    }
+
+    if (!userDoc || !userDoc.exists) {
+        throw new HttpsError("not-found", "No se encontró ningún usuario registrado con ese correo electrónico.");
+    }
+
     const userData = userDoc.data();
-    
-    if (userData.corporateData?.activationCode !== code) {
+    const storedCode = String(userData.corporateData?.activationCode || "").trim();
+    const providedCode = String(code).trim();
+
+    if (storedCode !== providedCode) {
         throw new HttpsError("permission-denied", "El código de activación ingresado es incorrecto.");
     }
     
-    const companyId = userData.corporateData.companyId;
+    const companyId = userData.corporateData?.companyId;
+    if (!companyId) {
+        throw new HttpsError("not-found", "La cuenta no tiene un ID de compañía asociado.");
+    }
+
     const companyDoc = await db.collection("companies").doc(companyId).get();
     if (!companyDoc.exists) {
         throw new HttpsError("not-found", "La compañía asociada no existe.");
@@ -689,12 +726,10 @@ exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
     
     const companyData = companyDoc.data();
     
-    // Activar formalmente el estado en base de datos de forma segura (dot-notation)
     await userDoc.ref.update({
         "corporateData.isActivated": true
     });
     
-    // EMAIL 2: Envío de las credenciales finales y del instructivo oficial de acceso
     const convenioCode = companyData.convenioCode;
     const password = userData.tempPassword || "La que elegiste al registrarte";
     
@@ -720,42 +755,6 @@ exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
     const baseMXN = mxnPrices[planId] || (plan.price * 20.00);
     const mxnWithIva = (baseMXN * 1.16).toFixed(2);
 
-    const subtotalUSD = plan.price.toFixed(2);
-    const ivaUSD = (plan.price * 0.16).toFixed(2);
-    const totalUSD = priceWithIva;
-
-    const subtotalMXN = baseMXN.toFixed(2);
-    const ivaMXN = (baseMXN * 0.16).toFixed(2);
-    const totalMXN = mxnWithIva;
-
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + 30);
-    const expirationString = expirationDate.toLocaleDateString("es-MX", { timeZone: "America/Mexico_City", day: '2-digit', month: '2-digit', year: 'numeric' });
-
-    const tableB2C = `
-        <div style="background-color: rgba(0, 236, 255, 0.05); border: 1px solid rgba(0, 236, 255, 0.3); padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 0.9rem; line-height: 1.5; text-align: left;">
-            <h3 style="color: #00ecff; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid rgba(0, 236, 255, 0.3); padding-bottom: 5px;">Detalles de Compra (Individual):</h3>
-            <p style="margin: 4px 0;"><strong>Concepto:</strong> Membresía ${plan.name || planId} (Vigencia 30 Días)</p>
-            <p style="margin: 4px 0;"><strong>Vigencia hasta:</strong> ${expirationString}</p>
-            <p style="margin: 4px 0;"><strong>Subtotal:</strong> $${subtotalUSD} USD / $${subtotalMXN} MXN</p>
-            <p style="margin: 4px 0;"><strong>IVA (16%):</strong> $${ivaUSD} USD / $${ivaMXN} MXN</p>
-            <p style="margin: 4px 0;"><strong>Total Cobrado:</strong> <span style="color: #2ecc71; font-weight: bold;">$${totalUSD} USD / $${totalMXN} MXN</span></p>
-            <p style="margin: 10px 0 0 0; font-size: 0.8rem; color: #888; font-style: italic;">Nota: Su comprobante fiscal oficial corresponde al recibo de pago expedido por PayPal.</p>
-        </div>
-    `;
-
-    const tableB2B = `
-        <div style="background-color: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.3); padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 0.9rem; line-height: 1.5; text-align: left;">
-            <h3 style="color: #FFD700; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 5px;">Detalles de Compra (Gerente):</h3>
-            <p style="margin: 4px 0;"><strong>Concepto:</strong> Licencia Corporativa ${plan.name || planId} (Vigencia 30 Días)</p>
-            <p style="margin: 4px 0;"><strong>Vigencia hasta:</strong> ${expirationString}</p>
-            <p style="margin: 4px 0;"><strong>Subtotal:</strong> $${subtotalUSD} USD / $${subtotalMXN} MXN</p>
-            <p style="margin: 4px 0;"><strong>IVA (16%):</strong> $${ivaUSD} USD / $${ivaMXN} MXN</p>
-            <p style="margin: 4px 0;"><strong>Total Cobrado:</strong> <span style="color: #2ecc71; font-weight: bold;">$${totalUSD} USD / $${totalMXN} MXN</span></p>
-            <p style="margin: 10px 0 0 0; font-size: 0.8rem; color: #888; font-style: italic;">Nota: Su comprobante fiscal oficial corresponde al recibo de pago expedido por PayPal.</p>
-        </div>
-    `;
-
     let mailSubject = "🔑 Tus Datos de Acceso Oficiales - Centro de Mando MAKUMOTO";
     let mailHtml = `
         <div style="font-family: sans-serif; background-color: #1E1E1E; color: #E0E0E0; padding: 30px; border-radius: 10px; border-top: 5px solid #FFD700; max-width: 600px; margin: 0 auto;">
@@ -766,7 +765,6 @@ exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
                 <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Código de Convenio:</strong> <span style="color: #FFD700; font-size: 1.3rem; letter-spacing: 2px;">${convenioCode}</span></p>
                 <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Contraseña:</strong> <span style="color: #FFD700; font-size: 1.3rem;">${password}</span></p>
             </div>
-            ${tableB2B}
             <h3 style="color: #FFD700; margin-top: 30px;">Instrucciones de Entrada:</h3>
             <ol style="line-height: 1.6; padding-left: 20px;">
                 <li>Visita la web principal: <a href="https://afiliados.makumoto.com" style="color: #FFD700; text-decoration: underline;">afiliados.makumoto.com</a></li>
@@ -789,14 +787,11 @@ exports.activateAffiliateAccount = onCall(emailOpts, async (request) => {
                     <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Código de Afiliado Plus:</strong> <span style="color: #00ecff; font-size: 1.3rem; letter-spacing: 2px; font-family: monospace; font-weight: bold;">${convenioCode}</span></p>
                     <p style="margin: 5px 0; font-size: 1.1rem;"><strong>Tu Email Registrado:</strong> <span style="color: #00ecff; font-size: 1.2rem;">${email}</span></p>
                 </div>
-                ${tableB2C}
                 <h3 style="color: #00ecff; margin-top: 30px;">Instrucciones de Entrada:</h3>
                 <ol style="line-height: 1.6; padding-left: 20px;">
-                    <li>Haz clic en el siguiente enlace de acceso directo para ingresar o cópialo en tu navegador: <br><a href="https://makumoto.com/?view=portal&affiliate=true" target="_blank" style="color: #00ecff; text-decoration: underline; font-weight: bold;">https://makumoto.com/?view=portal&affiliate=true</a></li>
-                    <li>Busca la letra <b>"A"</b> que se encuentra en la barra de navegación inferior de tu pantalla y púlsala de inmediato.</li>
-                    <li>Esto te llevará al formulario de inicio de sesión. Ahí, pulsa sobre la pestaña o botón de <b>"Plan Individual"</b> o <b>"Plus"</b>.</li>
-                    <li>Introduce tu <b>Código de Afiliado Plus</b> (<span style="font-family: monospace;">${convenioCode}</span>) junto a tu <b>Email Registrado</b> (${email}).</li>
-                    <li>¡Listo! Accederás de inmediato a tu panel de control de las 25 maravillosas funciones tácticas de bienestar, asistencia y productividad.</li>
+                    <li>Haz clic en el siguiente enlace de acceso directo para ingresar: <br><a href="https://makumoto.com/?view=portal&affiliate=true" target="_blank" style="color: #00ecff; text-decoration: underline; font-weight: bold;">https://makumoto.com/?view=portal&affiliate=true</a></li>
+                    <li>Busca la letra <b>"A"</b> en la barra de navegación inferior y púlsala.</li>
+                    <li>Introduce tu <b>Código de Afiliado Plus</b> (<span style="font-family: monospace;">${convenioCode}</span>) y tu <b>Email</b> (${email}).</li>
                 </ol>
                 <hr style="border: 0; border-top: 1px solid #444; margin: 30px 0;">
                 <p style="font-size: 0.85rem; opacity: 0.7; text-align: center;">Tus Herramientas. Tu Disciplina. &copy; Makumoto</p>

@@ -387,8 +387,12 @@ document.addEventListener('DOMContentLoaded', () => {
             health: 'Salud y Bienestar'
         };
         const sectorName = sectorNames[company.sector] || 'General';
+        const logoHTML = company.logoUrl 
+            ? `<div style="text-align:center; margin-bottom:15px;"><img src="${company.logoUrl}" alt="Logo Empresa" style="max-height:60px; max-width:200px; object-fit:contain; border-radius:6px; border:1px solid var(--color-primary); padding:4px; background:#121212;"></div>` 
+            : '';
 
         const arsenalHomeHTML = `
+            ${logoHTML}
             <h1 id="portal-title">Centro de Mando: ${company.name}</h1>
             <h2 style="text-align:center; font-weight: 500; color: var(--color-primary); margin-bottom: 2rem;">Sector: ${sectorName}</h2>
 

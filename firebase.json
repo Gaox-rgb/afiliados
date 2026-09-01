@@ -19,65 +19,68 @@
       ]
     }
   ],
-  "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/api/createAffiliatePaypalOrder",
-        "function": {
-          "id": "createAffiliatePaypalOrder",
-          "region": "us-central1"
+  "hosting": [
+    {
+      "target": "afiliados",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/api/createAffiliatePaypalOrder",
+          "function": {
+            "id": "createAffiliatePaypalOrder",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "api/finalizeAffiliatePurchase",
+          "function": {
+            "id": "finalizeAffiliatePurchase",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/api/getManagerEmailByCode",
+          "function": {
+            "id": "resolveManagerEmailByCode",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/api/getAffiliateCredentialsByOrder",
+          "function": {
+            "id": "getAffiliateCredentialsByOrder",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/api/sendRecoveryCredentials",
+          "function": {
+            "id": "sendRecoveryCredentials",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/api/activateAffiliateAccount",
+          "function": {
+            "id": "activateAffiliateAccount",
+            "region": "us-central1"
+          }
+        },
+        {
+          "source": "/api/getPayPalConfig",
+          "function": {
+            "id": "getPayPalConfig",
+            "region": "us-central1"
+          }
         }
-      },
-      {
-        "source": "/api/finalizeAffiliatePurchase",
-        "function": {
-          "id": "finalizeAffiliatePurchase",
-          "region": "us-central1"
-        }
-      },
-      {
-        "source": "/api/getManagerEmailByCode",
-        "function": {
-          "id": "resolveManagerEmailByCode",
-          "region": "us-central1"
-        }
-      },
-      {
-        "source": "/api/getAffiliateCredentialsByOrder",
-        "function": {
-          "id": "getAffiliateCredentialsByOrder",
-          "region": "us-central1"
-        }
-      },
-      {
-        "source": "/api/sendRecoveryCredentials",
-        "function": {
-          "id": "sendRecoveryCredentials",
-          "region": "us-central1"
-        }
-      },
-      {
-        "source": "/api/activateAffiliateAccount",
-        "function": {
-          "id": "activateAffiliateAccount",
-          "region": "us-central1"
-        }
-      },
-      {
-        "source": "/api/getPayPalConfig",
-        "function": {
-          "id": "getPayPalConfig",
-          "region": "us-central1"
-        }
-      }
-    ]
-  },
+      ]
+    }
+  ],
   "emulators": {
     "auth": {
       "port": 9099

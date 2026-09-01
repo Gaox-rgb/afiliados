@@ -1,5 +1,14 @@
 {
   "projects": {
-    "default": "afiliados-makumoto"
+    "default": "makumoto-app-2026"
+  },
+  "targets": {
+    "makumoto-app-2026": {
+      "hosting": {
+        "afiliados": [
+          "afiliados-makumoto-portal"
+        ]
+      }
+    }
   }
 }
