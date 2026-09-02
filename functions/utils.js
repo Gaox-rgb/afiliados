@@ -258,6 +258,30 @@ async function verifyPayPalWebhook(req) {
   }
 }
 
+// 🚀 CONECTOR EMISOR OFICIAL HACIA MAKUMOTO CORE (MAKUMOTO-APP-2026)
+async function sendSyncRequestToCore(payload) {
+    const SHARED_SECRET_KEY = "MK_SECURE_SYNC_TOKEN_2026";
+    const coreSyncUrl = "https://us-central1-makumoto-app-2026.cloudfunctions.net/syncAffiliateLicense";
+
+    try {
+        const response = await fetch(coreSyncUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${SHARED_SECRET_KEY}`
+            },
+            body: JSON.stringify({ data: payload })
+        });
+
+        const text = await response.text();
+        logger.info(`[SYNC_B2B_CORE] Respuesta recibida del Core: ${response.status} - ${text}`);
+        return response.ok;
+    } catch (error) {
+        logger.error("[SYNC_B2B_CORE_FAIL] Error de conexión con el Core:", error);
+        return false;
+    }
+}
+
 module.exports = {
   getPayPalAccessToken,
   getPayPalOrderDetails,
@@ -267,5 +291,6 @@ module.exports = {
   sendConfirmationEmail,
   validateRequestOrigin,
   handleError,
-  getSecret 
+  getSecret,
+  sendSyncRequestToCore
 };

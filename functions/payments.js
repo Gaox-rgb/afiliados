@@ -283,14 +283,15 @@ async function createAffiliateManager(orderID, email, name, planId, uid = null, 
     try {
         const planEndDate = new Date();
         planEndDate.setDate(planEndDate.getDate() + 30);
-        sendSyncRequestToCore({
+        await sendSyncRequestToCore({
+            email: email,
+            name: name,
+            planId: planId,
             convenioCode: convenioCode,
-            companyName: name,
-            activePlan: planId,
-            status: "active",
-            expirationDate: planEndDate.toISOString(),
-            userLimit: 50
-        }).catch(e => logger.error("[SYNC_FAIL] Error asíncrono de sincronización Core:", e));
+            companyName: finalCompanyName,
+            isIndividual: isIndividual
+        });
+        logger.info("[SYNC_SUCCESS] Señal emitida hacia Makumoto Core.");
     } catch (syncErr) {
         logger.error("[SYNC_CRASH] Excepción en disparo síncrono de sincronización:", syncErr);
     }

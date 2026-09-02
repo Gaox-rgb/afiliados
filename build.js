@@ -7,11 +7,12 @@ const CleanCSS = require('clean-css');
 const SRC_DIR = path.join(__dirname, 'public_src');
 const DIST_DIR = path.join(__dirname, 'public');
 
-// 1. Limpieza y preparación del directorio de producción /public
+// 1. Inicialización limpia de la carpeta de distribución
 if (fs.existsSync(DIST_DIR)) {
     fs.rmSync(DIST_DIR, { recursive: true, force: true });
 }
 fs.mkdirSync(DIST_DIR, { recursive: true });
+console.log('✅ Base de desarrollo establecida estrictamente en public_src/ hacia public/');
 
 // 2. Transporte de imágenes
 function copyImages() {
@@ -41,7 +42,31 @@ function processJsonFiles() {
     });
 }
 
-// 4. Ofuscación avanzada de archivos JavaScript
+// 4. Procesamiento y minificación de CSS externo
+function processCssFiles() {
+    const srcCssDir = path.join(SRC_DIR, 'css');
+    const distCssDir = path.join(DIST_DIR, 'css');
+    const cleanCss = new CleanCSS({ level: 1 });
+
+    if (fs.existsSync(srcCssDir)) {
+        fs.mkdirSync(distCssDir, { recursive: true });
+        const files = fs.readdirSync(srcCssDir);
+
+        files.forEach(file => {
+            if (file.endsWith('.css')) {
+                const srcPath = path.join(srcCssDir, file);
+                const distPath = path.join(distCssDir, file);
+                const cssContent = fs.readFileSync(srcPath, 'utf8');
+
+                const minifiedCss = cleanCss.minify(cssContent).styles;
+                fs.writeFileSync(distPath, minifiedCss, 'utf8');
+                console.log(`🎨 CSS minificado con éxito: css/${file}`);
+            }
+        });
+    }
+}
+
+// 5. Ofuscación avanzada de archivos JavaScript
 function processJsFiles(dir = 'js') {
     const srcJsDir = path.join(SRC_DIR, dir);
     const distJsDir = path.join(DIST_DIR, dir);
@@ -82,7 +107,7 @@ function processJsFiles(dir = 'js') {
         });
     }
 
-    // Ofuscación del Service Worker raíz
+    // Ofuscación del Service Worker raíz si existe
     const swPath = path.join(SRC_DIR, 'sw.js');
     if (fs.existsSync(swPath)) {
         const code = fs.readFileSync(swPath, 'utf8');
@@ -95,37 +120,49 @@ function processJsFiles(dir = 'js') {
     }
 }
 
-// 5. Copia y Minificación Inteligente de HTML y CSS embebido
+// 6. Sincronización y Copia Limpia de HTML (Cero Modificación Destructiva del DOM)
 async function processHtmlFiles() {
-    const cleanCss = new CleanCSS({ level: 2 });
+    const cleanCss = new CleanCSS({ level: 1 });
+    
+    if (!fs.existsSync(SRC_DIR)) {
+        console.error(`❌ ERROR CRÍTICO: La carpeta fuente '${SRC_DIR}' no existe.`);
+        process.exit(1);
+    }
+
     const files = fs.readdirSync(SRC_DIR);
+    let htmlCount = 0;
 
     for (const file of files) {
         if (file.endsWith('.html')) {
             const srcPath = path.join(SRC_DIR, file);
             let content = fs.readFileSync(srcPath, 'utf8');
 
-            // Minificar bloques de estilo <style> de forma segura
-            content = content.replace(/<style[\s\S]*?>([\s\S]*?)<\/style>/gi, (match, cssContent) => {
+            // Minificación segura de estilos embebidos
+            content = content.replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gi, (match, cssContent) => {
                 const minifiedCss = cleanCss.minify(cssContent).styles;
-                return `<style>${minifiedCss}</style>`;
+                return match.replace(cssContent, minifiedCss);
             });
 
-            // Minificación conservadora para preservar todos los inputs y modales del DOM
-            const minifiedHtml = await HTMLMinifier.minify(content, {
-                collapseWhitespace: true,
-                removeComments: true,
-                minifyJS: true,
+            // TRASLADO EXACTO: Evitamos que el minificador altere la estructura de los modales y formularios
+            const finalHtml = await HTMLMinifier.minify(content, {
+                collapseWhitespace: false,
+                removeComments: false,
+                minifyJS: false,
                 minifyCSS: true,
-                removeRedundantAttributes: false, // CLAVE: Evita borrar atributos requeridos por formularios
-                removeScriptTypeAttributes: true,
-                removeStyleLinkTypeAttributes: true,
+                removeRedundantAttributes: false,
+                removeScriptTypeAttributes: false,
+                removeStyleLinkTypeAttributes: false,
                 useShortDoctype: true
             });
 
-            fs.writeFileSync(path.join(DIST_DIR, file), minifiedHtml, 'utf8');
-            console.log(`⚡ HTML compilado y sincronizado desde public_src/${file} -> public/${file}`);
+            fs.writeFileSync(path.join(DIST_DIR, file), finalHtml, 'utf8');
+            console.log(`⚡ HTML sincronizado exactamente desde public_src/${file} -> public/${file}`);
+            htmlCount++;
         }
+    }
+
+    if (htmlCount === 0) {
+        console.warn(`⚠️ ADVERTENCIA: No se encontraron archivos .html en '${SRC_DIR}'. La carpeta public quedará sin index.html.`);
     }
 }
 
@@ -134,6 +171,7 @@ async function build() {
     console.log('🚀 Iniciando Pipeline de Compilación Makumoto...');
     copyImages();
     processJsonFiles();
+    processCssFiles(); // <-- Añadido correctamente
     processJsFiles();
     await processHtmlFiles();
     console.log('🎉 ¡Proceso de compilación completado! Todos los assets listos en la carpeta de producción /public');

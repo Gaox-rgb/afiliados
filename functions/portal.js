@@ -4,7 +4,7 @@
 
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { db, admin } = require("./firebase-admin.js");
-const { createPayPalOrder } = require("./utils.js");
+const utils = require("./utils.js");
 const { PRODUCT_CATALOG } = require("./product-catalog.js");
 
 const portalOpts = {
@@ -64,82 +64,85 @@ exports.getPortalData = onCall(portalOpts, async (request) => {
     }
 
     const planId = companyData.activePlan || "opus_10";
-            const catalogItem = PRODUCT_CATALOG[planId] || { name: "Plan Opus 10", price: 5.00, affiliateLimit: 10 };
+    const catalogItem = PRODUCT_CATALOG[planId] || { name: "Plan Opus 10", price: 5.00, affiliateLimit: 10 };
 
-            const mxnPrices = {
-                "opus_10": 99.00,
-                "starter_10": 99.00,
-                "nucleo_50": 199.00,
-                "growth_50": 199.00,
-                "zenith_200": 299.00,
-                "business_200": 299.00,
-                "master_500": 499.00,
-                "enterprise_500": 499.00
-            };
+    const mxnPrices = {
+        "opus_10": 99.00, "starter_10": 99.00,
+        "nucleo_50": 199.00, "growth_50": 199.00,
+        "zenith_200": 299.00, "business_200": 299.00,
+        "master_500": 499.00, "enterprise_500": 499.00
+    };
 
-            const baseUSD = catalogItem.price || 5.00;
-            const baseMXN = mxnPrices[planId] || (baseUSD * 20.00);
+    const baseUSD = catalogItem.price || 5.00;
+    const baseMXN = mxnPrices[planId] || (baseUSD * 20.00);
 
-            const usdWithIva = (baseUSD * 1.16).toFixed(2);
-            const mxnWithIva = (baseMXN * 1.16).toFixed(2);
+    const usdWithIva = (baseUSD * 1.16).toFixed(2);
+    const mxnWithIva = (baseMXN * 1.16).toFixed(2);
 
-            let cleanPlanName = catalogItem.name || "Plan Opus 10";
-            if (cleanPlanName.includes("Plan Opus") || cleanPlanName.includes("opus_10")) cleanPlanName = "Plan Opus 10";
-            else if (cleanPlanName.includes("Plan Núcleo") || cleanPlanName.includes("Plan Nucleo") || cleanPlanName.includes("nucleo_50")) cleanPlanName = "Plan Núcleo 50";
-            else if (cleanPlanName.includes("Plan Zenith") || cleanPlanName.includes("zenith_200")) cleanPlanName = "Plan Zenith 200";
-            else if (cleanPlanName.includes("Plan Master") || cleanPlanName.includes("master_500")) cleanPlanName = "Plan Master 500";
+    let cleanPlanName = catalogItem.name || "Plan Opus 10";
+    if (cleanPlanName.includes("Plan Opus") || cleanPlanName.includes("opus_10")) cleanPlanName = "Plan Opus 10";
+    else if (cleanPlanName.includes("Plan Núcleo") || cleanPlanName.includes("Plan Nucleo") || cleanPlanName.includes("nucleo_50")) cleanPlanName = "Plan Núcleo 50";
+    else if (cleanPlanName.includes("Plan Zenith") || cleanPlanName.includes("zenith_200")) cleanPlanName = "Plan Zenith 200";
+    else if (cleanPlanName.includes("Plan Master") || cleanPlanName.includes("master_500")) cleanPlanName = "Plan Master 500";
 
-            let planDetails = {
-                name: cleanPlanName,
-                memberLimit: catalogItem.affiliateLimit || 10,
-                price: `${usdWithIva} USD / $${mxnWithIva} MXN`
-            };
+    let planDetails = {
+        name: cleanPlanName,
+        memberLimit: catalogItem.affiliateLimit || 10,
+        price: `${usdWithIva} USD / $${mxnWithIva} MXN`
+    };
 
-            let planEndDate = null;
-            if (userData.createdAt) {
-                const createdDate = typeof userData.createdAt.toDate === "function" 
-                    ? userData.createdAt.toDate() 
-                    : new Date(userData.createdAt._seconds * 1000);
-                const endDate = new Date(createdDate);
-                endDate.setDate(endDate.getDate() + 30);
-                planEndDate = endDate.toISOString();
-            }
+    let planEndDate = null;
+    if (userData.createdAt) {
+        const createdDate = typeof userData.createdAt.toDate === "function" 
+            ? userData.createdAt.toDate() 
+            : new Date(userData.createdAt._seconds * 1000);
+        const endDate = new Date(createdDate);
+        endDate.setDate(endDate.getDate() + 30);
+        planEndDate = endDate.toISOString();
+    }
 
-            return {
-              company: {
-                name: companyData.companyName,
-                planDetails: planDetails,
-                sector: sector,
-                convenioCode: companyData.convenioCode,
-                planEndDate: planEndDate,
-              },
-              roster: roster,
-              powerUps: availablePowerUps
-            };
+    return {
+      company: {
+        name: companyData.companyName,
+        planDetails: planDetails,
+        sector: sector,
+        convenioCode: companyData.convenioCode,
+        planEndDate: planEndDate,
+      },
+      roster: roster,
+      powerUps: availablePowerUps
+    };
 
- } catch (error) {
-            console.error("❌ ERROR DETECTADO EN GETPORTALDATA:", error);
-            if (error instanceof HttpsError) throw error;
-            throw new HttpsError("internal", `Fallo interno en el portal: ${error.message}. Stack: ${error.stack}`);
-          }
-        });
+  } catch (error) {
+    console.error("❌ ERROR DETECTADO EN GETPORTALDATA:", error);
+    if (error instanceof HttpsError) throw error;
+    throw new HttpsError("internal", `Fallo interno en el portal: ${error.message}. Stack: ${error.stack}`);
+  }
+});
 
 exports.addMemberToMasterList = onCall(portalOpts, async (request) => {
     if (!request.auth) throw new HttpsError("unauthenticated", "Autenticación requerida.");
     const managerId = request.auth.uid;
-    const { firstName, lastName, memberId } = request.data;
+    const payload = request.data?.data || request.data || {};
+    const { firstName, lastName, memberId } = payload;
 
     if (!firstName || !lastName || !memberId) {
-        throw new HttpsError("invalid-argument", "Campos incompletos.");
+        throw new HttpsError("invalid-argument", "Campos incompletos: Se requiere nombre, apellido e ID.");
     }
 
     try {
         const managerDoc = await db.collection("users").doc(managerId).get();
-        if (!managerDoc.exists || managerDoc.data().corporateData?.role !== 'manager') {
-            throw new HttpsError("permission-denied", "Solo administradores.");
+        if (!managerDoc.exists) {
+            throw new HttpsError("not-found", "El perfil de administrador no existe en la base de datos.");
         }
+        
+        const userData = managerDoc.data();
+        const companyId = userData.corporateData?.companyId;
 
-        const companyId = managerDoc.data().corporateData.companyId;
+        if (!companyId) {
+            throw new HttpsError("failed-precondition", "El administrador no tiene una compañía asociada.");
+        }
+        
         const memberRef = db.collection("companies").doc(companyId).collection("employees").doc(memberId.toString());
         const memberDoc = await memberRef.get();
 
@@ -147,20 +150,43 @@ exports.addMemberToMasterList = onCall(portalOpts, async (request) => {
             throw new HttpsError("already-exists", "ID de miembro ya registrado.");
         }
 
-        await memberRef.set({
-            name: `${firstName} ${lastName}`,
-            firstName: firstName,
-            lastName: lastName,
+        const memberData = {
+            name: `${firstName} ${lastName}`.trim(),
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
             addedBy: managerId,
-            addedAt: new Date(),
+            addedAt: admin.firestore.FieldValue.serverTimestamp(),
             claimedBy: null,
-        });
+        };
 
-        return { success: true };
+        await memberRef.set(memberData);
+
+        // 🚀 SINCRONIZACIÓN BLINDADA HACIA EL CORE
+        let coreSyncSuccess = false;
+        try {
+            const companyDoc = await db.collection("companies").doc(companyId).get();
+            const companyData = companyDoc.exists ? companyDoc.data() : {};
+            
+            coreSyncSuccess = await utils.sendSyncRequestToCore({
+                action: "sync_employee",
+                employeeId: memberId.toString(),
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                name: `${firstName} ${lastName}`.trim(),
+                convenioCode: companyData.convenioCode || "",
+                companyName: companyData.companyName || ""
+            });
+            console.log(`[SYNC_RESULT] Sincronización con Core para ${memberId}:`, coreSyncSuccess);
+        } catch (syncErr) {
+            console.error(`[SYNC_ERROR] Excepción al sincronizar con el Core:`, syncErr);
+        }
+
+        return { success: true, coreSynced: coreSyncSuccess };
 
     } catch (error) {
+        console.error("❌ Error en addMemberToMasterList:", error);
         if (error instanceof HttpsError) throw error;
-        throw new HttpsError("internal", "No se pudo añadir al miembro.");
+        throw new HttpsError("internal", `No se pudo añadir al miembro: ${error.message}`);
     }
 });
 

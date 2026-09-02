@@ -1,1 +1,174 @@
-<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Makumoto - Centro de Mando</title><link rel="icon" type="image/png" href="imagenes/logo.png"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script><style>:root{--color-primary:#FFD700;--color-secondary:#ff4d4d;--color-dark:#101010;--color-light-dark:#1E1E1E;--color-text:#E0E0E0;--color-text-dark:#333;--font-family:'Poppins',sans-serif,system-ui}@keyframes vibrant-glow{0%,100%{text-shadow:0 0 3px gold,0 0 5px gold,0 0 8px #ffae00}50%{text-shadow:0 0 5px gold,0 0 10px #ffae00,0 0 15px #ffae00}}*{margin:0;padding:0;box-sizing:border-box}body{background-color:var(--color-dark);color:var(--color-text);font-family:var(--font-family);line-height:1.4;font-size:14px;padding-bottom:80px}.container{max-width:1100px;margin:0 auto;padding:0 20px}header{padding:.7rem 0;border-bottom:1px solid var(--color-primary)}.header-container{display:flex;align-items:center;justify-content:center;gap:10px}.logo img{height:24px}.logo span{font-size:1.2rem;font-weight:600;color:var(--color-primary)}#manager-portal{padding:1.5rem 0}.portal-actions-bar{display:flex;justify-content:center;margin-bottom:1.5rem}#portal-title{font-size:1.6rem;font-weight:600;text-align:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #333}#roster-title{font-size:1.4rem;font-weight:500;text-align:left;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #333}#dashboard-kpis{margin-bottom:2.5rem}.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}.kpi-card{background-color:#1e1e1e;padding:1rem;border-radius:6px;text-align:center}.kpi-card .value{font-size:1.8rem;font-weight:700;color:var(--color-primary)}.kpi-card .label{font-size:.75rem;opacity:.7;margin-top:.2rem;text-transform:uppercase}.portal-logout-btn{background:var(--color-secondary);color:#fff;border:none;padding:.5rem 1rem;border-radius:5px;cursor:pointer;font-weight:700;font-size:.8rem}.placeholder{min-height:80px;background-color:transparent;border:1px dashed #444;display:flex;align-items:center;justify-content:center;border-radius:8px;color:#666;font-style:italic;padding:1rem}.invite-container{background-color:#1a1a1a;padding:1rem;border-radius:6px;margin-bottom:1.5rem;border-left:3px solid var(--color-primary)}#invite-form{display:flex;gap:.8rem;align-items:center}#invite-form input{flex-grow:1;background:#2c2c2c;border:1px solid #444;color:var(--color-text);padding:.6rem .8rem;border-radius:4px;font-size:.9rem;font-family:var(--font-family)}#invite-form button{background:var(--color-primary);color:var(--color-text-dark);border:none;padding:.6rem 1rem;border-radius:4px;font-weight:700;cursor:pointer;font-size:.9rem}.roster-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}.member-row{background-color:var(--color-light-dark);border-radius:6px;padding:.8rem 1rem;display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem;align-items:center}.member-info{grid-column:1/2}.member-name{font-weight:600;color:var(--color-text);font-size:1rem}.member-email{font-size:.8rem;color:#999}.member-kpi,.member-role{grid-row:2;text-align:center;background-color:rgba(0,0,0,.2);padding:.4rem;border-radius:4px}.kpi-value{font-size:1.1rem;font-weight:700;color:var(--color-primary);display:block}.kpi-label{font-size:.65rem;text-transform:uppercase;color:#888}.role-selector{background-color:transparent;color:var(--color-primary);border:none;font-weight:700;font-size:1rem;text-align:center;padding:0}.member-action{grid-column:2/3;grid-row:1/span 2;display:flex;align-items:center;justify-content:center}.member-action button{background-color:var(--color-secondary);color:#fff;border:none;padding:.5rem .8rem;border-radius:4px;font-size:.8rem;font-weight:700;cursor:pointer}.member-action button[disabled]{background-color:#555;cursor:not-allowed;color:#999}.power-up-list{display:flex;flex-direction:column;gap:1rem;margin-top:1.5rem}.power-up-row{background-color:var(--color-light-dark);border-radius:6px;padding:1rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;border-left:3px solid var(--color-primary);position:relative}.power-up-icon{font-size:1.8rem;color:var(--color-primary)}.power-up-info h3{font-size:1rem;font-weight:600}.power-up-info p{font-size:.8rem;color:#999;line-height:1.4}.power-up-action a{display:block;background:var(--color-secondary);color:#fff;text-decoration:none;padding:.6rem 1rem;border-radius:4px;font-weight:700;font-size:.9rem;cursor:pointer}.tag-active{position:absolute;top:0;left:0;background:var(--color-primary);color:var(--color-dark);padding:.1rem .5rem;font-size:.6rem;font-weight:700;border-top-left-radius:6px}#portal-footer{position:fixed;bottom:0;left:0;width:100%;background-color:var(--color-dark);padding:1rem;text-align:center;border-top:1px solid #333;z-index:1000}</style></head><body><header></header><main id="manager-portal" class="container"><div id="portal-container"></div></main><footer id="portal-footer"><button id="btn-logout-footer" class="portal-logout-btn">Cerrar Sesión</button></footer><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script><script src="js/firebase-config.js"></script><script src="js/app.header.js"></script><script src="/js/portal.js"></script><div id="manager-chatbot-container"><div id="manager-chatbot-bubble"><i class="fas fa-book-open"></i></div><div id="manager-chatbot-window"><div id="manager-chatbot-header"><h3>Asistente Táctico</h3><button id="manager-chatbot-close-btn">&times;</button></div><div class="manager-chatbot-content-wrapper"><div id="manager-chatbot-messages"></div><div id="manager-chatbot-options"></div><div id="manager-chatbot-footer"><button id="manager-chatbot-back-btn"><i class="fas fa-arrow-left"></i> Volver al Menú</button> <button id="manager-chatbot-exit-btn"><i class="fas fa-times-circle"></i> Cerrar Asistente</button></div></div></div></div><style>#manager-chatbot-container{position:fixed;bottom:25px;right:25px;z-index:1001}#manager-chatbot-bubble{width:60px;height:60px;background:var(--color-primary);color:var(--color-dark);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.3);transition:transform .3s}#manager-chatbot-bubble:hover{transform:scale(1.1)}#manager-chatbot-window{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(16,16,16,.98);display:flex;flex-direction:column;overflow:hidden;visibility:hidden;opacity:0;transition:opacity .3s,visibility .3s}#manager-chatbot-container.open #manager-chatbot-window{visibility:visible;opacity:1}#manager-chatbot-header{padding:15px 25px;color:var(--color-primary);display:flex;justify-content:space-between;align-items:center;background:var(--color-dark);border-bottom:1px solid #333}#manager-chatbot-header h3{margin:0;font-size:1.2rem}#manager-chatbot-close-btn{background:0 0;border:none;color:var(--color-text);font-size:2.2rem;cursor:pointer}.manager-chatbot-content-wrapper{width:100%;max-width:800px;margin:auto;display:flex;flex-direction:column;height:90%}#manager-chatbot-messages{flex-grow:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}.manager-chat-message{padding:12px 18px;border-radius:20px;max-width:85%;line-height:1.5}.manager-bot-message{background:#333;color:var(--color-text);align-self:flex-start;border-bottom-left-radius:5px}.manager-user-message{background:var(--color-primary);color:var(--color-dark);align-self:flex-end;border-bottom-right-radius:5px;font-weight:500}#manager-chatbot-options{padding:20px;border-top:1px solid #333;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px;overflow-y:auto;max-height:50%}.manager-chatbot-option-btn{padding:15px;background:0 0;border:2px solid var(--color-primary);color:var(--color-primary);border-radius:8px;cursor:pointer;text-align:left;font-family:var(--font-family);font-size:.95rem;font-weight:700;transition:.2s}.manager-chatbot-option-btn:hover{background-color:var(--color-primary);color:var(--color-dark)}.manager-chatbot-action-btn{background:var(--color-secondary);color:#fff;border-color:var(--color-secondary)}.manager-chatbot-action-btn:hover{background-color:var(--color-secondary);color:#fff;filter:brightness(1.2)}#manager-chatbot-footer{padding:15px 20px;border-top:1px solid #555;background:var(--color-dark);display:flex;gap:15px}#manager-chatbot-back-btn,#manager-chatbot-exit-btn{flex-grow:1;padding:15px;border-radius:8px;cursor:pointer;font-family:var(--font-family);font-size:1rem;font-weight:700;transition:.2s}#manager-chatbot-back-btn{display:none;background:#333;border:1px solid #555;color:var(--color-text)}#manager-chatbot-back-btn:hover{background:#444}#manager-chatbot-exit-btn{background:var(--color-secondary);border:1px solid var(--color-secondary);color:#fff}#manager-chatbot-exit-btn:hover{filter:brightness(1.2)}</style><script>!function(){const e=()=>{const e=document.getElementById("manager-chatbot-container");if(!e)return;const a=document.getElementById("manager-chatbot-bubble"),n=document.getElementById("manager-chatbot-close-btn"),o=document.getElementById("manager-chatbot-messages"),t=document.getElementById("manager-chatbot-options"),s=document.getElementById("manager-chatbot-back-btn"),i=document.getElementById("manager-chatbot-exit-btn"),r={welcome:{text:"¡Saludos, Gerente! Soy tu asistente táctico. Mi misión es asegurar que domines cada herramienta de este Centro de Mando. ¿Qué necesitas optimizar hoy?"},q1:{question:"¿Cómo afilio a un nuevo miembro?",answer:"Ve a <strong>'Gestión de Altas'</strong>, añade a la persona con un ID único (ej. su ID de empleado). Luego, el miembro usa la app Makumoto, ese ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Así de fácil!",cta:{text:"Abrir Gestión de Altas",action:()=>document.getElementById("btn-show-roster-management").click()}},q2:{question:"¿Comunicado masivo o Mensaje Directo?",answer:"Usa la <strong>'Consola de Comunicados'</strong> para enviar mensajes a TODA tu tribu. Ideal para anuncios. <br><br>Usa la <strong>'Bandeja de Mensajes'</strong> para una conversación privada con un miembro específico."},q3:{question:"¿Para qué sirve el 'Mapa de Misión'?",answer:"Es tu vista de satélite. Te muestra en un mapa <strong>dónde tus miembros realizan sus 'check-ins'</strong>. Es la prueba visual de que tu comunidad está activa en el mundo real."},q4:{question:"¿Por qué considerar las 'Mejoras Premium'?",answer:"Te dan una <strong>ventaja táctica decisiva</strong>. Son 'Power-Ups' de pago único que desbloquean funciones avanzadas como retos personalizados o analíticas de comportamiento para llevar tu liderazgo al siguiente nivel.",cta:{text:"Explorar Mejoras",action:()=>document.getElementById("btn-show-premium-upgrades").click()}},q5:{question:"¿Qué son los 'Power-Ups'?",answer:"Son módulos que puedes añadir a tu arsenal. Por ejemplo, el Power-Up 'Impulso Personalizado' te permite crear micro-retos específicos, dándote un control granular sobre la motivación del equipo."},q6:{question:"¿Cómo uso el 'Código de Convenio'?",answer:"Es la llave de acceso a tu comunidad. Dáselo a todos tus miembros junto con el ID que les asignaste en la 'Gestión de Altas'. Es el método seguro para que solo tu gente pueda entrar."},q7:{question:"Necesito eliminar a un miembro, ¿cómo lo hago?",answer:"Actualmente, la funcionalidad para dar de baja a un miembro se gestiona desde el sistema central. Si necesitas revocar el acceso a alguien, contacta a soporte y lo haremos de inmediato por ti."},q8:{question:"¿Qué pasa si mi plan está por expirar?",answer:"Verás un botón de 'Actualizar Plan' aparecer junto al contador de vigencia cuando queden menos de 10 días. El proceso de renovación es simple y rápido para que tu comunidad nunca pierda el acceso."},q9:{question:"¿Puedo cambiar de Sector más adelante?",answer:"No. La elección de Sector (Empresa, Gimnasio, Clínica) que haces en tu primer login es <strong>permanente</strong>, ya que calibra todo tu Centro de Mando. Elige sabiamente para alinear las herramientas con tus objetivos."},q10:{question:"¿Cómo mido el rendimiento de mi comunidad?",answer:"Tu primer vistazo es el 'Mapa de Misión' para ver actividad. Para métricas más profundas sobre engagement y comportamiento, explora las 'Mejoras Premium'. Hay Power-Ups de analítica diseñados para darte esa inteligencia de negocio."}},c=(e,a)=>{const n=document.createElement("div");n.className=`manager-chat-message ${a}-message`,n.innerHTML=e,o.appendChild(n),o.scrollTop=o.scrollHeight},d=e=>{const a=r[e];c(a.question,"manager-user"),t.innerHTML='<p style="text-align:center; opacity: 0.7;">Procesando...</p>',setTimeout(()=>{if(c(a.answer,"manager-bot"),t.innerHTML="",s.style.display="block",a.cta){const e=document.createElement("button");e.className="manager-chatbot-option-btn manager-chatbot-action-btn",e.innerHTML=`<i class="fas fa-crosshairs"></i> ${a.cta.text}`,e.onclick=()=>{a.cta.action(),m(!1)},t.appendChild(e)}},800)},l=()=>{o.innerHTML="",c(r.welcome.text,"manager-bot"),t.innerHTML="",s.style.display="none",Object.keys(r).filter(e=>e.startsWith("q")).forEach(e=>{const a=document.createElement("button");a.className="manager-chatbot-option-btn",a.textContent=r[e].question,a.onclick=()=>d(e),t.appendChild(a)})},m=(a=null)=>{!0===a?e.classList.add("open"):!1===a?e.classList.remove("open"):e.classList.toggle("open")};a&&(a.onclick=()=>m()),n&&(n.onclick=()=>m(!1)),i&&(i.onclick=()=>m(!1)),s&&(s.onclick=l),l()};"loading"===document.readyState?document.addEventListener("DOMContentLoaded",e):e()}()</script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Makumoto - Centro de Mando</title>
+    <link rel="icon" type="image/png" href="imagenes/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet.js para el Mapa de Misión -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>:root{--color-primary:#FFD700;--color-secondary:#ff4d4d;--color-dark:#101010;--color-light-dark:#1E1E1E;--color-text:#E0E0E0;--color-text-dark:#333;--font-family:'Poppins',sans-serif,system-ui}@keyframes vibrant-glow{0%{text-shadow:0 0 3px gold,0 0 5px gold,0 0 8px #ffae00}50%{text-shadow:0 0 5px gold,0 0 10px #ffae00,0 0 15px #ffae00}100%{text-shadow:0 0 3px gold,0 0 5px gold,0 0 8px #ffae00}}*{margin:0;padding:0;box-sizing:border-box}body{background-color:var(--color-dark);color:var(--color-text);font-family:var(--font-family);line-height:1.4;font-size:14px}.container{max-width:1100px;margin:0 auto;padding:0 20px}header{padding:.7rem 0;border-bottom:1px solid var(--color-primary)}.header-container{display:flex;align-items:center;justify-content:center;gap:10px}.logo img{height:24px}.logo span{font-size:1.2rem;font-weight:600;color:var(--color-primary)}#manager-portal{padding:1.5rem 0}.portal-actions-bar{display:flex;justify-content:center;margin-bottom:1.5rem}#portal-title{font-size:1.6rem;font-weight:600;text-align:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #333}#roster-title{font-size:1.4rem;font-weight:500;text-align:left;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #333}#dashboard-kpis{margin-bottom:2.5rem}.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}.kpi-card{background-color:#1e1e1e;padding:1rem;border-radius:6px;text-align:center}.kpi-card .value{font-size:1.8rem;font-weight:700;color:var(--color-primary)}.kpi-card .label{font-size:.75rem;opacity:.7;margin-top:.2rem;text-transform:uppercase}.portal-logout-btn{background:var(--color-secondary);color:#fff;border:none;padding:.5rem 1rem;border-radius:5px;cursor:pointer;font-weight:700;font-size:.8rem}.placeholder{min-height:80px;background-color:transparent;border:1px dashed #444;display:flex;align-items:center;justify-content:center;border-radius:8px;color:#666;font-style:italic;padding:1rem}.invite-container{background-color:#1a1a1a;padding:1rem;border-radius:6px;margin-bottom:1.5rem;border-left:3px solid var(--color-primary)}#invite-form{display:flex;gap:.8rem;align-items:center}#invite-form input{flex-grow:1;background:#2c2c2c;border:1px solid #444;color:var(--color-text);padding:.6rem .8rem;border-radius:4px;font-size:.9rem;font-family:var(--font-family)}#invite-form button{background:var(--color-primary);color:var(--color-text-dark);border:none;padding:.6rem 1rem;border-radius:4px;font-weight:700;cursor:pointer;font-size:.9rem}#invite-form button{background:var(--color-primary);color:var(--color-text-dark);border:none;padding:.6rem 1rem;border-radius:4px;font-weight:700;cursor:pointer;font-size:.9rem}.roster-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:1.5rem}.member-row{background-color:var(--color-light-dark);border-radius:6px;padding:.8rem 1rem;display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem;align-items:center}.member-info{grid-column:1/2}.member-name{font-weight:600;color:var(--color-text);font-size:1rem}.member-email{font-size:.8rem;color:#999}.member-kpi,.member-role{grid-row:2;text-align:center;background-color:rgba(0,0,0,.2);padding:.4rem;border-radius:4px}.kpi-value{font-size:1.1rem;font-weight:700;color:var(--color-primary);display:block}.kpi-label{font-size:.65rem;text-transform:uppercase;color:#888}.role-selector{background-color:transparent;color:var(--color-primary);border:none;font-weight:700;font-size:1rem;text-align:center;padding:0}.member-action{grid-column:2/3;grid-row:1/span 2;display:flex;align-items:center;justify-content:center}.member-action button{background-color:var(--color-secondary);color:#fff;border:none;padding:.5rem .8rem;border-radius:4px;font-size:.8rem;font-weight:700;cursor:pointer}.member-action button[disabled]{background-color:#555;cursor:not-allowed;color:#999}.power-up-list{display:flex;flex-direction:column;gap:1rem;margin-top:1.5rem}.power-up-row{background-color:var(--color-light-dark);border-radius:6px;padding:1rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;border-left:3px solid var(--color-primary);position:relative}.power-up-icon{font-size:1.8rem;color:var(--color-primary)}.power-up-info h3{font-size:1rem;font-weight:600}.power-up-info p{font-size:.8rem;color:#999;line-height:1.4}.power-up-action a{display:block;background:var(--color-secondary);color:#fff;text-decoration:none;padding:.6rem 1rem;border-radius:4px;font-weight:700;font-size:.9rem;cursor:pointer}.tag-active{position:absolute;top:0;left:0;background:var(--color-primary);color:var(--color-dark);padding:.1rem .5rem;font-size:.6rem;font-weight:700;border-top-left-radius:6px}#portal-footer{position:fixed;bottom:0;left:0;width:100%;background-color:var(--color-dark);padding:1rem;text-align:center;border-top:1px solid #333;z-index:1000}body{padding-bottom:80px}</style>
+</head>
+<body>
+
+    <header>
+        </header>
+
+    <main id="manager-portal" class="container">
+        <!-- Este contenedor se elimina por completo -->
+        
+        <!-- Contenedor Dinámico para el Flujo de Iniciación y Dashboard -->
+        <div id="portal-container">
+            <!-- El contenido se renderizará aquí vía JS -->
+        </div>
+
+    </main>
+
+    <footer id="portal-footer">
+        <button id="btn-logout-footer" class="portal-logout-btn">Cerrar Sesión</button>
+    </footer>
+
+    <!-- SDKs DE FIREBASE (ORDEN DE CARGA GARANTIZADO) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- ===== CONFIGURACIÓN SEGURA DE FIREBASE (NO VERSIONADA) ===== -->
+    <script src="js/firebase-config.js"></script>
+
+    <!-- ===== NÚCLEO DEL PORTAL DE MANAGER (SIGUE SIENDO LA VERSIÓN MÍNIMA) ===== -->
+    <script src="js/app.header.js"></script>
+    <script src="/js/portal.js"></script>
+
+<!-- =================================================================== -->
+<!--     INICIO DEL CHATBOT INMERSIVO PARA GERENTES Makumoto        -->
+<!-- =================================================================== -->
+<div id="manager-chatbot-container">
+    <div id="manager-chatbot-bubble">
+        <i class="fas fa-book-open"></i>
+    </div>
+    <div id="manager-chatbot-window">
+        <div id="manager-chatbot-header">
+            <h3>Asistente Táctico</h3>
+            <button id="manager-chatbot-close-btn">&times;</button>
+        </div>
+        <div class="manager-chatbot-content-wrapper">
+            <div id="manager-chatbot-messages">
+                <!-- Los mensajes se insertarán aquí -->
+            </div>
+            <div id="manager-chatbot-options">
+                <!-- Las opciones de botones se insertarán aquí -->
+            </div>
+            <div id="manager-chatbot-footer">
+                <button id="manager-chatbot-back-btn"><i class="fas fa-arrow-left"></i> Volver al Menú</button>
+                <button id="manager-chatbot-exit-btn"><i class="fas fa-times-circle"></i> Cerrar Asistente</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>#manager-chatbot-container{position:fixed;bottom:25px;right:25px;z-index:1001}#manager-chatbot-bubble{width:60px;height:60px;background:var(--color-primary);color:var(--color-dark);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,.3);transition:transform .3s ease}#manager-chatbot-bubble:hover{transform:scale(1.1)}#manager-chatbot-window{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(16,16,16,.98);display:flex;flex-direction:column;overflow:hidden;visibility:hidden;opacity:0;transition:opacity .3s ease,visibility .3s ease}#manager-chatbot-container.open #manager-chatbot-window{visibility:visible;opacity:1}#manager-chatbot-header{padding:15px 25px;color:var(--color-primary);display:flex;justify-content:space-between;align-items:center;background:var(--color-dark);border-bottom:1px solid #333}#manager-chatbot-header h3{margin:0;font-size:1.2rem}#manager-chatbot-close-btn{background:0 0;border:none;color:var(--color-text);font-size:2.2rem;cursor:pointer}.manager-chatbot-content-wrapper{width:100%;max-width:800px;margin:auto;display:flex;flex-direction:column;height:90%}#manager-chatbot-messages{flex-grow:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}.manager-chat-message{padding:12px 18px;border-radius:20px;max-width:85%;line-height:1.5}.manager-bot-message{background:#333;color:var(--color-text);align-self:flex-start;border-bottom-left-radius:5px}.manager-user-message{background:var(--color-primary);color:var(--color-dark);align-self:flex-end;border-bottom-right-radius:5px;font-weight:500}#manager-chatbot-options{padding:20px;border-top:1px solid #333;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px;overflow-y:auto;max-height:50%}.manager-chatbot-option-btn{padding:15px;background:0 0;border:2px solid var(--color-primary);color:var(--color-primary);border-radius:8px;cursor:pointer;text-align:left;font-family:var(--font-family);font-size:.95rem;font-weight:700;transition:all .2s ease}.manager-chatbot-option-btn:hover{background-color:var(--color-primary);color:var(--color-dark)}.manager-chatbot-action-btn{background:var(--color-secondary);color:#fff;border-color:var(--color-secondary)}.manager-chatbot-action-btn:hover{background-color:var(--color-secondary);color:#fff;filter:brightness(1.2)}#manager-chatbot-footer{padding:15px 20px;border-top:1px solid #555;background:var(--color-dark);display:flex;gap:15px}#manager-chatbot-back-btn,#manager-chatbot-exit-btn{flex-grow:1;padding:15px;border-radius:8px;cursor:pointer;font-family:var(--font-family);font-size:1rem;font-weight:700;transition:all .2s ease}#manager-chatbot-back-btn{display:none;background:#333;border:1px solid #555;color:var(--color-text)}#manager-chatbot-back-btn:hover{background:#444}#manager-chatbot-exit-btn{background:var(--color-secondary);border:1px solid var(--color-secondary);color:#fff}#manager-chatbot-exit-btn:hover{filter:brightness(1.2)}</style>
+
+<script>
+    (function() {
+        const initManagerChatbot = () => {
+            const chatbotContainer = document.getElementById('manager-chatbot-container');
+            if (!chatbotContainer) return;
+            const bubble = document.getElementById('manager-chatbot-bubble');
+            const closeBtn = document.getElementById('manager-chatbot-close-btn');
+            const messagesContainer = document.getElementById('manager-chatbot-messages');
+            const optionsContainer = document.getElementById('manager-chatbot-options');
+            const backBtn = document.getElementById('manager-chatbot-back-btn');
+            const exitBtn = document.getElementById('manager-chatbot-exit-btn');
+            
+            const chatbotData = {
+                welcome: { text: "¡Saludos, Gerente! Soy tu asistente táctico. Mi misión es asegurar que domines cada herramienta de este Centro de Mando. ¿Qué necesitas optimizar hoy?" },
+                q1: { question: "¿Cómo afilio a un nuevo miembro?", answer: "Ve a <strong>'Gestión de Altas'</strong>, añade a la persona con un ID único (ej. su ID de empleado). Luego, el miembro usa la app Makumoto, ese ID y tu <strong>'Código de Convenio'</strong> para unirse. ¡Así de fácil!", cta: { text: "Abrir Gestión de Altas", action: () => document.getElementById('btn-show-roster-management').click() } },
+                q2: { question: "¿Comunicado masivo o Mensaje Directo?", answer: "Usa la <strong>'Consola de Comunicados'</strong> para enviar mensajes a TODA tu tribu. Ideal para anuncios. <br><br>Usa la <strong>'Bandeja de Mensajes'</strong> para una conversación privada con un miembro específico." },
+                q3: { question: "¿Para qué sirve el 'Mapa de Misión'?", answer: "Es tu vista de satélite. Te muestra en un mapa <strong>dónde tus miembros realizan sus 'check-ins'</strong>. Es la prueba visual de que tu comunidad está activa en el mundo real." },
+                q4: { question: "¿Por qué considerar las 'Mejoras Premium'?", answer: "Te dan una <strong>ventaja táctica decisiva</strong>. Son 'Power-Ups' de pago único que desbloquean funciones avanzadas como retos personalizados o analíticas de comportamiento para llevar tu liderazgo al siguiente nivel.", cta: { text: "Explorar Mejoras", action: () => document.getElementById('btn-show-premium-upgrades').click() } },
+                q5: { question: "¿Qué son los 'Power-Ups'?", answer: "Son módulos que puedes añadir a tu arsenal. Por ejemplo, el Power-Up 'Impulso Personalizado' te permite crear micro-retos específicos, dándote un control granular sobre la motivación del equipo." },
+                q6: { question: "¿Cómo uso el 'Código de Convenio'?", answer: "Es la llave de acceso a tu comunidad. Dáselo a todos tus miembros junto con el ID que les asignaste en la 'Gestión de Altas'. Es el método seguro para que solo tu gente pueda entrar." },
+                q7: { question: "Necesito eliminar a un miembro, ¿cómo lo hago?", answer: "Actualmente, la funcionalidad para dar de baja a un miembro se gestiona desde el sistema central. Si necesitas revocar el acceso a alguien, contacta a soporte y lo haremos de inmediato por ti." },
+                q8: { question: "¿Qué pasa si mi plan está por expirar?", answer: "Verás un botón de 'Actualizar Plan' aparecer junto al contador de vigencia cuando queden menos de 10 días. El proceso de renovación es simple y rápido para que tu comunidad nunca pierda el acceso." },
+                q9: { question: "¿Puedo cambiar de Sector más adelante?", answer: "No. La elección de Sector (Empresa, Gimnasio, Clínica) que haces en tu primer login es <strong>permanente</strong>, ya que calibra todo tu Centro de Mando. Elige sabiamente para alinear las herramientas con tus objetivos." },
+                q10: { question: "¿Cómo mido el rendimiento de mi comunidad?", answer: "Tu primer vistazo es el 'Mapa de Misión' para ver actividad. Para métricas más profundas sobre engagement y comportamiento, explora las 'Mejoras Premium'. Hay Power-Ups de analítica diseñados para darte esa inteligencia de negocio." }
+            };
+
+            const showMainMenu = () => {
+                optionsContainer.innerHTML = '';
+                backBtn.style.display = 'none';
+                const keys = Object.keys(chatbotData).filter(k => k.startsWith('q'));
+                keys.forEach(key => {
+                    const btn = document.createElement('button');
+                    btn.className = 'manager-chatbot-option-btn';
+                    btn.textContent = chatbotData[key].question;
+                    btn.onclick = () => handleQuestionClick(key);
+                    optionsContainer.appendChild(btn);
+                });
+            };
+
+            const addMessage = (text, type) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `manager-chat-message ${type}-message`;
+                messageDiv.innerHTML = text;
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            };
+
+            const handleQuestionClick = (key) => {
+                const data = chatbotData[key];
+                addMessage(data.question, 'manager-user');
+                optionsContainer.innerHTML = '<p style="text-align:center; opacity: 0.7;">Procesando...</p>';
+                setTimeout(() => {
+                    addMessage(data.answer, 'manager-bot');
+                    optionsContainer.innerHTML = '';
+                    backBtn.style.display = 'block';
+                    if (data.cta) {
+                        const btnAction = document.createElement('button');
+                        btnAction.className = 'manager-chatbot-option-btn manager-chatbot-action-btn';
+                        btnAction.innerHTML = `<i class="fas fa-crosshairs"></i> ${data.cta.text}`;
+                        btnAction.onclick = () => {
+                            data.cta.action();
+                            toggleChat(false);
+                        };
+                        optionsContainer.appendChild(btnAction);
+                    }
+                }, 800);
+            };
+
+            const resetChat = () => {
+                messagesContainer.innerHTML = '';
+                addMessage(chatbotData.welcome.text, 'manager-bot');
+                showMainMenu();
+            };
+
+            const toggleChat = (forceOpen = null) => {
+                if (forceOpen === true) chatbotContainer.classList.add('open');
+                else if (forceOpen === false) chatbotContainer.classList.remove('open');
+                else chatbotContainer.classList.toggle('open');
+            };
+
+            if (bubble) bubble.onclick = () => toggleChat();
+            if (closeBtn) closeBtn.onclick = () => toggleChat(false);
+            if (exitBtn) exitBtn.onclick = () => toggleChat(false);
+            if (backBtn) backBtn.onclick = resetChat;
+            
+            resetChat();
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initManagerChatbot);
+        } else {
+            initManagerChatbot();
+        }
+    })();
+</script>
+<!-- =================================================================== -->
+<!--            FIN DEL CHATBOT INMERSIVO PARA GERENTES             -->
+<!-- =================================================================== -->
+</body>
+</html>

@@ -45,6 +45,21 @@ function getDashboardContentContainer(buttonId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // BLINDAJE GLOBAL CONTRA ASIGNACIONES NULAS DE ONSUBMIT
+    const originalSetProperty = Object.getOwnPropertyDescriptor(HTMLFormElement.prototype, 'onsubmit');
+    if (!originalSetProperty) {
+        Object.defineProperty(HTMLFormElement.prototype, 'onsubmit', {
+            set: function(handler) {
+                if (!this) {
+                    console.warn("⚠️ Intento de asignar onsubmit a un formulario nulo interceptado.");
+                    return;
+                }
+                this._onsubmit = handler;
+            },
+            get: function() { return this._onsubmit; }
+        });
+    }
+
     const ui = {
         portalContainer: document.getElementById('portal-container'),
         logoutButton: document.getElementById('btn-logout-footer'),
@@ -538,8 +553,18 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        document.getElementById('add-member-form').onsubmit = handleAddMemberSubmit;
-        
+        const formEl = document.getElementById('add-member-form');
+        if (formEl) {
+            formEl.onsubmit = handleAddMemberSubmit;
+        }
+
+        contentContainer.addEventListener('submit', async (e) => {
+            if (e.target && e.target.id === 'add-member-form') {
+                e.preventDefault();
+                await handleAddMemberSubmit(e);
+            }
+        });
+
         try {
             const getCompanyMasterList = functions.httpsCallable('getCompanyMasterList');
         const result = await getCompanyMasterList();
@@ -588,9 +613,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const addMemberToMasterList = functions.httpsCallable('addMemberToMasterList');
-        await addMemberToMasterList(payload);
-            event.target.reset(); // Limpiar el formulario
-            renderRosterManagementConsole(); // Recargar la vista para mostrar el nuevo miembro
+            // Enfoque blindado: Envolvemos el payload explícitamente para cumplir con el contrato del backend
+            await addMemberToMasterList({ data: payload });
+            
+            // Verificación segura antes de resetear para evitar TypeError en consola
+            if (event && event.target && typeof event.target.reset === 'function') {
+                event.target.reset();
+            }
+            
+            renderRosterManagementConsole(); // Recargar la vista con seguridad
         } catch (error) {
             alert(`Error al añadir miembro: ${error.message}`);
             button.disabled = false;

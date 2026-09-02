@@ -1013,9 +1013,9 @@
         <h3 style="font-size: 1.8rem; color: #FFD700; margin-bottom: 10px;">Registro de Gerente</h3>
         <p style="margin-bottom: 25px; font-size: 1.1rem;">Crea tu cuenta de acceso corporativo antes de completar tu suscripción en PayPal.</p>
        <form id="signup-form">
-            <input type="text" id="signup-name" placeholder="NOMBRE DEL GERENTE/DUEÑO" required style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #444; background: #fff; color: #333;">
+            <input type="text" id="signup-name" placeholder="NOMBRE COMPLETO" required style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #444; background: #fff; color: #333;">
             <input type="email" id="signup-email" placeholder="TU EMAIL CORPORATIVO" required style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #444; background: #fff; color: #333;">
-            <div id="company-name-wrapper" style="display: block !important; visibility: visible !important;">
+            <div id="company-name-wrapper" style="display: block !important; visibility: visible !important; width: 100%;">
                 <input type="text" id="signup-company" placeholder="NOMBRE DE TU EMPRESA O NEGOCIO" required style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #444; background: #fff; color: #333;">
             </div>
             <div style="position: relative; width: 100%; margin-bottom: 15px;">
@@ -1549,7 +1549,8 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
-            const companyName = document.getElementById('signup-company').value || name;
+            const companyNameInput = document.getElementById('signup-company');
+            const companyName = companyNameInput ? companyNameInput.value : name;
             const password = document.getElementById('signup-password').value;
             const planId = window.app.selectedPlanId;
             const convenioCode = window.app.generatedConvenioCode;
@@ -1580,21 +1581,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.app.ui.showLoader('Redirigiendo a pasarela PayPal...');
 
                 // Llamar al backend pasando los datos del usuario y el código de convenio pre-aprobado junto con su contraseña
-               const response = await fetch('https://us-central1-afiliados-makumoto.cloudfunctions.net/createAffiliatePaypalOrder', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    data: {
-                        planId: planId, 
-                        uid: user.uid, 
-                        name: name, 
-                        email: email,
-                        companyName: companyName,
-                        convenioCode: convenioCode,
-                        password: password
-                    }
-                })
-            });
+               // Llamar al backend pasando los datos del usuario y el código de convenio pre-aprobado junto con su contraseña
+                const response = await fetch('https://us-central1-afiliados-makumoto.cloudfunctions.net/createAffiliatePaypalOrder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        data: {
+                            planId: planId, 
+                            uid: user.uid, 
+                            name: name, 
+                            email: email,
+                            companyName: companyName,
+                            convenioCode: convenioCode,
+                            password: password
+                        }
+                    })
+                });
 
                 if (!response.ok) {
                     const errData = await response.json();
