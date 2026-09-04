@@ -54,14 +54,19 @@ window.app.ui.injectHeader = function() {
     }
 };
 
-// MOTOR DE EVENTOS GLOBAL (Solución definitiva para la X y Modales)
+// REDIRECCIÓN DIRECTA DEL BOTÓN LOGIN AL CENTRO DE MANDO EN MAKUMOTO.COM
 document.addEventListener('click', (e) => {
+    if (e.target.id === 'btn-show-login' || e.target.classList.contains('login-button-header') && e.target.textContent.trim() === 'Login') {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.replace('https://makumoto.com/portal.html');
+        return;
+    }
+
     const modal = document.getElementById('login-modal');
     if (!modal) return;
 
-    if (e.target.id === 'btn-show-login') {
-        modal.classList.add('visible');
-    } else if (e.target.id === 'close-login-modal' || e.target === modal) {
+    if (e.target.id === 'close-login-modal' || e.target === modal) {
         modal.classList.remove('visible');
     }
 });
