@@ -46,7 +46,7 @@ window.app.ui.injectHeader = function() {
                     <a href="index.html#seccion-precios-directa" style="background:#FFD700; color:#101010; padding:10px 20px; border-radius:5px; text-decoration:none; font-weight:900; font-size:13px;">CONTRATAR</a>
                 </div>
                 <div class="header-bottom">
-                    <a href="directorio.html" class="login-button-header">Directorio</a>
+                    <a href="promos.html" class="login-button-header btn-plus">Promos</a>
                     <button id="btn-show-login" class="login-button-header">Login</button>
                     <a href="gana-dinero.html" class="login-button-header btn-plus">¡Gana Dinero!</a>
                 </div>
