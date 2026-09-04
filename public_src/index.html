@@ -444,11 +444,13 @@
     .precio-tarjeta:hover { transform: translateY(-10px); border-color: var(--color-primary); }
     .precio-tarjeta h3 { font-size: 1.2rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase; }
     .lema-paquete { font-style: italic; opacity: 0.7; font-size: 0.9rem; min-height: 40px; }
-    .precio-valor { font-size: 2.1rem; font-weight: 900; margin: 10px 0; }
-    .precio-valor span { font-size: 1rem; font-weight: 400; color: var(--color-text); }
-    .precio-tarjeta ul { list-style: none; text-align: left; margin-top: 20px; flex-grow: 1; }
-    .precio-tarjeta ul li { margin-bottom: 10px; }
-    .precio-tarjeta ul i { color: var(--color-primary); margin-right: 10px; }
+    /* ===== TARJETAS DE PRECIOS ULTRA ESTÉTICAS Y LIMPIAS ===== */
+    .precio-valor { font-size: 2.2rem; font-weight: 400; margin: 12px 0; color: #ffffff; letter-spacing: -1px; }
+    .precio-valor span { font-size: 0.95rem; font-weight: 400; color: #aaaaaa; display: block; margin-top: 2px; }
+    .precio-tarjeta ul { list-style: none; text-align: left; margin-top: 20px; flex-grow: 1; font-weight: 400; }
+    .precio-tarjeta ul li { margin-bottom: 12px; font-weight: 400; font-size: 0.92rem; opacity: 0.9; }
+    .precio-tarjeta ul i { color: var(--color-primary); margin-right: 10px; font-weight: 400; }
+    .precio-tarjeta strong { font-weight: 400 !important; } /* ANULACIÓN TOTAL DE NEGRITAS */
     .cta-precio {
         width: 100%; padding: 15px; margin-top: 20px; border: none;
         border-radius: 5px; background: var(--color-primary); color: var(--color-dark);
@@ -660,18 +662,19 @@
 
     #fomo-container {
         position: fixed !important;
-        top: 45% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
+        bottom: 25px !important;
+        left: 20px !important;
+        top: auto !important;
+        transform: none !important;
         z-index: 2147483647 !important;
-        width: 85% !important;
-        max-width: 270px !important;
+        width: 90% !important;
+        max-width: 280px !important;
         box-sizing: border-box !important;
         pointer-events: none !important;
         display: flex !important;
         flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
+        align-items: flex-start !important;
+        justify-content: flex-end !important;
     }
     .fomo-burbuja {
         display: flex !important;
@@ -982,44 +985,44 @@
 
              <div class="precios-grid">
                  <div class="precio-tarjeta">
-                    <h3>Opus</h3><p class="lema-paquete">"Para equipos pequeños con grandes ambiciones."</p><p class="precio-valor">$99 MXN <span>/ $5 USD/mes</span><span style="font-size: 0.85rem; display: block; color: #aaa; font-weight: normal; line-height: 1.2; margin-top: 4px;">+ IVA</span></p>
+                    <h3>Opus</h3><p class="lema-paquete">"Para equipos pequeños con grandes ambiciones."</p><p class="precio-valor">$99 MXN <span>$5 USD al mes</span><span style="font-size: 0.8rem; display: block; color: #888; font-weight: 400; line-height: 1.2; margin-top: 4px;">más IVA</span></p>
                     <ul>
-                        <li><i class="fas fa-users"></i> <strong>Hasta 10</strong> Miembros</li>
+                        <li><i class="fas fa-users"></i> Hasta 10 Miembros</li>
                         <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Comunidad</li>
                         <li><i class="fas fa-check-circle"></i> Implementa beneficios de tu sector</li>
-                        <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto®</li>
+                        <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto</li>
                     </ul>
-                    <button class="cta-precio" onclick="window.location.href='https://makumoto.com/checkout.html?plan=opus_10'">COMPRAR AHORA ($99 MXN)</button>
+                    <button class="cta-precio" onclick="window.location.href='https://makumoto.com/checkout.html?plan=opus_10'">COMPRAR AHORA</button>
                 </div>
                 <div class="precio-tarjeta">
-                    <h3>Núcleo</h3><p class="lema-paquete">"Convierte a tus clientes en una comunidad leal."</p><p class="precio-valor">$199 MXN <span>/ $10 USD/mes</span><span style="font-size: 0.85rem; display: block; color: #aaa; font-weight: normal; line-height: 1.2; margin-top: 4px;">+ IVA</span></p>
+                    <h3>Núcleo</h3><p class="lema-paquete">"Convierte a tus clientes en una comunidad leal."</p><p class="precio-valor">$199 MXN <span>$10 USD al mes</span><span style="font-size: 0.8rem; display: block; color: #888; font-weight: 400; line-height: 1.2; margin-top: 4px;">más IVA</span></p>
                     <ul>
-                        <li><i class="fas fa-users"></i> <strong>Hasta 50</strong> Miembros</li>
+                        <li><i class="fas fa-users"></i> Hasta 50 Miembros</li>
                         <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Comunidad</li>
                         <li><i class="fas fa-check-circle"></i> Implementa beneficios de tu sector</li>
-                        <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto®</li>
+                        <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto</li>
                     </ul>
-                    <button class="cta-precio" data-plan="nucleo_50" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA ($199 MXN)</button>
+                    <button class="cta-precio" onclick="window.location.href='https://makumoto.com/checkout.html?plan=nucleo_50'">COMPRAR AHORA</button>
                 </div>
                 <div class="precio-tarjeta recomendada">
-                    <span class="etiqueta-recomendada">MÁS POPULAR</span><h3>Zenith</h3><p class="lema-paquete">"La herramienta definitiva de retención y lealtad."</p><p class="precio-valor">$299 MXN <span>/ $15 USD/mes</span><span style="font-size: 0.85rem; display: block; color: #aaa; font-weight: normal; line-height: 1.2; margin-top: 4px;">+ IVA</span></p>
+                    <span class="etiqueta-recomendada">MÁS POPULAR</span><h3>Zenith</h3><p class="lema-paquete">"La herramienta definitiva de retención y lealtad."</p><p class="precio-valor">$299 MXN <span>$15 USD al mes</span><span style="font-size: 0.8rem; display: block; color: #888; font-weight: 400; line-height: 1.2; margin-top: 4px;">más IVA</span></p>
                     <ul>
-                        <li><i class="fas fa-users"></i> <strong>Hasta 200</strong> Miembros</li>
+                        <li><i class="fas fa-users"></i> Hasta 200 Miembros</li>
                         <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Comunidad</li>
                         <li><i class="fas fa-check-circle"></i> Implementa beneficios de tu sector</li>
-                        <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto®</li>
+                        <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto</li>
                     </ul>
-                    <button class="cta-precio cta-recomendada" data-plan="zenith_200" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA ($299 MXN)</button>
+                    <button class="cta-precio cta-recomendada" onclick="window.location.href='https://makumoto.com/checkout.html?plan=zenith_200'">COMPRAR AHORA</button>
                 </div>
                 <div class="precio-tarjeta">
-                    <h3>Master</h3><p class="lema-paquete">"Domina tu mercado con una comunidad imparable."</p><p class="precio-valor">$499 MXN <span>/ $25 USD/mes</span><span style="font-size: 0.85rem; display: block; color: #aaa; font-weight: normal; line-height: 1.2; margin-top: 4px;">+ IVA</span></p>
+                    <h3>Master</h3><p class="lema-paquete">"Domina tu mercado con una comunidad imparable."</p><p class="precio-valor">$499 MXN <span>$25 USD al mes</span><span style="font-size: 0.8rem; display: block; color: #888; font-weight: 400; line-height: 1.2; margin-top: 4px;">más IVA</span></p>
                     <ul>
-                        <li><i class="fas fa-users"></i> Cubre hasta <strong>500 empleados o clientes</strong></li>
+                        <li><i class="fas fa-users"></i> Cubre hasta 500 empleados o clientes</li>
                         <li><i class="fas fa-tachometer-alt"></i> Dashboard de Gestión de Comunidad</li>
                         <li><i class="fas fa-check-circle"></i> Implementa beneficios de tu sector</li>
-                        <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto®</li>
+                        <li><i class="fas fa-rocket"></i> Acceso total a la app Makumoto</li>
                     </ul>
-                    <button class="cta-precio" data-plan="master_500" onclick="window.app.events.handlePlanPurchase(this)">COMPRAR AHORA ($499 MXN)</button>
+                    <button class="cta-precio" onclick="window.location.href='https://makumoto.com/checkout.html?plan=master_500'">COMPRAR AHORA</button>
                 </div>
             </div>
 
@@ -1030,10 +1033,10 @@
                         <h3 style="color: #00ecff; font-size: 1.6rem; line-height: 1.3;"><i class="fas fa-rocket" style="color: #00ecff; margin-right: 8px;"></i> Plan Plus, pensado para individuos y líderes que enfrentan los desafíos solos.</h3>
                         <p style="margin-top: 10px;">Diseñado exclusivamente para emprendedores, consultores e independientes que requieren autonomía total sin la necesidad de administrar una plantilla de miembros.</p>
                         <ul class="diff-list">
-                            <li><i class="fas fa-check-circle"></i> <span><strong>Autonomía Individual:</strong> No requiere gestión de código de convenio ni padrón de empleados.</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span><strong>25 Herramientas Tácticas:</strong> Suite completa de utilidad inmediata en tu móvil.</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span><strong>Velocidad Zero-Latency:</strong> Buscador de datos y módulos de asistencia utilizables SIN INTERNET.</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span><strong>Suscripción Asequible:</strong> Tarifa plana accesible de solo $50 MXN ($2.50 USD) al mes.</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span>Autonomía Individual: No requiere gestión de código de convenio ni padrón de empleados.</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span>25 Herramientas Tácticas: Suite completa de utilidad inmediata en tu móvil.</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span>Velocidad Zero-Latency: Buscador de datos y módulos de asistencia utilizables SIN INTERNET.</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span>Suscripción Asequible: Tarifa plana accesible de solo $50 MXN ($2.50 USD) al mes.</span></li>
                         </ul>
                     </div>
 
@@ -1043,14 +1046,14 @@
                         </div>
                         <h3 style="color: #00ecff; font-size: 1.8rem; margin-top: 5px;">PLAN PLUS</h3>
                         <p class="lema-paquete">"La suite de herramientas para el emprendedor enfocado."</p>
-                        <p class="precio-valor" style="color: #ffffff;">$50 MXN <span style="font-size: 1rem; color: #00ecff; font-weight: bold;">/ $2.50 USD</span><span style="font-size: 0.85rem; display: block; color: #00ecff; font-weight: normal; line-height: 1.2; margin-top: 4px;">+ IVA</span></p>
+                        <p class="precio-valor" style="color: #ffffff;">$50 MXN <span style="font-size: 1rem; color: #00ecff; font-weight: 400;">$2.50 USD al mes</span><span style="font-size: 0.8rem; display: block; color: #00ecff; font-weight: 400; line-height: 1.2; margin-top: 4px;">más IVA</span></p>
                         <ul style="margin-bottom: 25px;">
                             <li><i class="fas fa-user-tie" style="color: #00ecff;"></i> Diseñado para Emprendedores</li>
                             <li><i class="fas fa-mobile-alt" style="color: #00ecff;"></i> Acceso Individual a 25 Herramientas</li>
                             <li><i class="fas fa-wifi" style="color: #00ecff;"></i> Buscador y Módulos SIN INTERNET</li>
                             <li><i class="fas fa-bolt" style="color: #00ecff;"></i> Asistencia Táctica y Utilidades 0ms</li>
                         </ul>
-                        <button data-plan="plan_plus" onclick="window.app.events.handlePlanPurchase(this)" style="background-color: #00ecff !important; color: #000000 !important; font-weight: 900 !important; font-size: 1.1rem; width: 100%; padding: 16px; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 25px rgba(0, 236, 255, 0.6); transition: transform 0.2s;">COMPRAR PLAN PLUS ($50 MXN)</button>
+                        <button onclick="window.location.href='https://makumoto.com/checkout.html?plan=plan_plus'" style="background-color: #00ecff !important; color: #000000 !important; font-weight: 900 !important; font-size: 1.1rem; width: 100%; padding: 16px; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 25px rgba(0, 236, 255, 0.6); transition: transform 0.2s;">COMPRAR PLAN PLUS</button>
                     </div>
                 </div>
             </div>
