@@ -86,14 +86,34 @@
 </head>
 <body>
 
-<header id="main-header"></header>
+<header id="main-header" style="width: 100%; background: #101010; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 2000;">
+    <div class="header-container" style="max-width: 1200px; margin: 0 auto; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px; box-sizing: border-box;">
+        <div class="header-top" style="width: 100%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <a href="index.html" class="logo" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
+                <img src="imagenes/logo.png" alt="Logo" style="height:35px;">
+                <div style="display:flex; flex-direction:column; align-items:center; line-height:1;">
+                    <span style="color:#FFD700; font-weight:900; font-size:18px;">Makumoto</span>
+                    <span style="font-size:9px; letter-spacing:3px; color:#fff; font-weight:700;">AFILIADOS</span>
+                </div>
+            </a>
+            <a href="index.html#seccion-precios-directa" style="background:#FFD700; color:#101010; padding:10px 20px; border-radius:5px; text-decoration:none; font-weight:900; font-size:13px;">CONTRATAR</a>
+        </div>
+        <div class="header-bottom" style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <a href="promos.html" class="login-button-header btn-plus" style="font-size: 11px !important; padding: 6px 12px !important; border: 1px solid #00ecff !important; border-radius: 4px !important; font-weight: 800 !important; text-transform: uppercase !important; text-decoration: none !important; color: #00ecff !important; background: transparent !important;">Promos</a>
+            <button id="btn-show-login" class="login-button-header" style="font-size: 11px !important; padding: 6px 12px !important; border: 1px solid #FFD700 !important; border-radius: 4px !important; font-weight: 800 !important; text-transform: uppercase !important; text-decoration: none !important; color: #FFD700 !important; background: transparent !important; cursor: pointer !important;">Login</button>
+            <a href="gana-dinero.html" class="login-button-header btn-plus" style="font-size: 11px !important; padding: 6px 12px !important; border: 1px solid #00ecff !important; border-radius: 4px !important; font-weight: 800 !important; text-transform: uppercase !important; text-decoration: none !important; color: #00ecff !important; background: transparent !important;">¡Gana Dinero!</a>
+        </div>
+    </div>
+</header>
 
 <main class="container">
     <!-- HERO Y BIENVENIDA -->
-    <section class="hero-tools">
-        <img src="imagenes/logo.png" alt="Makumoto Logo" class="main-logo">
-        <h1>¡Tu Energía + Nuestra Tecnología = Tu Mina de Oro! 🚀</h1>
-        <p class="subtitle">Bienvenido a la comunidad comercial más divertida, transparente e innovadora. Gana dinero recomendando soluciones que la gente y las empresas aman usar.</p>
+    <section class="hero-tools" style="padding-top: 30px;">
+        <div style="display: inline-block; background: rgba(0,236,255,0.08); border: 1px solid rgba(0,236,255,0.3); padding: 6px 20px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; color: var(--color-accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; box-shadow: 0 0 15px rgba(0,236,255,0.2);">
+            <i class="fas fa-hand-holding-usd"></i> GANA DINERO 💸
+        </div>
+        <h1 style="font-size: 2.1rem; font-weight: 600; color: var(--color-primary); margin: 0; text-transform: uppercase; line-height: 1.2; text-shadow: 0 0 25px rgba(255,215,0,0.25);">¡Tu Energía + Nuestra Tecnología = Tu Mina de Oro! 🚀</h1>
+        <p class="subtitle" style="font-weight: 400; opacity: 0.9;">Bienvenido a la comunidad comercial más divertida, transparente e innovadora. Gana dinero recomendando soluciones que la gente y las empresas aman usar.</p>
     </section>
 
     <!-- INTRODUCCIÓN CORPORATIVA: ¿QUIÉNES SOMOS? -->
@@ -430,6 +450,11 @@
         </div>
     </div>
 </div>
+
+<!-- BOTÓN ELEGANTE FLOTANTE PARA SUBIR AL INICIO (LADO IZQUIERDO) -->
+<button id="scroll-top-btn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" aria-label="Volver arriba" style="position: fixed; bottom: 25px; left: 20px; z-index: 1001; width: 44px; height: 44px; border-radius: 50%; background: rgba(18, 18, 20, 0.85); color: #FFD700; border: 1.5px solid rgba(255, 215, 0, 0.4); display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: all 0.25s ease;">
+    <i class="fas fa-chevron-up"></i>
+</button>
 
 <footer style="background: #000; border-top: 1px solid #222; padding: 25px 20px; text-align: center; font-size: 0.8rem; color: #888;">
     <div class="container">

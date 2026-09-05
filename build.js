@@ -144,15 +144,18 @@ async function processHtmlFiles() {
             });
 
             // TRASLADO EXACTO: Evitamos que el minificador altere la estructura de los modales y formularios
+            // MINIFICACIÓN REAL Y SEGURA DEL HTML
             const finalHtml = await HTMLMinifier.minify(content, {
-                collapseWhitespace: false,
-                removeComments: false,
+                collapseWhitespace: true,
+                removeComments: true,
                 minifyJS: false,
                 minifyCSS: true,
                 removeRedundantAttributes: false,
-                removeScriptTypeAttributes: false,
-                removeStyleLinkTypeAttributes: false,
-                useShortDoctype: true
+                removeScriptTypeAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                useShortDoctype: true,
+                keepClosingSlash: true,
+                caseSensitive: true
             });
 
             fs.writeFileSync(path.join(DIST_DIR, file), finalHtml, 'utf8');

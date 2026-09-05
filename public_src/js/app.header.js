@@ -11,7 +11,7 @@ window.app.ui.injectHeader = function() {
         const style = document.createElement('style');
         style.id = 'header-styles';
         style.innerHTML = `
-            #main-header { width: 100%; background: #101010; border-bottom: 1px solid #2a2a2a; }
+            #main-header { width: 100%; background: #101010; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 2000; }
             .header-container { max-width: 1200px; margin: 0 auto; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
             .header-top { width: 100%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
             .header-bottom { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
