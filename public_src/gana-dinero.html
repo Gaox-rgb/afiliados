@@ -287,19 +287,25 @@
             </div>
         </div>
 
-        <!-- ANUNCIO ANCHO: BONUS DE EMBAJADOR (10% POR NUEVO COMISIONISTA) -->
-            <div style="margin-top:14px; background:linear-gradient(135deg, rgba(255,215,0,0.12) 0%, rgba(0,236,255,0.08) 100%); border:1.5px dashed var(--color-primary); border-radius:14px; padding:12px 16px; text-align:left;">
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
-                    <span style="background:var(--color-primary); color:#000; font-weight:900; font-size:0.7rem; padding:3px 8px; border-radius:12px; text-transform:uppercase;">¡Promoción Activa!</span>
-                    <strong style="color:var(--color-primary); font-size:0.85rem; text-transform:uppercase;"><i class="fas fa-user-friends"></i> Bonus del 10% por Recomendado</strong>
+        <!-- ANUNCIO COMPACTO: PROMOCIÓN ACTIVA CON ANCHO CONTROLADO -->
+            <div style="max-width:460px; width:92%; margin:16px auto 0 auto; background:linear-gradient(135deg, rgba(255,215,0,0.14) 0%, rgba(0,236,255,0.08) 100%); border:1.5px dashed var(--color-primary); border-radius:16px; padding:14px 18px; text-align:center; box-shadow:0 0 15px rgba(255,215,0,0.1);">
+                <div style="color:var(--color-primary); font-size:1.05rem; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:3px; text-shadow:0 0 10px rgba(255,215,0,0.35);">
+                    🔥 ¡PROMOCIÓN ACTIVA! 🔥
                 </div>
-                <p style="font-size:0.78rem; color:#ccc; margin:0; line-height:1.45;">Invita a nuevos comisionistas: por cada persona que recomiendes y sea aprobada, <strong>tú te llevas el 10% de su primera venta</strong>. Al nuevo comisionista se le paga su <strong>50% íntegro</strong> sin descontarle ni un peso.</p>
+                <div style="color:var(--color-accent); font-size:0.85rem; font-weight:800; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:8px;">
+                    <i class="fas fa-user-friends"></i> Bonus del 10% por Recomendado
+                </div>
+                <p style="font-size:0.76rem; color:#d0d0d0; margin:0 auto; line-height:1.45;">
+                    Invita a nuevos comisionistas a la Tribu: por cada persona que recomiendes y sea aprobada, <strong>tú te llevas el 10% de su primera venta</strong>. Al nuevo comisionista se le paga su <strong>50% íntegro</strong> sin descontarle ni un solo peso.
+                </p>
             </div>
         </div>
 
-        <button class="btn-cta-secondary" onclick="openCommissionLoginModal()" style="margin-top:5px;">
-            <i class="fas fa-key"></i> YA SOY COMISIONISTA - INGRESAR A MI PORTAL PRIVADO
-        </button>
+        <div style="text-align: center; width: 100%; margin-top: 15px;">
+            <button class="btn-cta-secondary" onclick="openCommissionLoginModal()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin: 0 auto;">
+                <i class="fas fa-key"></i> YA SOY COMISIONISTA - INGRESAR A MI PORTAL PRIVADO
+            </button>
+        </div>
     </div>
 </main>
 
@@ -803,6 +809,15 @@
 
 <style>
     #promoter-chatbot-container.open #promoter-chat-window { visibility: visible !important; opacity: 1 !important; }
+    #promoter-chat-messages, #promoter-chat-options {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    #promoter-chat-messages::-webkit-scrollbar, #promoter-chat-options::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
     .pchat-msg { padding: 12px 18px; border-radius: 20px; max-width: 85%; line-height: 1.5; font-size: 0.9rem; }
     .pchat-bot { background: #222; color: #fff; align-self: flex-start; border-bottom-left-radius: 5px; border-left: 3px solid #FFD700; }
     .pchat-user { background: #FFD700; color: #000; align-self: flex-end; border-bottom-right-radius: 5px; font-weight: 600; }
@@ -1187,10 +1202,6 @@
     }
 
     async function submitPromoterApplication() {
-        const nextBtn = document.getElementById('btn-quiz-next');
-        nextBtn.disabled = true;
-        nextBtn.textContent = "Registrando solicitud...";
-
         const payload = {
             ...quizAnswers,
             createdAt: new Date().toISOString(),
@@ -1198,21 +1209,24 @@
             status: "pendiente"
         };
 
-        try {
-            if (typeof firebase !== 'undefined' && firebase.firestore) {
-                await firebase.firestore().collection('prospectos_comisionistas').add(payload);
-            }
-        } catch (err) {
-            console.warn("Resguardo local de solicitud:", err.message);
-        }
+        // ZERO-LATENCY: Mostrar pantalla final de inmediato sin esperar la red
+        document.getElementById('quiz-questions-container').style.display = 'none';
+        document.getElementById('quiz-step-final').style.display = 'block';
 
-        // Respaldo de seguridad en localStorage
+        // Resguardo preventivo instantáneo
         const localQueue = JSON.parse(localStorage.getItem('makumoto_prospectos') || '[]');
         localQueue.push(payload);
         localStorage.setItem('makumoto_prospectos', JSON.stringify(localQueue));
 
-        document.getElementById('quiz-questions-container').style.display = 'none';
-        document.getElementById('quiz-step-final').style.display = 'block';
+        // Despacho asíncrono en segundo plano hacia Cloud Function de Makumoto
+        try {
+            if (typeof firebase !== 'undefined' && firebase.functions) {
+                const sendApplicationFn = firebase.functions().httpsCallable('submitCommissionerApplication');
+                sendApplicationFn(payload).catch(err => console.warn("Aviso en background:", err.message));
+            }
+        } catch (err) {
+            console.warn("Resguardo background completado:", err.message);
+        }
     }
 // =======================================================================
     // MOTOR DE BASE DE CONOCIMIENTO DEL CHATBOT DE GANANCIAS
