@@ -11,6 +11,27 @@
     function closeDocModal(num) { document.getElementById('doc-modal-' + num).classList.remove('visible'); }
 
     // ABRIR Y CERRAR LOS 10 MODALES MASTERPIECE
+    // MODAL DE AUTENTICACIÓN OFICIAL DE COMISIONISTA
+    function openCommissionLoginModal() { document.getElementById('modal-commissioner-login').classList.add('visible'); }
+    function closeCommissionLoginModal() { document.getElementById('modal-commissioner-login').classList.remove('visible'); }
+
+    function handleCommissionerLogin(e) {
+        e.preventDefault();
+        const name = document.getElementById('auth-comm-name').value.trim();
+        const code = document.getElementById('auth-comm-id').value.trim().toUpperCase();
+
+        if (!name || !code) return;
+
+        // Guardar sesión autorizada
+        sessionStorage.setItem('active_commissioner', JSON.stringify({
+            name: name,
+            code: code,
+            loginTime: Date.now()
+        }));
+
+        window.location.href = 'promotor-dashboard.html';
+    }
+
     function openMasterSim(num) { document.getElementById('master-modal-' + num).classList.add('visible'); }
     function closeMasterSim(num) { document.getElementById('master-modal-' + num).classList.remove('visible'); }
 

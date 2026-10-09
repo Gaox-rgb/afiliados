@@ -287,11 +287,37 @@
             </div>
         </div>
 
-        <button class="btn-cta-secondary" onclick="window.location.href='promotor-dashboard.html'" style="margin-top:5px;">
-            <i class="fas fa-key"></i> YA SOY PROMOTOR - INGRESAR A MI PORTAL PRIVADO
+        <!-- ANUNCIO ANCHO: BONUS DE EMBAJADOR (10% POR NUEVO COMISIONISTA) -->
+            <div style="margin-top:14px; background:linear-gradient(135deg, rgba(255,215,0,0.12) 0%, rgba(0,236,255,0.08) 100%); border:1.5px dashed var(--color-primary); border-radius:14px; padding:12px 16px; text-align:left;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                    <span style="background:var(--color-primary); color:#000; font-weight:900; font-size:0.7rem; padding:3px 8px; border-radius:12px; text-transform:uppercase;">¡Promoción Activa!</span>
+                    <strong style="color:var(--color-primary); font-size:0.85rem; text-transform:uppercase;"><i class="fas fa-user-friends"></i> Bonus del 10% por Recomendado</strong>
+                </div>
+                <p style="font-size:0.78rem; color:#ccc; margin:0; line-height:1.45;">Invita a nuevos comisionistas: por cada persona que recomiendes y sea aprobada, <strong>tú te llevas el 10% de su primera venta</strong>. Al nuevo comisionista se le paga su <strong>50% íntegro</strong> sin descontarle ni un peso.</p>
+            </div>
+        </div>
+
+        <button class="btn-cta-secondary" onclick="openCommissionLoginModal()" style="margin-top:5px;">
+            <i class="fas fa-key"></i> YA SOY COMISIONISTA - INGRESAR A MI PORTAL PRIVADO
         </button>
     </div>
 </main>
+
+<!-- MODAL DE ACCESO PRIVADO CON CREDENCIALES OFICIALES -->
+<div id="modal-commissioner-login" class="modal-overlay">
+    <div class="login-card" style="max-width:440px; text-align:left; background:#080808; border-color:var(--color-primary);">
+        <span onclick="closeCommissionLoginModal()" style="position:absolute; top:15px; right:20px; color:#fff; font-size:1.8rem; cursor:pointer;">&times;</span>
+        <h3 style="color:var(--color-primary); font-size:1.15rem; font-weight:900; text-transform:uppercase; margin-bottom:6px;"><i class="fas fa-lock"></i> Acceso a Portal Privado</h3>
+        <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Ingresa tus credenciales oficiales autorizadas por Makumoto:</p>
+        <form onsubmit="handleCommissionerLogin(event)">
+            <label style="font-size:0.75rem; color:var(--color-primary); font-weight:bold; display:block; margin-bottom:4px;">Nombre Completo Registrado:</label>
+            <input type="text" id="auth-comm-name" required placeholder="Ej. Roberto Morales Gómez" style="width:100%; padding:12px; border-radius:10px; border:1px solid #333; background:#111; color:#fff; font-size:0.85rem; margin-bottom:12px;">
+            <label style="font-size:0.75rem; color:var(--color-primary); font-weight:bold; display:block; margin-bottom:4px;">Número Oficial de Comisionista:</label>
+            <input type="text" id="auth-comm-id" required placeholder="Ej. COM-1024" style="width:100%; padding:12px; border-radius:10px; border:1px solid #333; background:#111; color:#fff; font-size:0.85rem; margin-bottom:18px; text-transform:uppercase;">
+            <button type="submit" style="width:100%; background:var(--color-primary); color:#000; border:none; padding:12px; border-radius:25px; font-weight:900; font-size:0.85rem; cursor:pointer; text-transform:uppercase;">ENTRAR AL EXPEDIENTE</button>
+        </form>
+    </div>
+</div>
 
 <!-- MODAL CUESTIONARIO DINÁMICO DE POSTULACIÓN DE COMISIONISTAS -->
 <div id="modal-promoter-register" class="modal-overlay">
@@ -811,6 +837,27 @@
     function closeDocModal(num) { document.getElementById('doc-modal-' + num).classList.remove('visible'); }
 
     // ABRIR Y CERRAR LOS 10 MODALES MASTERPIECE
+    // MODAL DE AUTENTICACIÓN OFICIAL DE COMISIONISTA
+    function openCommissionLoginModal() { document.getElementById('modal-commissioner-login').classList.add('visible'); }
+    function closeCommissionLoginModal() { document.getElementById('modal-commissioner-login').classList.remove('visible'); }
+
+    function handleCommissionerLogin(e) {
+        e.preventDefault();
+        const name = document.getElementById('auth-comm-name').value.trim();
+        const code = document.getElementById('auth-comm-id').value.trim().toUpperCase();
+
+        if (!name || !code) return;
+
+        // Guardar sesión autorizada
+        sessionStorage.setItem('active_commissioner', JSON.stringify({
+            name: name,
+            code: code,
+            loginTime: Date.now()
+        }));
+
+        window.location.href = 'promotor-dashboard.html';
+    }
+
     function openMasterSim(num) { document.getElementById('master-modal-' + num).classList.add('visible'); }
     function closeMasterSim(num) { document.getElementById('master-modal-' + num).classList.remove('visible'); }
 
