@@ -51,6 +51,7 @@ window.app.tools = {
 
     logout() {
         this.vibrate();
+        localStorage.removeItem('arsenal_access');
         sessionStorage.removeItem('arsenal_access');
         window.location.replace('gana-dinero.html');
     },

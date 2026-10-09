@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviso de Privacidad Integral | LA PLATAFORMA</title>
+    <title>Aviso de Privacidad Integral | PRIVACY POLICY</title>
     <link rel="icon" type="image/png" href="imagenes/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root { 
             --color-primary: #FFD700; 
@@ -25,112 +24,261 @@
             line-height: 1.7; padding-bottom: 100px;
         }
         .legal-header { 
-            padding: 50px 20px; text-align: center; border-bottom: 2px solid var(--color-primary); 
-            background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 10;
+            padding: 30px 20px 25px 20px; text-align: center; border-bottom: 1.5px solid var(--color-primary); 
+            background: rgba(10, 10, 10, 0.95); position: static;
         }
-        .legal-header img { width: 50px; margin-bottom: 10px; }
-        h1 { color: var(--color-primary); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; font-size: 1.8rem; }
-        .tagline { color: var(--color-accent); font-weight: 700; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 5px; }
-        
-        .container { max-width: 950px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: var(--color-primary); font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; font-size: 1.35rem; line-height: 1.3; }
+        .tagline { color: var(--color-accent); font-weight: 700; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+        .lang-switch-box { display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
+        .lang-btn { background: transparent; border: 1px solid #444; color: #888; font-family: 'Poppins', sans-serif; font-size: 0.7rem; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-weight: 800; transition: all 0.2s; }
+        .lang-btn.active { background: rgba(57,255,20,0.2); border-color: #39ff14; color: #39ff14; box-shadow: 0 0 10px rgba(57,255,20,0.3); }
+        .container { max-width: 950px; margin: 25px auto; padding: 0 20px; }
         .protocol-block { 
-            border-left: 4px solid var(--color-primary); padding: 30px; margin-bottom: 30px; 
+            border-left: 4px solid var(--color-primary); padding: 22px 20px; margin-bottom: 22px; 
             background: var(--color-card); border-radius: 0 15px 15px 0; border: 1px solid #222;
         }
         .protocol-block.accent { border-left-color: var(--color-accent); }
         .protocol-block.danger { border-left-color: var(--color-danger); }
-        
-        h2 { color: var(--color-primary); font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        h2 { color: var(--color-primary); font-size: 0.95rem; font-weight: 800; margin-bottom: 12px; letter-spacing: 0.8px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; line-height: 1.35; }
         .protocol-block.accent h2 { color: var(--color-accent); }
         .protocol-block.danger h2 { color: var(--color-danger); }
-
-        p { color: #ccc; margin-bottom: 12px; font-size: 0.93rem; }
+        p { color: #ccc; margin-bottom: 8px; font-size: 0.93rem; }
+        p.en-trans { color: #888; font-style: italic; font-size: 0.85rem; margin-bottom: 16px; }
         ul { list-style: none; padding-left: 0; margin-bottom: 15px; }
         ul li { position: relative; padding-left: 25px; margin-bottom: 10px; color: #ccc; font-size: 0.93rem; }
         ul li::before { content: "►"; position: absolute; left: 0; color: var(--color-primary); font-size: 0.8rem; }
-        
         .highlight-gold { color: var(--color-primary); font-weight: bold; }
         .highlight-cyan { color: var(--color-accent); font-weight: bold; }
-        .highlight-danger { color: var(--color-danger); font-weight: bold; }
-
         .back-btn { 
-            position: fixed; bottom: 30px; right: 30px; background: var(--color-primary); color: #000;
-            padding: 14px 28px; border-radius: 50px; text-decoration: none; font-weight: 900; font-size: 0.9rem;
-            text-transform: uppercase; box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4); transition: 0.3s; z-index: 100;
-            display: flex; align-items: center; gap: 10px;
+            position: fixed; bottom: 25px; right: 25px; 
+            width: 48px; height: 48px; border-radius: 50%;
+            background: rgba(10, 10, 15, 0.85); color: var(--color-primary);
+            border: 1.5px solid var(--color-primary); text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.25);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; transition: all 0.25s ease; z-index: 100;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
         }
-        .back-btn:hover { background: #fff; transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255, 255, 255, 0.5); }
+        .back-btn:hover { 
+            background: var(--color-primary); color: #000; 
+            transform: scale(1.12); box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); 
+        }
     </style>
 </head>
 <body>
     <header class="legal-header">
-        <img src="imagenes/logo.png" alt="Logo de la Empresa">
         <h1>Aviso de Privacidad Integral</h1>
-        <p class="tagline">Protección de Datos Personales | afiliados.makumoto.com</p>
+        <p class="tagline">Protección de Datos Personales | PRIVACY POLICY</p>
     </header>
 
+   <div class="lang-switch-box" style="margin-bottom: 20px;">
+        <button type="button" onclick="setPrivacyLang('es')" id="btn-priv-es" class="lang-btn">ES</button>
+        <button type="button" onclick="setPrivacyLang('en')" id="btn-priv-en" class="lang-btn">EN</button>
+    </div>
+
     <div class="container">
-        <!-- SECCIÓN 01: IDENTIDAD -->
-        <div class="protocol-block">
-            <h2><i class="fas fa-user-shield"></i> 01. IDENTIDAD DEL RESPONSABLE Y DEFINICIONES</h2>
-            <p>Para los efectos del presente Aviso de Privacidad, al sitio web <code>afiliados.makumoto.com</code>, sus aplicaciones web, bots de atención e infraestructura en la nube se les denominará unificadamente como <span class="highlight-gold">"LA PLATAFORMA"</span>.</p>
-            <p>LA PLATAFORMA es responsable del tratamiento, uso, almacenamiento y protección de los datos personales recabados de los usuarios en cumplimiento con las leyes aplicables de protección de datos personales.</p>
+        <!-- ================= BLOQUE EXCLUSIVO EN ESPAÑOL ================= -->
+        <div id="privacy-es">
+            <!-- SECCIÓN 01 -->
+            <div class="protocol-block">
+                <h2><i class="fas fa-user-shield"></i> 01. IDENTIDAD DE LOS RESPONSABLES Y PLATAFORMAS</h2>
+                <p>Para los efectos del presente Aviso de Privacidad, al conjunto integral conformado por el portal B2C <span class="highlight-gold">makumoto.com</span>, el subdominio comercial B2B <span class="highlight-gold">afiliados.makumoto.com</span>, sus aplicaciones y herramientas se les denominará de forma unificada en lo sucesivo como <span class="highlight-gold">"LA PLATAFORMA"</span>.</p>
+                <p>El tratamiento, almacenamiento y protección de datos están gestionados tecnológicamente bajo los estándares de ciberseguridad y cifrado de la firma de sistemas de inteligencia artificial <span class="highlight-cyan">ROBOTIAX®</span> (accesible en <code>robotiax.com</code>), actuando como el cerebro tecnológico de todo el ecosistema.</p>
+            </div>
+
+            <!-- SECCIÓN 02 -->
+            <div class="protocol-block accent">
+                <h2><i class="fas fa-cookie-bite"></i> 02. DESGLOSE DE PROCESADORES DE TERCEROS Y TECNOLOGÍAS</h2>
+                <p>LA PLATAFORMA utiliza tecnologías como <code>LocalStorage</code> y <code>Cookies</code> de sesión para el funcionamiento Offline-First. No se comparte ni vende información con agencias de publicidad o marketing de terceros.</p>
+                <p>• <span class="highlight-cyan">Procesadores de Datos de Terceros autorizados:</span> Transmitimos datos de forma segura para la correcta ejecución de las herramientas a los siguientes proveedores:</p>
+                <ul>
+                    <li><strong>Firebase (Google LLC):</strong> Para autenticación, base de datos en tiempo real y almacenamiento cifrado en la nube.</li>
+                    <li><strong>Vertex AI (Google Cloud):</strong> Para el procesamiento de lenguaje natural y retroalimentación de la IA Lyra.</li>
+                    <li><strong>Makumoto & Robotiax Pay / Stripe:</strong> Para el procesamiento, cobro cifrado y validación de transacciones bancarias e impuestos automatizados (Stripe Payments Mexico / Stripe Inc.).</li>
+                </ul>
+            </div>
+
+            <!-- SECCIÓN 03 -->
+            <div class="protocol-block danger">
+                <h2><i class="fas fa-child"></i> 03. RESTRICCIÓN ABSOLUTA Y EXCLUSIÓN DE MENORES DE EDAD (18+)</h2>
+                <p>LA PLATAFORMA está clasificada de forma exclusiva para adultos (M18). Queda estrictamente prohibido el acceso, registro o tratamiento de datos de menores de 18 años. No recopilamos, solicitamos ni almacenamos de forma deliberada datos de menores de edad de ningún tipo.</p>
+                <p>• Al registrarse o interactuar con LA PLATAFORMA, el usuario declara bajo protesta de decir verdad ser mayor de 18 años. Cualquier cuenta asociada a un menor de edad será eliminada de forma inmediata y definitiva de nuestros servidores de base de datos sin previo aviso.</p>
+            </div>
+
+            <!-- SECCIÓN 04 -->
+            <div class="protocol-block">
+                <h2><i class="fas fa-key"></i> 04. DERECHOS A.R.C.O. Y AUDITORÍA DE CANCELACIÓN</h2>
+                <p>El usuario tiene derecho a Acceder, Rectificar, Cancelar u Oponerse al uso de sus datos enviando su requerimiento formal a: <span class="highlight-gold">afiliados@makumoto.com</span>.</p>
+                <p>• <strong>Plazo de Auditoría de Cancelación (30 a 90 días):</strong> Toda solicitud de cancelación de datos o baja del sistema estará sujeta a un periodo de auditoría y revisión técnica de seguridad interna de un plazo de <span class="highlight-cyan">30 a 90 días hábiles</span>.</p>
+            </div>
+
+            <!-- SECCIÓN 05 -->
+            <div class="protocol-block accent">
+                <h2><i class="fas fa-terminal"></i> 05. TELEMETRÍA DE DEPURACIÓN EN FASE BETA Y MONITOREO TÉCNICO</h2>
+                <p>Durante la Fase Beta y cortesía operativa, LA PLATAFORMA y ROBOTIAX® capturan automáticamente registros técnicos de telemetría (tales como reportes de fallos o crash logs, latencia de conexión, métricas de rendimiento del navegador y eventos de interfaz). Dicha información técnica se procesa de manera estrictamente anonimizada y encriptada, teniendo como finalidad exclusiva la identificación y resolución de bucles, la depuración de código y el aseguramiento de la infraestructura previa al inicio formal de operaciones del <span class="highlight-gold">11 de Noviembre de 2026 (11/11/2026)</span>. En ningún caso estos registros técnicos se utilizan para elaboración de perfiles comerciales ni se comparten con empresas externas de publicidad.</p>
+            </div>
+
+            <!-- SECCIÓN 06 -->
+            <div class="protocol-block">
+                <h2><i class="fas fa-database"></i> 06. DATOS PERSONALES EN EL ECOSISTEMA DE AFILIADOS</h2>
+                <p>LA PLATAFORMA recaba y clasifica los datos personales de acuerdo con el rol de interacción en la comunidad:</p>
+                <ul>
+                    <li><span class="highlight-gold">Contratantes B2B (Empresas, Gimnasios y Clínicas):</span> Nombre completo del titular, correo corporativo, razón social o nombre comercial, código de convenio exclusivo (<code>convenioCode</code>), sector de operación, credenciales de acceso cifradas, logotipos en formato WebP y padrón de miembros autorizados.</li>
+                    <li><span class="highlight-gold">Miembros de la Tribu (Empleados, Pacientes y Socios):</span> Nombre, identificador interno de miembro (<code>memberId</code>), correo de invitación, métricas de actividad comunitaria, puntos XP acumulados y coordenadas de geolocalización satelital puntual para confirmación de misiones.</li>
+                    <li><span class="highlight-gold">Usuarios Individuales "Arsenal Plus" (B2C):</span> Nombre, correo electrónico, código de acceso individual y registros biométricos de auto-calibración (horas de descanso, peso, ingesta de agua almacenados localmente en el dispositivo).</li>
+                    <li><span class="highlight-gold">Promotores Comisionistas Independientes:</span> Nombre completo, correo electrónico y cuenta bancaria verificada para dispersiones a través de MAKUMOTO & ROBOTIAX PAY / Stripe.</li>
+                </ul>
+            </div>
+
+            <!-- SECCIÓN 07 -->
+            <div class="protocol-block accent">
+                <h2><i class="fas fa-map-marked-alt"></i> 07. FINALIDADES OPERATIVAS Y GEOLOCALIZACIÓN SATELITAL</h2>
+                <p>Los datos de afiliados se tratan estrictamente para finalidades primarias del servicio:</p>
+                <ul>
+                    <li>Generación, validación y autenticación de accesos mediante códigos OTP de 6 dígitos.</li>
+                    <li>Habilitación del Centro de Mando B2B y despliegue local del Arsenal Táctico Plus B2C.</li>
+                    <li>Gestión de altas y bajas en el padrón corporativo y despacho automatizado de invitaciones.</li>
+                    <li>Conciliación y dispersión quincenal de comisiones mercantiles a promotores.</li>
+                    <li><span class="highlight-cyan">Geolocalización Satelital Puntual (Mapeo Leaflet):</span> El acceso al GPS se solicita únicamente al momento de ejecutar voluntariamente un check-in de misión. Las coordenadas solo son visibles para el Gerente dentro de su Centro de Mando privado. No se realiza rastreo pasivo, continuo ni en segundo plano.</li>
+                    <li><span class="highlight-cyan">Protección de Datos Bancarios:</span> LA PLATAFORMA no recopila ni almacena números de tarjetas bancarias ni claves CVC/CVV. Todo el cobro se ejecuta bajo cifrado SSL/TLS de 256 bits directamente por MAKUMOTO & ROBOTIAX PAY a través de la infraestructura bancaria certificada de Stripe.</li>
+                </ul>
+            </div>
+
+            <!-- SECCIÓN 08 -->
+            <div class="protocol-block" style="border-left-color: #ffd700;">
+                <h2><i class="fas fa-shield-alt"></i> 08. PRIVACIDAD DE ANUNCIANTES (SPONSORS) Y PROTOCOLO INSTITUCIONAL DE INVERSIONISTAS (KYC/AML)</h2>
+                <p><strong style="color:var(--color-primary)">A. DATOS RECABADOS DE ANUNCIANTES Y MARCAS PATROCINADORAS:</strong></p>
+                <ul>
+                    <li><span class="highlight-gold">Datos de Pauta y Facturación:</span> Para la contratación y asignación de slots publicitarios, LA PLATAFORMA recaba: nombre de la marca o empresa, enlace de destino comercial, correo de facturación y comprobantes de anticipo emitidos por MAKUMOTO & ROBOTIAX PAY / Stripe.</li>
+                    <li><span class="highlight-gold">Telemetría de Vistas e Impresiones:</span> Los motores internos auditan de forma automatizada las visualizaciones generadas para certificar el cumplimiento acumulativo del volumen de impactos contratados.</li>
+                    <li><span class="highlight-gold">Confidencialidad de Métricas Comerciales:</span> Las métricas de conversión y desempeño de cada sponsor son estrictamente privadas.</li>
+                </ul>
+                <div style="border-top:1px dashed rgba(255,255,255,0.1); margin:15px 0; padding-top:10px;"></div>
+                <p><strong style="color:var(--color-accent)">B. PROTOCOLO INSTITUCIONAL DE INVERSIONISTAS, KYC Y CUMPLIMIENTO AML:</strong></p>
+                <ul>
+                    <li><span class="highlight-cyan">Datos de Escrutinio Institucional:</span> Solicitudes a la mesa de inversión recaban razón social, giro, acreditación legal y fiscal, dominio corporativo oficial y teléfono directo de oficina.</li>
+                    <li><span class="highlight-cyan">Validación Biométrica y Legal vía Zoom:</span> La sesión Zoom con la dirección general se procesa exclusivamente para la verificación de identidad y acreditación de origen lícito de recursos bajo directrices AML/FATF.</li>
+                    <li><span class="highlight-cyan">Custodia y Secreto Industrial del Data Room:</span> Toda la documentación de propiedad intelectual se resguarda bajo cifrado de alta seguridad y acuerdos estrictos de confidencialidad (NDA).</li>
+                </ul>
+            </div>
         </div>
 
-        <!-- SECCIÓN 02: CATEGORÍAS DE DATOS Y MULTIUSUARIOS -->
-        <div class="protocol-block accent">
-            <h2><i class="fas fa-database"></i> 02. DATOS PERSONALES RECOPILADOS POR CATEGORÍA DE USUARIO</h2>
-            <p>LA PLATAFORMA recaba datos personales ajustados a cada perfil de interacción:</p>
-            <ul>
-                <li><span class="highlight-cyan">Clientes Contratantes B2B (Empresas, Gyms, Clínicas):</span> Nombre completo, correo electrónico corporativo, nombre comercial de la organización, código de convenio asignado (`convenioCode`), registros de acceso al portal y credenciales cifradas.</li>
-                <li><span class="highlight-cyan">Miembros Finales de la Tribu (Empleados, Pacientes, Socios):</span> Nombre, correo electrónico, registro de altas por intermediación del contratante B2B, geolocalización aproximada para mapa de misión y métricas de gamificación.</li>
-                <li><span class="highlight-cyan">Usuarios Individuales "Arsenal Plus" (B2C):</span> Nombre, correo electrónico, registros de activación de herramientas digitales de salud y datos de uso de la aplicación.</li>
-                <li><span class="highlight-cyan">Promotores Comisionistas Independientes:</span> Nombre completo, correo electrónico registrado para dispersiones digitales de pago y Números de Referencia de transacciones enviadas para conciliación quincenal.</li>
-            </ul>
-        </div>
+        <!-- ================= BLOQUE EXCLUSIVO EN INGLÉS ================= -->
+        <div id="privacy-en" style="display: none;">
+            <!-- SECTION 01 -->
+            <div class="protocol-block">
+                <h2><i class="fas fa-user-shield"></i> 01. PLATFORM IDENTITY & OPERATING ENTITY</h2>
+                <p>For the purposes of this Privacy Notice, the comprehensive system formed by the B2C portal <span class="highlight-gold">makumoto.com</span>, the B2B commercial subdomain <span class="highlight-gold">afiliados.makumoto.com</span>, its applications, and tactical tools shall be collectively referred to as <span class="highlight-gold">"THE PLATFORM"</span>.</p>
+                <p>Data treatment, storage, and protection are technologically managed under the cybersecurity and encryption standards of the artificial intelligence firm <span class="highlight-cyan">ROBOTIAX®</span> (accessible at <code>robotiax.com</code>), acting as the technological core of the entire ecosystem.</p>
+            </div>
 
-        <!-- SECCIÓN 03: DELEGACIÓN Y PROTECCIÓN FINANCIERA -->
-        <div class="protocol-block danger">
-            <h2><i class="fas fa-lock"></i> 03. TRATAMIENTO DE DATOS FINANCIEROS Y DELEGACIÓN PROCESADORA</h2>
-            <p>LA PLATAFORMA <span class="highlight-danger">NO almacena, recopila ni procesa directamente números de tarjetas de crédito o débito</span>.</p>
-            <p>Toda la gestión de cobros con tarjeta, emisión de comprobantes digitales de pago y dispersión de comisiones se encuentra formalmente delegada en la entidad procesadora financiera independiente <span class="highlight-danger">CLEARPAY FINANCIAL</span>. Las transacciones se ejecutan mediante conexiones cifradas SSL/TLS de 256 bits bajo los más estrictos estándares de seguridad bancaria internacional.</p>
-        </div>
+            <!-- SECTION 02 -->
+            <div class="protocol-block accent">
+                <h2><i class="fas fa-cookie-bite"></i> 02. THIRD-PARTY PROCESSORS & STORAGE TECHNOLOGIES</h2>
+                <p>THE PLATFORM uses technologies such as <code>LocalStorage</code> and session <code>Cookies</code> for Offline-First functionality. Under no circumstances is personal data sold or shared with external advertising agencies.</p>
+                <p>• <span class="highlight-cyan">Authorized Third-Party Data Processors:</span> Data is securely transferred strictly to execute system capabilities with the following certified partners:</p>
+                <ul>
+                    <li><strong>Firebase (Google LLC):</strong> Real-time authenticated databases and encrypted cloud infrastructure.</li>
+                    <li><strong>Vertex AI (Google Cloud):</strong> Natural language processing and cognition models powering Lyra AI.</li>
+                    <li><strong>Makumoto & Robotiax Pay / Stripe:</strong> End-to-end encrypted bank transactions, checkout flows, and tax compliance (Stripe Inc. / Stripe Mexico).</li>
+                </ul>
+            </div>
 
-        <!-- SECCIÓN 04: FINALIDADES DEL TRATAMIENTO -->
-        <div class="protocol-block">
-            <h2><i class="fas fa-bullseye"></i> 04. FINALIDADES PRIMARIAS DEL TRATAMIENTO DE DATOS</h2>
-            <p>Los datos recabados son utilizados exclusivamente para los siguientes fines operativos indispensables:</p>
-            <ul>
-                <li>Gestión de acceso y autenticación mediante código de verificación OTP de 6 dígitos.</li>
-                <li>Activación de licencias B2B y despliegue del Centro de Mando.</li>
-                <li>Verificación quincenal de Números de Referencia de transacción para el envío de comisiones mercantiles.</li>
-                <li>Funcionamiento de notificaciones comunitarias, alertas de salud y herramientas del Arsenal Digital.</li>
-            </ul>
-        </div>
+            <!-- SECTION 03 -->
+            <div class="protocol-block danger">
+                <h2><i class="fas fa-child"></i> 03. STRICT ADULT RESTRICTION (18+ POLICY)</h2>
+                <p>THE PLATFORM is classified strictly for adult users (M18). Access, account registration, or data submission by individuals under 18 years of age is strictly prohibited. We never knowingly collect or retain data belonging to minors.</p>
+                <p>• By creating an account or accessing the platform, the user legally warrants that they are 18 years of age or older. Any account linked to an unauthorized minor will be immediately and irrevocably purged from all database instances without notice.</p>
+            </div>
 
-        <!-- SECCIÓN 05: DERECHOS ARCO Y PROCEDIMIENTO DE ATENCIÓN -->
-        <div class="protocol-block accent">
-            <h2><i class="fas fa-key"></i> 05. DERECHOS A.R.C.O. Y CANCELACIÓN DE CUENTAS</h2>
-            <p>Cualquier usuario tiene derecho a Acceder, Rectificar, Cancelar u Oponerse al tratamiento de sus datos personales (Derechos A.R.C.O.).</p>
-            <p>Para ejercer estos derechos, el titular deberá enviar una solicitud formal por escrito al correo oficial de soporte: <span class="highlight-gold">soporte@makumoto.com</span>.</p>
-            <p>• <strong>Periodo de Evaluación Técnica de Solicitudes (30 a 90 días):</strong> Por razones de seguridad informática y prevención de fraude en licencias activas o comisiones en proceso de conciliación, las solicitudes de cancelación de datos o baja de cuenta se someterán a un periodo de auditoría interna de <span class="highlight-cyan">30 (treinta) a 90 (noventa) días hábiles</span> para emitir la resolución correspondiente.</p>
-        </div>
+            <!-- SECTION 04 -->
+            <div class="protocol-block">
+                <h2><i class="fas fa-key"></i> 04. ARCO PRIVACY RIGHTS & TERMINATION AUDITING</h2>
+                <p>Users maintain the legal right to Access, Rectify, Cancel, or Oppose data usage by directing an official request to: <span class="highlight-gold">afiliados@makumoto.com</span>.</p>
+                <p>• <strong>Security Audit Period (30 to 90 Days):</strong> Every cancellation or account purging request is subject to a formal technical audit and internal security review lasting between <span class="highlight-cyan">30 to 90 business days</span>.</p>
+            </div>
 
-        <!-- SECCIÓN 06: COOKIES Y PWA -->
-        <div class="protocol-block">
-            <h2><i class="fas fa-microchip"></i> 06. COOKIES, LOCALSTORAGE Y FUNCIONAMIENTO OFFLINE</h2>
-            <p>LA PLATAFORMA utiliza tecnologías como <code>LocalStorage</code>, <code>SessionStorage</code> y <code>Service Workers</code> para garantizar el funcionamiento ultrarrápido (Zero-Latency) y la disponibilidad sin conexión a internet (Offline-First) de las herramientas del Arsenal Digital.</p>
-            <p>Estas tecnologías almacenan datos técnicos estrictamente necesarios en el dispositivo del usuario para mantener activa la sesión y no se utilizan para rastreo comercial de terceros.</p>
-        </div>
+            <!-- SECTION 05 -->
+            <div class="protocol-block accent">
+                <h2><i class="fas fa-terminal"></i> 05. BETA TELEMETRY & SYSTEM MONITORING</h2>
+                <p>During the Beta Phase and operational window, THE PLATFORM and ROBOTIAX® automatically record technical telemetry data (including crash dumps, network latency, rendering benchmarks, and UI event logs). This information is processed in an entirely anonymized and encrypted format for the sole purpose of debugging code, resolving software loops, and hardening infrastructure before the official opening on <span class="highlight-gold">November 11, 2026 (11/11/2026)</span>. Telemetry logs are never monetized or shared with third-party advertising brokers.</p>
+            </div>
 
-        <!-- SECCIÓN 07: MODIFICACIONES -->
-        <div class="protocol-block accent">
-            <h2><i class="fas fa-sync-alt"></i> 07. ACTUALIZACIONES AL AVISO DE PRIVACIDAD</h2>
-            <p>LA PLATAFORMA se reserva el derecho de efectuar modificaciones o actualizaciones al presente Aviso de Privacidad en cualquier momento.</p>
-            <p>Cualquier cambio estará disponible para su consulta pública y actualizada directamente en esta dirección web: <code>afiliados.makumoto.com/politica-de-privacidad.html</code>.</p>
+            <!-- SECTION 06 -->
+            <div class="protocol-block">
+                <h2><i class="fas fa-database"></i> 06. AFFILIATE ECOSYSTEM DATA PROFILES</h2>
+                <p>THE PLATFORM collects and categorizes personal data based on user roles within the community:</p>
+                <ul>
+                    <li><span class="highlight-gold">B2B Corporate Clients:</span> Full name of the authorized representative, corporate email, legal trade name, unique <code>convenioCode</code>, operational sector, encrypted credentials, WebP logos, and authorized staff rosters.</li>
+                    <li><span class="highlight-gold">Tribe Members (Staff, Patients, Clients):</span> Full name, internal <code>memberId</code>, invitation email, community participation metrics, earned XP, and voluntary GPS coordinates strictly for check-in missions.</li>
+                    <li><span class="highlight-gold">Arsenal Plus B2C Users:</span> Full name, email, individual license token, and on-device biohacking calibration logs (sleep, hydration, weight).</li>
+                    <li><span class="highlight-gold">Independent Commission Promoters:</span> Full name, contact email, and verified payout banking details for disbursements processed via MAKUMOTO & ROBOTIAX PAY / Stripe.</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 07 -->
+            <div class="protocol-block accent">
+                <h2><i class="fas fa-map-marked-alt"></i> 07. OPERATIONAL PURPOSES & SATELLITE GEOLOCATION</h2>
+                <p>All affiliate records are processed strictly for indispensable operational services:</p>
+                <ul>
+                    <li>Generation, validation, and authentication of secure 6-digit OTP codes.</li>
+                    <li>Provisioning of the B2B Command Center and deployment of offline B2C tools.</li>
+                    <li>Management of corporate rosters and automated invitation dispatching.</li>
+                    <li>Bi-weekly reconciliation and settlement of promoter commissions.</li>
+                    <li><span class="highlight-cyan">Pinpoint Satellite Geolocation (Leaflet):</span> GPS data is accessed strictly upon voluntary user interaction when confirming an on-site mission. Geodata is private to the corporate manager. No background or passive tracking is performed.</li>
+                    <li><span class="highlight-cyan">Banking Security:</span> THE PLATFORM does not record or retain credit/debit card numbers or security codes. All billing is encrypted under 256-bit SSL/TLS by MAKUMOTO & ROBOTIAX PAY via Stripe's certified infrastructure.</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 08 -->
+            <div class="protocol-block" style="border-left-color: #ffd700;">
+                <h2><i class="fas fa-shield-alt"></i> 08. SPONSOR PRIVACY & INSTITUTIONAL INVESTOR PROTOCOL (KYC/AML)</h2>
+                <p><strong style="color:var(--color-primary)">A. SPONSOR & ADVERTISER DATA PRIVACY:</strong></p>
+                <ul>
+                    <li><span class="highlight-gold">Campaign & Billing Data:</span> For ad slot reservations, THE PLATFORM processes brand name, target link or WhatsApp Business destination, billing email, and Stripe transaction confirmation tokens.</li>
+                    <li><span class="highlight-gold">Impression Telemetry:</span> Internal engines verify ad exposure in Game Over screens, TIPS channels, and Orbis nodes to certify the contracted impression quota.</li>
+                    <li><span class="highlight-gold">Commercial Confidentiality:</span> Sponsor analytics and conversion numbers remain strictly private and confidential.</li>
+                </ul>
+                <div style="border-top:1px dashed rgba(255,255,255,0.1); margin:15px 0; padding-top:10px;"></div>
+                <p><strong style="color:var(--color-accent)">B. INSTITUTIONAL INVESTOR KYC & AML COMPLIANCE PRIVACY:</strong></p>
+                <ul>
+                    <li><span class="highlight-cyan">Screening Credentials:</span> Institutional desk submissions require corporate entity legal name, industry, tax compliance verification, verified executive email, and direct office phone.</li>
+                    <li><span class="highlight-cyan">Live Zoom Biometric & Legal Screening:</span> The live Zoom conference with leadership is executed exclusively for visual identity confirmation and source-of-funds validation under international AML/FATF guidelines.</li>
+                    <li><span class="highlight-cyan">Data Room Custody & Trade Secrecy:</span> All IP documentation and financial records are safeguarded under strict Non-Disclosure Agreements (NDA) and military-grade encryption.</li>
+                </ul>
+            </div>
         </div>
     </div>
 
-    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Regresar al Inicio</a>
+    <a href="index.html" class="back-btn" title="Regresar al inicio" aria-label="Regresar al inicio"><i class="fas fa-arrow-left"></i></a>
+
+    <script>
+        let currentPrivacyLang = 'es';
+
+        function setPrivacyLang(lang) {
+            currentPrivacyLang = lang;
+
+            const isEng = (lang === 'en');
+            const blockEs = document.getElementById('privacy-es');
+            const blockEn = document.getElementById('privacy-en');
+            const btnEs = document.getElementById('btn-priv-es');
+            const btnEn = document.getElementById('btn-priv-en');
+            const h1 = document.querySelector('.legal-header h1');
+            const tag = document.querySelector('.legal-header .tagline');
+
+            if (blockEs) blockEs.style.display = isEng ? 'none' : 'block';
+            if (blockEn) blockEn.style.display = isEng ? 'block' : 'none';
+
+            if (btnEs) btnEs.className = 'lang-btn' + (!isEng ? ' active' : '');
+            if (btnEn) btnEn.className = 'lang-btn' + (isEng ? ' active' : '');
+
+            if (h1) h1.innerText = isEng ? "Comprehensive Privacy Notice" : "Aviso de Privacidad Integral";
+            if (tag) tag.innerText = isEng ? "Personal Data Protection Policy" : "Protección de Datos Personales | PRIVACY POLICY";
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setPrivacyLang('es');
+        });
+    </script>
 </body>
 </html>
