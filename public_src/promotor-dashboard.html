@@ -262,10 +262,10 @@
         <div id="admin-notices-container" style="display:flex; flex-direction:column; gap:8px;">
             <div style="background:#000; padding:12px 14px; border-radius:10px; border-left:3px solid var(--color-primary); font-size:0.78rem;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
-                    <strong style="color:var(--color-primary);">Régimen Pionero Beta Activo</strong>
+                    <strong style="color:var(--color-primary);">Sistema de Conciliación en Vivo Activo</strong>
                     <span style="color:#666; font-size:0.7rem;">Oficial</span>
                 </div>
-                <p style="color:#bbb; margin:0;">El cómputo oficial de contratos de clientes corre a partir del 11 de Noviembre de 2026. Todas las ventas generadas en fase previa reciben sus comisiones íntegras en los cortes quincenales.</p>
+                <p style="color:#bbb; margin:0;">Tus ventas son conciliadas quincenalmente en los cortes de los días 15 y 30. Todas las referencias verificadas reciben el 50% de comisión directa transferida vía Stripe o cuenta bancaria.</p>
             </div>
             <div style="background:#000; padding:12px 14px; border-radius:10px; border-left:3px solid var(--color-accent); font-size:0.78rem;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
@@ -340,26 +340,42 @@
         reader.readAsDataURL(file);
     }
 
-    function handleReferenceReport(e) {
+    async function handleReferenceReport(e) {
         e.preventDefault();
         const ref = document.getElementById('dash-ref-number').value.trim();
         const plan = document.getElementById('dash-plan-type').value;
+        const comm = JSON.parse(sessionStorage.getItem('active_commissioner') || '{}');
 
         const newSale = {
             ref: ref,
             plan: plan,
-            status: 'review', // 'review', 'paid', 'rejected'
+            status: 'review',
             timestamp: Date.now()
         };
 
         salesHistory.unshift(newSale);
-        const comm = JSON.parse(sessionStorage.getItem('active_commissioner') || '{}');
         if (comm.code) {
             localStorage.setItem(`sales_${comm.code}`, JSON.stringify(salesHistory));
         }
-
         updateDashboardUI();
-        alert(`¡Referencia [${ref}] enviada con éxito! 📩\nHa sido registrada en estado 'En Revisión' para la conciliación del próximo corte.`);
+
+        // Despacho asíncrono al backend con copia dual de control
+        try {
+            if (typeof firebase !== 'undefined' && firebase.functions) {
+                const reportFn = firebase.functions().httpsCallable('reportCommissionSale');
+                reportFn({
+                    promoterName: comm.name || "Comisionista",
+                    promoterCode: comm.code || "COM-1024",
+                    promoterEmail: document.getElementById('dash-promoter-email').value.trim(),
+                    reference: ref,
+                    plan: plan
+                }).catch(err => console.warn("Aviso en segundo plano:", err.message));
+            }
+        } catch (err) {
+            console.warn("Resguardo local activo:", err.message);
+        }
+
+        alert(`¡Referencia [${ref}] enviada con éxito! 📩\nHa sido registrada en estado 'En Revisión' y notificada a conciliación para el próximo corte.`);
         document.getElementById('dash-ref-number').value = '';
     }
 
